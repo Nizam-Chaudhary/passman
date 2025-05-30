@@ -1,0 +1,29 @@
+services:
+    passman:
+        image: ghcr.io/nizam-chaudhary/passman:${GIT_COMMIT_HASH:-latest}
+        build:
+            context: .
+        container_name: passman
+        restart: unless-stopped # Restart if inactive
+        ports:
+            - 8080:80
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        labels:
+            - traefik.enable=true
+            - traefik.http.services.passman.loadbalancer.server.port=80
+            - traefik.http.routers.passman.rule=Host(`passman.live`)
+            - traefik.http.routers.passman.entrypoints=websecure
+            - traefik.http.routers.passman.tls.certresolver=myresolver
+        networks:
+            - web # create network separately
+
+networks:
+    web:
+        external: true

@@ -1,0 +1,51 @@
+services:
+    postgres:
+        image: postgres:16
+        container_name: postgres
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: passman
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        healthcheck: # Optional: Check if the database is ready
+            test: [CMD-SHELL, pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 10s
+        restart: on-failure
+
+    traefik:
+        image: traefik:v3.3
+        container_name: traefik
+        command:
+            - --providers.docker
+            - --api.insecure=true
+            - --providers.docker.exposedbydefault=false
+            - --entrypoints.web.address=:80
+        ports:
+            - 80:80
+            - 8080:8080
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+
+    passman-be:
+        image: passman-be
+        build:
+            context: .
+        container_name: passman-be
+        restart: always
+        env_file:
+            - .env
+        networks:
+            - web # create network separately
+
+networks:
+    web:
+        external: true
+
+volumes:
+    postgres-data:

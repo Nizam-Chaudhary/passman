@@ -1,0 +1,21 @@
+services:
+    passman-be:
+        image: ghcr.io/nizam-chaudhary/passman-be:${GIT_COMMIT_HASH:-latest}
+        build:
+            context: .
+        container_name: passman-be
+        restart: always
+        env_file:
+            - .env.prod
+        networks:
+            - web # create network separately
+        labels:
+            - traefik.enable=true
+            - traefik.http.services.passman-be.loadbalancer.server.port=3000
+            - traefik.http.routers.passman-be.rule=Host(`api.passman.live`)
+            - traefik.http.routers.passman-be.entrypoints=websecure
+            - traefik.http.routers.passman-be.tls.certresolver=myresolver
+
+networks:
+    web:
+        external: true

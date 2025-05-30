@@ -1,0 +1,25 @@
+services:
+    passman-be:
+        image: ghcr.io/nizam-chaudhary/passman-be:${GIT_COMMIT_HASH:-latest}
+        labels:
+            - traefik.enable=true
+            - traefik.http.services.passman-be.loadbalancer.server.port=3000
+            - traefik.http.routers.passman-be.rule=Host(`api.passman.live`)
+            - traefik.http.routers.passman-be.entrypoints=websecure
+            - traefik.http.routers.passman-be.tls.certresolver=myresolver
+        env_file:
+            - .env.prod
+        networks:
+            - web
+        deploy:
+            update_config:
+                order: start-first
+                delay: 5s
+                # parallelism: 2
+                failure_action: rollback
+                monitor: 20s
+                max_failure_ratio: 0.2
+
+networks:
+    web:
+        external: true
