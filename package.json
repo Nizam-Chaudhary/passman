@@ -25,9 +25,6 @@
         "prettier": "^3.5.3"
     },
     "lint-staged": {
-        "**/*.{js,ts,tsx}": [
-            "eslint --fix"
-        ],
         "**/*": "prettier --write --ignore-unknown"
     }
 }
