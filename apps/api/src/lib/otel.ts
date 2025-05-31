@@ -1,5 +1,6 @@
 const {
     getNodeAutoInstrumentations,
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
 } = require("@opentelemetry/auto-instrumentations-node");
 const nodeAutoInstrumentations = getNodeAutoInstrumentations({});
 
@@ -22,6 +23,7 @@ import {
 import appPackage from "../../package.json";
 import env from "./env";
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: fastifyOtel } = require("@fastify/otel");
 const fastifyOtelInstrumentation = new fastifyOtel.FastifyOtelInstrumentation({
     registerOnInitialization: true,
