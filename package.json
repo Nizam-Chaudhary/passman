@@ -4,7 +4,8 @@
     "description": "Passman monorepo",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "clean": "nx run-many -t clean --output-style=stream",
+        "cleanAll": "nx run-many -t clean --output-style=stream; rm -rf node_modules; rm -rf apps/*/node_modules",
         "lint": "eslint .",
         "format": "prettier --write .",
         "prepare": "husky"
