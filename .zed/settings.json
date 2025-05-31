@@ -1,0 +1,62 @@
+// Folder-specific settings
+//
+// For a full list of overridable settings, and general information on folder-specific settings,
+// see the documentation: https://zed.dev/docs/configuring-zed#settings-files
+{
+    "format_on_save": "prettier",
+    "formatter": "prettier",
+    "languages": {
+        // Refer https://zed.dev/docs/languages/javascript and https://zed.dev/docs/languages/typescript for more info
+        "TypeScript": {
+            "language_servers": [
+                "tsgo",
+                "typescript-language-server",
+                "!vtsls"
+            ],
+            "formatter": "prettier",
+            "format_on_save": "prettier",
+            // Refer https://github.com/jellydn/ts-inlay-hints for how to setup for Neovim and VSCode
+            "code_actions_on_format": {
+                "source.addMissingImports.ts": true,
+                "source.sortImports.ts": true
+            }
+        },
+        "TSX": {
+            "language_servers": [
+                "tsgo",
+                "typescript-language-server",
+                "!vtsls"
+            ],
+            "formatter": "prettier",
+            "format_on_save": "prettier",
+            "code_actions_on_format": {
+                "source.addMissingImports.ts": true,
+                "source.sortImports.ts": true
+            }
+        },
+        "JavaScript": {
+            "language_servers": ["typescript-language-server", "!vtsls"],
+            "formatter": "prettier",
+            "format_on_save": "prettier",
+            "code_actions_on_format": {
+                "source.addMissingImports.ts": true,
+                "source.sortImports.ts": true
+            }
+        }
+    },
+    "prettier": {
+        "allowed": true,
+        "plugins": [],
+        "singleQuote": false,
+        "arrowParens": "always",
+        "jsxSingleQuote": false,
+        "tabWidth": 4,
+        "quoteProps": "as-needed",
+        "singleAttributePerLine": false,
+        "printWidth": 80,
+        "trailingComma": "es5",
+        "semi": true,
+        "useTabs": false,
+        "bracketSpacing": true
+    }
+}
