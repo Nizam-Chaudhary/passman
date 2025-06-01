@@ -1,6 +1,10 @@
 import { db } from "../../db/index";
 import { files } from "../../db/schema";
-import AppError from "../../lib/appError";
+import {
+    BadRequestException,
+    NotFoundException,
+    ValidationException,
+} from "../../lib/responseExceptions";
 import { env } from "../../lib/env";
 import s3 from "../../lib/s3";
 import { validFileTypesSchema } from "./file.schema";
@@ -12,7 +16,7 @@ class FileService {
         try {
             validFileTypesSchema.parse(file.type);
         } catch {
-            throw new AppError("INVALID_FILE_TYPE", "Invalid file type", 400);
+            throw new ValidationException("Invalid file type");
         }
 
         // Sanitize filename
@@ -40,7 +44,7 @@ class FileService {
             .$returningId();
 
         if (!uploadedFile?.id) {
-            throw new AppError("FILE_UPLOAD_FAILED", "File upload failed", 400);
+            throw new BadRequestException("File upload failed");
         }
 
         const uploadedFileData = await db.query.files.findFirst({
@@ -60,7 +64,7 @@ class FileService {
         });
 
         if (!file) {
-            throw new AppError("FILE_NOT_FOUND", "File not found", 404);
+            throw new NotFoundException("File not found");
         }
 
         await this.deleteFileFromS3(file.fileKey);

@@ -6,11 +6,10 @@ import type {
 } from "./auth.schema";
 import { db } from "../../db/index";
 import { users } from "../../db/schema";
-import AppError from "../../lib/appError";
 import * as jwt from "hono/jwt";
 import { createToken } from "../../utils/tokenHelper";
 import { env } from "../../lib/env";
-import { UnauthorizedException } from "../../lib/response";
+import { UnauthorizedException } from "../../lib/responseExceptions";
 
 class AuthService {
     async loginUser(input: LoginUserBody) {

@@ -6,7 +6,7 @@ import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { timeout } from "hono/timeout";
 import { env } from "./lib/env";
-import { HTTPException } from "hono/http-exception";
+import { errorHandler } from "./middlewares/errorHandler";
 
 const app = new Hono();
 
@@ -20,17 +20,10 @@ app.use(
     })
 );
 app.use(secureHeaders());
+app.onError(errorHandler);
 app.use("/api", timeout(10 * 1000));
 
 app.route("/api", routes);
-
-app.onError((err, c) => {
-    console.log("err", err);
-    if (err instanceof HTTPException) {
-        return err.getResponse();
-    }
-    return c.json({ error: "Internal Server Error" }, 500);
-});
 
 export default app;
 export type AppType = typeof routes;

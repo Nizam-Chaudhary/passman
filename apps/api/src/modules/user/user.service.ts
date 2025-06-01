@@ -17,10 +17,13 @@ import { eq, like } from "drizzle-orm";
 import { db } from "../../db/index";
 import { files, users, vaults } from "../../db/schema";
 import fileService from "../file/file.service";
-import AppError from "../../lib/appError";
 import { env } from "../../lib/env";
 import { createToken, verifyToken } from "../../utils/tokenHelper";
-import { ConflictException } from "../../lib/response";
+import {
+    BadRequestException,
+    ConflictException,
+    NotFoundException,
+} from "../../lib/responseExceptions";
 
 class UserService {
     async signUpUser(input: SignUpUserBody) {
@@ -143,15 +146,13 @@ class UserService {
         });
 
         if (!userData) {
-            throw new AppError(
-                "USER_NOT_REGISTERED",
-                "Email not registered. Please register first!",
-                400
+            throw new BadRequestException(
+                "Email not registered. Please register first!"
             );
         }
 
         if (input.otp !== userData.otp) {
-            throw new AppError("INVALID_OTP", "Invalid OTP", 400);
+            throw new BadRequestException("Invalid OTP");
         }
 
         await db
@@ -177,11 +178,7 @@ class UserService {
         });
 
         if (!user?.masterPassword) {
-            throw new AppError(
-                "MASTER_PASSWORD_NOT_EXISTS",
-                "Master password not created yet",
-                400
-            );
+            throw new BadRequestException("Master password not created yet");
         }
 
         const isMasterPasswordValid = await Bun.password.verify(
@@ -190,11 +187,7 @@ class UserService {
         );
 
         if (!isMasterPasswordValid) {
-            throw new AppError(
-                "INCORRECT_MASTER_PASSWORD",
-                "Incorrect master password",
-                400
-            );
+            throw new BadRequestException("Incorrect master password");
         }
 
         return {
@@ -220,16 +213,8 @@ class UserService {
         });
 
         if (!userPassword?.password) {
-            throw new AppError("USER_NOT_FOUND", "user not found", 400);
+            throw new NotFoundException("User not found");
         }
-
-        // if (compareSync(input.masterPassword, userPassword.password)) {
-        //   throw new AppError(
-        //     "MASTER_PASSWORD_AND_PASSWORD_MATCH",
-        //     "Master password and user password cannot be same",
-        //     400
-        //   );
-        // }
 
         await db
             .update(users)
@@ -252,11 +237,7 @@ class UserService {
         });
 
         if (!user) {
-            throw new AppError(
-                "USER_NOT_FOUND",
-                "No user found for email",
-                400
-            );
+            throw new NotFoundException("User not found");
         }
 
         const otp = generateOtp();
@@ -288,7 +269,7 @@ class UserService {
         });
 
         if (!user) {
-            throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
+            throw new NotFoundException("User not found");
         }
 
         const token = await createToken({
@@ -320,7 +301,7 @@ class UserService {
         );
 
         if (!jwtTokenResult.success || !jwtTokenResult.payload) {
-            throw new AppError("INVALID_TOKEN", "Invalid token", 400);
+            throw new BadRequestException("Invalid token");
         }
         const [passwordUpdate] = await db
             .update(users)
@@ -332,7 +313,7 @@ class UserService {
             );
 
         if (!passwordUpdate.affectedRows) {
-            throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
+            throw new NotFoundException("User not found");
         }
 
         return {
@@ -355,7 +336,7 @@ class UserService {
             .where(eq(users.id, userId));
 
         if (!updateUser.affectedRows) {
-            throw new AppError("USER_NOT_FOUND", "User not found", 400);
+            throw new NotFoundException("User not found");
         }
 
         return {

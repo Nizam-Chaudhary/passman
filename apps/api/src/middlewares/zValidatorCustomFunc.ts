@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { BadRequestException } from "../lib/response";
+import { BadRequestException } from "../lib/responseExceptions";
 
 export const zValidatorCustomFunc = (res: any) => {
     if (!res.success) {

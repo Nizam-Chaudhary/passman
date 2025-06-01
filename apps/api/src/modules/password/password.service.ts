@@ -9,8 +9,7 @@ import { and, desc, eq, like, inArray, or } from "drizzle-orm";
 
 import { db } from "../../db/index";
 import { passwords } from "../../db/schema";
-import AppError from "../../lib/appError";
-import { metrics } from "@opentelemetry/sdk-node";
+import { NotFoundException } from "../../lib/responseExceptions";
 
 class PasswordService {
     async addPassword(userId: number, input: AddPasswordBody) {
@@ -63,7 +62,7 @@ class PasswordService {
         });
 
         if (!password) {
-            throw new AppError("PASSWORD_NOT_FOUND", "Password not found", 404);
+            throw new NotFoundException("Password not found");
         }
 
         return {
@@ -84,7 +83,7 @@ class PasswordService {
             .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
 
         if (!updatedPassword.affectedRows) {
-            throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
+            throw new NotFoundException("Password not found");
         }
 
         return {
@@ -99,7 +98,7 @@ class PasswordService {
             .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
 
         if (!deletedPassword.affectedRows) {
-            throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
+            throw new NotFoundException("Password not found");
         }
 
         return {
@@ -116,7 +115,7 @@ class PasswordService {
             );
 
         if (!deletedPasswords.affectedRows) {
-            throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
+            throw new NotFoundException("Password not found");
         }
 
         return {

@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 import type { JwtUserData } from "../modules/auth/auth.schema";
-import { UnauthorizedException } from "../lib/response";
+import { UnauthorizedException } from "../lib/responseExceptions";
 import { verifyToken } from "../utils/tokenHelper";
 
 export const bearerAuth = createMiddleware<{
