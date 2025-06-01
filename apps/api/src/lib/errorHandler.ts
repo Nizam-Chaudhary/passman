@@ -7,8 +7,6 @@ import {
     isResponseSerializationError,
 } from "fastify-type-provider-zod";
 
-import env from "./env";
-
 export function globalErrorHandler(
     fastify: FastifyInstance,
     error: any,

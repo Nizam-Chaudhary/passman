@@ -3,18 +3,17 @@ import type { MasterKeyType } from "../../utils/basicSchema";
 
 import {
     boolean,
-    integer,
+    int,
     json,
-    pgTable,
-    serial,
+    mysqlTable,
     timestamp,
     varchar,
-} from "drizzle-orm/pg-core";
+} from "drizzle-orm/mysql-core";
 
-import { files, passwords, vaults } from "./schema";
+import { files, passwords, vaults } from "../schema";
 
-export const users = pgTable("users", {
-    id: serial("id").primaryKey(),
+export const users = mysqlTable("users", {
+    id: int("id").autoincrement().primaryKey(),
     userName: varchar("user_name", { length: 255 }).notNull(),
     email: varchar("email", { length: 255 }).notNull().unique(),
     password: varchar("password", { length: 255 }).notNull(),
@@ -23,7 +22,7 @@ export const users = pgTable("users", {
     recoveryKey: json("recovery_key").$type<MasterKeyType>(),
     isVerified: boolean("is_verified").default(false).notNull(),
     otp: varchar("otp", { length: 6 }).notNull(),
-    fileId: integer().references(() => files.id, { onDelete: "set null" }),
+    fileId: int().references(() => files.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at")
         .notNull()

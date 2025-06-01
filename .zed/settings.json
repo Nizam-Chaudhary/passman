@@ -8,39 +8,27 @@
     "languages": {
         // Refer https://zed.dev/docs/languages/javascript and https://zed.dev/docs/languages/typescript for more info
         "TypeScript": {
-            "language_servers": [
-                "tsgo",
-                "typescript-language-server",
-                "!vtsls"
-            ],
             "formatter": "prettier",
             "format_on_save": "prettier",
-            // Refer https://github.com/jellydn/ts-inlay-hints for how to setup for Neovim and VSCode
             "code_actions_on_format": {
                 "source.addMissingImports.ts": true,
-                "source.sortImports.ts": true
+                "source.sortImports": true
             }
         },
         "TSX": {
-            "language_servers": [
-                "tsgo",
-                "typescript-language-server",
-                "!vtsls"
-            ],
             "formatter": "prettier",
             "format_on_save": "prettier",
             "code_actions_on_format": {
                 "source.addMissingImports.ts": true,
-                "source.sortImports.ts": true
+                "source.sortImports": true
             }
         },
         "JavaScript": {
-            "language_servers": ["typescript-language-server", "!vtsls"],
             "formatter": "prettier",
             "format_on_save": "prettier",
             "code_actions_on_format": {
                 "source.addMissingImports.ts": true,
-                "source.sortImports.ts": true
+                "source.sortImports": true
             }
         }
     },

@@ -1,101 +1,121 @@
 {
-    "id": "d19736c7-4a4c-4b51-a8ff-2eb9662e8aaf",
+    "version": "5",
+    "dialect": "mysql",
+    "id": "e913231d-a82a-4a1c-a84d-4eb014bd4b5b",
     "prevId": "00000000-0000-0000-0000-000000000000",
-    "version": "7",
-    "dialect": "postgresql",
     "tables": {
-        "public.files": {
+        "files": {
             "name": "files",
-            "schema": "",
             "columns": {
                 "id": {
                     "name": "id",
-                    "type": "serial",
-                    "primaryKey": true,
-                    "notNull": true
+                    "type": "int",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "autoincrement": true
                 },
                 "url": {
                     "name": "url",
                     "type": "varchar(512)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
+                },
+                "user_id": {
+                    "name": "user_id",
+                    "type": "int",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "file_key": {
                     "name": "file_key",
                     "type": "varchar(256)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "created_at": {
                     "name": "created_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 },
                 "updated_at": {
                     "name": "updated_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 }
             },
             "indexes": {},
             "foreignKeys": {},
-            "compositePrimaryKeys": {},
+            "compositePrimaryKeys": {
+                "files_id": {
+                    "name": "files_id",
+                    "columns": ["id"]
+                }
+            },
             "uniqueConstraints": {},
-            "policies": {},
-            "checkConstraints": {},
-            "isRLSEnabled": false
+            "checkConstraint": {}
         },
-        "public.notes": {
+        "notes": {
             "name": "notes",
-            "schema": "",
             "columns": {
                 "id": {
                     "name": "id",
-                    "type": "serial",
-                    "primaryKey": true,
-                    "notNull": true
+                    "type": "int",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "autoincrement": true
                 },
                 "userId": {
                     "name": "userId",
-                    "type": "integer",
+                    "type": "int",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "vaultId": {
                     "name": "vaultId",
-                    "type": "integer",
+                    "type": "int",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "title": {
                     "name": "title",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "content": {
                     "name": "content",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": false
+                    "notNull": false,
+                    "autoincrement": false
                 },
                 "created_at": {
                     "name": "created_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 },
                 "updated_at": {
                     "name": "updated_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 }
             },
             "indexes": {},
@@ -119,83 +139,96 @@
                     "onUpdate": "no action"
                 }
             },
-            "compositePrimaryKeys": {},
+            "compositePrimaryKeys": {
+                "notes_id": {
+                    "name": "notes_id",
+                    "columns": ["id"]
+                }
+            },
             "uniqueConstraints": {},
-            "policies": {},
-            "checkConstraints": {},
-            "isRLSEnabled": false
+            "checkConstraint": {}
         },
-        "public.passwords": {
+        "passwords": {
             "name": "passwords",
-            "schema": "",
             "columns": {
                 "id": {
                     "name": "id",
-                    "type": "serial",
-                    "primaryKey": true,
-                    "notNull": true
+                    "type": "int",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "autoincrement": true
                 },
                 "user_id": {
                     "name": "user_id",
-                    "type": "integer",
+                    "type": "int",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "vault_id": {
                     "name": "vault_id",
-                    "type": "integer",
+                    "type": "int",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "name": {
                     "name": "name",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": false
+                    "notNull": false,
+                    "autoincrement": false
                 },
                 "url": {
                     "name": "url",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "username": {
                     "name": "username",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "password": {
                     "name": "password",
                     "type": "json",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "favicon_url": {
                     "name": "favicon_url",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": false
+                    "notNull": false,
+                    "autoincrement": false
                 },
                 "note": {
                     "name": "note",
                     "type": "varchar(500)",
                     "primaryKey": false,
-                    "notNull": false
+                    "notNull": false,
+                    "autoincrement": false
                 },
                 "created_at": {
                     "name": "created_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 },
                 "updated_at": {
                     "name": "updated_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 }
             },
             "indexes": {},
@@ -219,90 +252,104 @@
                     "onUpdate": "no action"
                 }
             },
-            "compositePrimaryKeys": {},
+            "compositePrimaryKeys": {
+                "passwords_id": {
+                    "name": "passwords_id",
+                    "columns": ["id"]
+                }
+            },
             "uniqueConstraints": {},
-            "policies": {},
-            "checkConstraints": {},
-            "isRLSEnabled": false
+            "checkConstraint": {}
         },
-        "public.users": {
+        "users": {
             "name": "users",
-            "schema": "",
             "columns": {
                 "id": {
                     "name": "id",
-                    "type": "serial",
-                    "primaryKey": true,
-                    "notNull": true
+                    "type": "int",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "autoincrement": true
                 },
                 "user_name": {
                     "name": "user_name",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "email": {
                     "name": "email",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "password": {
                     "name": "password",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "master_password": {
                     "name": "master_password",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": false
+                    "notNull": false,
+                    "autoincrement": false
                 },
                 "master_key": {
                     "name": "master_key",
                     "type": "json",
                     "primaryKey": false,
-                    "notNull": false
+                    "notNull": false,
+                    "autoincrement": false
                 },
                 "recovery_key": {
                     "name": "recovery_key",
                     "type": "json",
                     "primaryKey": false,
-                    "notNull": false
+                    "notNull": false,
+                    "autoincrement": false
                 },
                 "is_verified": {
                     "name": "is_verified",
                     "type": "boolean",
                     "primaryKey": false,
                     "notNull": true,
+                    "autoincrement": false,
                     "default": false
                 },
                 "otp": {
                     "name": "otp",
                     "type": "varchar(6)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "fileId": {
                     "name": "fileId",
-                    "type": "integer",
+                    "type": "int",
                     "primaryKey": false,
-                    "notNull": false
+                    "notNull": false,
+                    "autoincrement": false
                 },
                 "created_at": {
                     "name": "created_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 },
                 "updated_at": {
                     "name": "updated_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 }
             },
             "indexes": {},
@@ -317,53 +364,59 @@
                     "onUpdate": "no action"
                 }
             },
-            "compositePrimaryKeys": {},
+            "compositePrimaryKeys": {
+                "users_id": {
+                    "name": "users_id",
+                    "columns": ["id"]
+                }
+            },
             "uniqueConstraints": {
                 "users_email_unique": {
                     "name": "users_email_unique",
-                    "nullsNotDistinct": false,
                     "columns": ["email"]
                 }
             },
-            "policies": {},
-            "checkConstraints": {},
-            "isRLSEnabled": false
+            "checkConstraint": {}
         },
-        "public.vaults": {
+        "vaults": {
             "name": "vaults",
-            "schema": "",
             "columns": {
                 "id": {
                     "name": "id",
-                    "type": "serial",
-                    "primaryKey": true,
-                    "notNull": true
+                    "type": "int",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "autoincrement": true
                 },
                 "name": {
                     "name": "name",
-                    "type": "varchar",
+                    "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "user_id": {
                     "name": "user_id",
-                    "type": "integer",
+                    "type": "int",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": true,
+                    "autoincrement": false
                 },
                 "created_at": {
                     "name": "created_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 },
                 "updated_at": {
                     "name": "updated_at",
                     "type": "timestamp",
                     "primaryKey": false,
                     "notNull": true,
-                    "default": "now()"
+                    "autoincrement": false,
+                    "default": "(now())"
                 }
             },
             "indexes": {},
@@ -378,22 +431,24 @@
                     "onUpdate": "no action"
                 }
             },
-            "compositePrimaryKeys": {},
+            "compositePrimaryKeys": {
+                "vaults_id": {
+                    "name": "vaults_id",
+                    "columns": ["id"]
+                }
+            },
             "uniqueConstraints": {},
-            "policies": {},
-            "checkConstraints": {},
-            "isRLSEnabled": false
+            "checkConstraint": {}
         }
     },
-    "enums": {},
-    "schemas": {},
-    "sequences": {},
-    "roles": {},
-    "policies": {},
     "views": {},
     "_meta": {
-        "columns": {},
         "schemas": {},
-        "tables": {}
+        "tables": {},
+        "columns": {}
+    },
+    "internal": {
+        "tables": {},
+        "indexes": {}
     }
 }

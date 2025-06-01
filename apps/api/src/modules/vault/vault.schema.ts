@@ -1,49 +1,17 @@
-import { createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
+import { z } from "zod/v4";
 
-import { vaults } from "../../db/schema/schema";
-import { statusSchema } from "../../utils/basicSchema";
-
-export const selectVaultsSchema = createSelectSchema(vaults).describe(
-    "Schema for selecting vault data"
-);
-
-export const getVaultsResponseSchema = z
+export const addVaultBodySchema = z
     .object({
-        status: statusSchema,
-        data: z.array(selectVaultsSchema),
-    })
-    .describe("Response schema for getting all vaults");
-
-export const addUpdateVaultBodySchema = z
-    .object({
-        name: z.string().min(1, "Vault name is required"),
+        name: z
+            .string()
+            .min(1, "Vault name is required")
+            .max(255, "Vault name must be 255 characters or less"),
     })
     .describe("Request body schema for adding or updating a vault");
 
-export const addVaultResponseSchema = z
-    .object({
-        status: z.literal("success"),
-        message: z.literal("Vault created successfully"),
-        data: selectVaultsSchema,
-    })
-    .describe("Response schema for adding a new vault");
-
-export const updateVaultResponseSchema = z
-    .object({
-        status: z.literal("success"),
-        message: z.literal("Vault updated successfully"),
-        data: selectVaultsSchema,
-    })
-    .describe("Response schema for updating an existing vault");
-
-export const deleteVaultResponseSchema = z
-    .object({
-        status: z.literal("success"),
-        message: z.literal("Vault deleted successfully"),
-        data: selectVaultsSchema,
-    })
-    .describe("Response schema for deleting a vault");
+export const updateVaultBodySchema = addVaultBodySchema;
+export type AddVaultBodySchema = z.infer<typeof addVaultBodySchema>;
+export type UpdateVaultBodySchema = z.infer<typeof updateVaultBodySchema>;
 
 export const getVaultWithResourceQuerySchema = z
     .object({

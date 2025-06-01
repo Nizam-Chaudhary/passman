@@ -1,22 +1,15 @@
 services:
-    postgres:
-        image: postgres:16
-        container_name: postgres
-        ports:
-            - "5432:5432"
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: passman
-        volumes:
-            - postgres-data:/var/lib/postgresql/data
-        healthcheck: # Optional: Check if the database is ready
-            test: [CMD-SHELL, pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB]
-            interval: 10s
-            timeout: 5s
-            retries: 5
-            start_period: 10s
+    mysql:
+        image: mysql:8.0
+        container_name: mysql
         restart: unless-stopped
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_DATABASE: passman
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql-data:/var/lib/mysql
 
     traefik:
         image: traefik:v3.3
@@ -48,4 +41,4 @@ networks:
         external: true
 
 volumes:
-    postgres-data:
+    mysql-data:

@@ -1,17 +1,11 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import pg from "pg";
-import env from "../lib/env";
-import * as schema from "./schema/schema";
+import { drizzle } from "drizzle-orm/mysql2";
+import * as schema from "./schema";
+import { env } from "../lib/env";
 
-const { Pool } = pg;
-
-const pool = new Pool({
-    connectionString: `postgresql://${env.DB_USERNAME}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}${env.DB_SSL}`,
-});
-
-export const db = drizzle(pool, {
-    schema,
-    logger: env.NODE_ENV === "development",
+export const db = drizzle({
+    connection: env.DB_URI,
+    mode: "default",
+    schema: schema,
 });
 
 export type DB = typeof db;

@@ -1,5 +1,3 @@
-import env from "./env";
-
 const pinoLogger = {
     target: env.LOGGER_TARGET,
 };

@@ -2,22 +2,21 @@ import { relations } from "drizzle-orm";
 import type { EncryptedValueType } from "../../utils/basicSchema";
 
 import {
-    integer,
+    int,
     json,
-    pgTable,
-    serial,
+    mysqlTable,
     timestamp,
     varchar,
-} from "drizzle-orm/pg-core";
+} from "drizzle-orm/mysql-core";
 
-import { users, vaults } from "./schema";
+import { users, vaults } from "../schema";
 
-export const passwords = pgTable("passwords", {
-    id: serial("id").primaryKey(),
-    userId: integer("user_id")
+export const passwords = mysqlTable("passwords", {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("user_id")
         .notNull()
         .references(() => users.id),
-    vaultId: integer("vault_id")
+    vaultId: int("vault_id")
         .notNull()
         .references(() => vaults.id),
     name: varchar("name", { length: 255 }),

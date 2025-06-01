@@ -5,8 +5,7 @@ import {
     randomBytes,
     scryptSync,
 } from "node:crypto";
-
-import env from "../lib/env";
+import { env } from "../lib/env";
 
 export function deriveKey(password: string, salt: string): Buffer {
     return scryptSync(password, salt, env.ENC_KEY_LENGTH);

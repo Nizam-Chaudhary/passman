@@ -7,12 +7,7 @@ import react from "eslint-plugin-react";
 
 export default tseslint.config(
     {
-        ignores: [
-            "dist",
-            "node_modules",
-            "**/api-client/**/*",
-            "orval.config.ts",
-        ],
+        ignores: ["dist", "node_modules"],
     },
     {
         settings: {

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const passwordSchema = z.object({
     url: z.string().min(1, "Url is required"),

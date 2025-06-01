@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 
 import { db } from "../../db/index";
-import * as schema from "../../db/schema/schema";
+import * as schema from "../../db/schema";
 import AppError from "../../lib/appError";
 
 class UserService {
@@ -11,7 +11,8 @@ class UserService {
         });
 
         return {
-            status: "success",
+            status: true,
+            message: "Vaults retrieved successfully",
             data: vaults,
         };
     }
@@ -31,100 +32,51 @@ class UserService {
                 400
             );
         }
-        const vaults = await db
-            .insert(schema.vaults)
-            .values({
-                name,
-                userId,
-            })
-            .returning();
+        await db.insert(schema.vaults).values({
+            name,
+            userId,
+        });
 
         return {
-            status: "success",
+            status: true,
             message: "Vault created successfully",
-            data: vaults[0],
         };
     }
 
     async updateVault(id: number, name: string, userId: number) {
-        const vaults = await db
+        const [updatedVault] = await db
             .update(schema.vaults)
             .set({ name })
             .where(
                 and(eq(schema.vaults.id, id), eq(schema.vaults.userId, userId))
-            )
-            .returning();
+            );
 
-        if (vaults.length <= 0) {
+        if (!updatedVault.affectedRows) {
             throw new AppError("VAULT_NOT_FOUND", "Vault not found", 400);
         }
 
         return {
-            status: "success",
+            status: true,
             message: "Vault updated successfully",
-            data: vaults[0],
         };
     }
 
     async deleteVault(id: number, userId: number) {
-        const vaults = await db
+        const [deletedVaults] = await db
             .delete(schema.vaults)
             .where(
                 and(eq(schema.vaults.id, id), eq(schema.vaults.userId, userId))
-            )
-            .returning();
+            );
 
-        if (vaults.length <= 0) {
+        if (!deletedVaults.affectedRows) {
             throw new AppError("VAULT_NOT_FOUND", "Vault not found", 400);
         }
 
         return {
-            status: "success",
+            status: true,
             message: "Vault deleted successfully",
-            data: vaults[0],
         };
     }
-    // async getVaultsWithPasswords(userId: number, vaultId?: number) {
-    //     const vaults = await db.query.vaults.findMany({
-    //         where: (vaults, { and, eq }) =>
-    //             and(
-    //                 eq(vaults.userId, userId),
-    //                 vaultId ? eq(vaults.id, vaultId) : undefined
-    //             ),
-    //         with: {
-    //             passwords: {
-    //                 orderBy: (passwords, { desc }) => [
-    //                     desc(passwords.createdAt),
-    //                 ],
-    //             },
-    //         },
-    //     });
-
-    //     return {
-    //         status: "success",
-    //         data: vaults,
-    //     };
-    // }
-
-    // async getVaultsWithNotes(userId: number, vaultId?: number) {
-    //     const vaults = await db.query.vaults.findMany({
-    //         where: (vaults, { and, eq }) =>
-    //             and(
-    //                 eq(vaults.userId, userId),
-    //                 vaultId ? eq(vaults.id, vaultId) : undefined
-    //             ),
-    //         with: {
-    //             notes: {
-    //                 orderBy: (notes, { desc }) => [desc(notes.updatedAt)],
-    //             },
-    //         },
-    //     });
-
-    //     return {
-    //         status: "success",
-    //         data: vaults,
-    //     };
-    // }
 }
 
 export default new UserService();

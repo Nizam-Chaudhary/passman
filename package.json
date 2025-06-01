@@ -3,6 +3,10 @@
     "version": "1.0.0",
     "description": "Passman monorepo",
     "main": "index.js",
+    "private": true,
+    "workspaces": [
+        "apps/*"
+    ],
     "scripts": {
         "clean": "nx run-many -t clean --output-style=stream",
         "cleanAll": "nx run-many -t clean --output-style=stream; rm -rf node_modules; rm -rf apps/*/node_modules",

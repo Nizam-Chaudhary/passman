@@ -1,7 +1,6 @@
 import * as aws from "@aws-sdk/client-ses";
 import { createTransport } from "nodemailer";
-
-import env from "./env";
+import { env } from "./env";
 
 // configuring AWS SDK
 const ses = new aws.SES({
@@ -34,24 +33,24 @@ export function sendMail(options: {
     emailBody: string;
 }) {
     return new Promise((resolve, _reject) => {
-        transporter.sendMail(
-            {
-                from: env.FROM_EMAIL_ADDR,
-                to: options.toAddresses,
-                subject: options.subject,
-                html: options.emailBody,
-            },
-            (err, info) => {
-                transporter.close();
-                resolve(true);
-                if (err) {
-                    console.error(err);
-                } else {
-                    console.error(new Date().toLocaleString(), info.envelope);
-                    console.error(info.messageId);
-                }
-            }
-        );
+        // transporter.sendMail(
+        //     {
+        //         from: env.FROM_EMAIL_ADDR,
+        //         to: options.toAddresses,
+        //         subject: options.subject,
+        //         html: options.emailBody,
+        //     },
+        //     (err, info) => {
+        //         transporter.close();
+        //         resolve(true);
+        //         if (err) {
+        //             console.error(err);
+        //         } else {
+        //             console.error(new Date().toLocaleString(), info.envelope);
+        //             console.error(info.messageId);
+        //         }
+        //     }
+        // );
         resolve(true);
     });
 }

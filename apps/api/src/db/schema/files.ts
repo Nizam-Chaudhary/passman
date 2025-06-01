@@ -1,11 +1,12 @@
 import { relations } from "drizzle-orm";
-import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import { mysqlTable, int, timestamp, varchar } from "drizzle-orm/mysql-core";
 
-import { users } from "./schema";
+import { users } from "../schema";
 
-export const files = pgTable("files", {
-    id: serial("id").primaryKey(),
+export const files = mysqlTable("files", {
+    id: int("id").autoincrement().primaryKey(),
     url: varchar("url", { length: 512 }).notNull(),
+    userId: int("user_id").notNull(),
     fileKey: varchar("file_key", { length: 256 }).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
@@ -15,5 +16,8 @@ export const files = pgTable("files", {
 });
 
 export const filesRelations = relations(files, ({ one }) => ({
-    user: one(users),
+    user: one(users, {
+        fields: [files.userId],
+        references: [users.id],
+    }),
 }));

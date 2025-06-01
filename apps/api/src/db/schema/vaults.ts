@@ -1,18 +1,12 @@
 import { relations } from "drizzle-orm";
-import {
-    integer,
-    pgTable,
-    serial,
-    timestamp,
-    varchar,
-} from "drizzle-orm/pg-core";
+import { int, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
-import { notes, passwords, users } from "./schema";
+import { notes, passwords, users } from "../schema";
 
-export const vaults = pgTable("vaults", {
-    id: serial("id").primaryKey(),
-    name: varchar("name").notNull(),
-    userId: integer("user_id")
+export const vaults = mysqlTable("vaults", {
+    id: int("id").autoincrement().primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    userId: int("user_id")
         .notNull()
         .references(() => users.id),
     createdAt: timestamp("created_at").defaultNow().notNull(),

@@ -1,5 +1,5 @@
 import type { ApiResponse } from "./common";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { ecryptedValueSchema } from "./common";
 
 const passwordSchema = z

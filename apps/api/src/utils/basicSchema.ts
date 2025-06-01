@@ -1,12 +1,8 @@
-import { z } from "zod";
-
-export const statusSchema = z
-    .enum(["success", "fail", "error"])
-    .describe("Response status indicating success, failure or error");
+import { z } from "zod/v4";
 
 export const responseSchema = z
     .object({
-        status: statusSchema,
+        status: z.boolean(),
         message: z.string(),
     })
     .describe("Generic response schema with status and message");
@@ -20,17 +16,17 @@ export const idParamsSchema = z
 export const errorSchema = z
     .union([
         z.object({
-            status: statusSchema.default("error"),
+            status: z.literal(false),
             message: z.string().default("something went wrong"),
             issues: z.any().optional().nullable().default(null),
         }),
         z.object({
-            status: statusSchema.default("error"),
+            status: z.literal(false),
             message: z.string().default("something went wrong"),
             stack: z.string().optional().nullable(),
         }),
         z.object({
-            status: statusSchema.default("error"),
+            status: z.literal(false),
             message: z.string().default("something went wrong"),
         }),
     ])

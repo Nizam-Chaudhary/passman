@@ -1,41 +1,43 @@
-import type { AddPasswordInput, ImportPasswordsInput } from "./password.schema";
+import type {
+    AddPasswordBody,
+    ImportPasswordsBody,
+    MovePasswordsVaultBody,
+    UpdatePasswordBody,
+} from "./password.schema";
 
-import { and, desc, eq, ilike, inArray, or } from "drizzle-orm";
+import { and, desc, eq, like, inArray, or } from "drizzle-orm";
 
 import { db } from "../../db/index";
-import { passwords } from "../../db/schema/schema";
+import { passwords } from "../../db/schema";
 import AppError from "../../lib/appError";
+import { metrics } from "@opentelemetry/sdk-node";
 
 class PasswordService {
-    async addPassword(userId: number, input: AddPasswordInput) {
-        const password = await db
-            .insert(passwords)
-            .values({
-                vaultId: input.vaultId,
-                userId,
-                name: input.name,
-                url: input.url,
-                username: input.username,
-                password: input.password,
-                faviconUrl: input.faviconUrl,
-                note: input.note,
-            })
-            .returning();
+    async addPassword(userId: number, input: AddPasswordBody) {
+        await db.insert(passwords).values({
+            vaultId: input.vaultId,
+            userId,
+            name: input.name,
+            url: input.url,
+            username: input.username,
+            password: input.password,
+            faviconUrl: input.faviconUrl,
+            note: input.note,
+        });
 
         return {
-            status: "success",
+            status: true,
             message: "password added successfully",
-            data: password[0],
         };
     }
 
     async getPasswords(userId: number, vaultId: number, search?: string) {
         const searchCondition = search
             ? or(
-                  ilike(passwords.name, `%${search}%`),
-                  ilike(passwords.url, `%${search}%`),
-                  ilike(passwords.username, `%${search}%`),
-                  ilike(passwords.note, `%${search}%`)
+                  like(passwords.name, `%${search}%`),
+                  like(passwords.url, `%${search}%`),
+                  like(passwords.username, `%${search}%`),
+                  like(passwords.note, `%${search}%`)
               )
             : undefined;
 
@@ -49,7 +51,8 @@ class PasswordService {
         });
 
         return {
-            status: "success",
+            status: true,
+            message: "passwords fetched successfully",
             data: passwordsData,
         };
     }
@@ -64,89 +67,91 @@ class PasswordService {
         }
 
         return {
-            status: "success",
+            status: true,
+            message: "password fetched successfully",
             data: password,
         };
     }
 
-    async updatePassword(id: number, input: AddPasswordInput, userId: number) {
-        const password = await db.query.passwords.findFirst({
-            where: and(eq(passwords.id, id), eq(passwords.userId, userId)),
-        });
+    async updatePassword(
+        id: number,
+        input: UpdatePasswordBody,
+        userId: number
+    ) {
+        const [updatedPassword] = await db
+            .update(passwords)
+            .set({ ...input, updatedAt: new Date() })
+            .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
 
-        if (!password) {
+        if (!updatedPassword.affectedRows) {
             throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
         }
 
-        const updatedPassword = await db
-            .update(passwords)
-            .set({ ...input, updatedAt: new Date() })
-            .where(eq(passwords.id, id))
-            .returning();
-
         return {
-            status: "success",
+            status: true,
             message: "password updated successfully",
-            data: updatedPassword[0],
         };
     }
 
     async deletePassword(id: number, userId: number) {
-        const password = await db
+        const [deletedPassword] = await db
             .delete(passwords)
-            .where(and(eq(passwords.id, id), eq(passwords.userId, userId)))
-            .returning();
+            .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
+
+        if (!deletedPassword.affectedRows) {
+            throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
+        }
 
         return {
-            status: "success",
+            status: true,
             message: "password deleted successfully",
-            data: password[0],
         };
     }
 
     async deleteMultiplePasswords(userId: number, ids: number[]) {
-        await db
+        const [deletedPasswords] = await db
             .delete(passwords)
             .where(
                 and(inArray(passwords.id, ids), eq(passwords.userId, userId))
             );
 
+        if (!deletedPasswords.affectedRows) {
+            throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
+        }
+
         return {
-            status: "success",
+            status: true,
             message: "passwords deleted successfully",
         };
     }
 
-    async importPasswords(
-        userId: number,
-        inputPasswords: ImportPasswordsInput
-    ) {
+    async importPasswords(userId: number, inputPasswords: ImportPasswordsBody) {
         const allPasswords = inputPasswords.map((password) => ({
             ...password,
             userId,
         }));
-        const importedPasswords = await db
-            .insert(passwords)
-            .values(allPasswords)
-            .returning();
+
+        await db.insert(passwords).values(allPasswords);
 
         return {
-            status: "success",
+            status: true,
             message: "passwords imported successfully",
-            data: importedPasswords,
         };
     }
 
-    async movePasswordsToVault(userId: number, vaultId: number, ids: number[]) {
+    async movePasswordsToVault(userId: number, body: MovePasswordsVaultBody) {
         await db
             .update(passwords)
-            .set({ vaultId })
+            .set({ vaultId: body.vaultId })
             .where(
-                and(inArray(passwords.id, ids), eq(passwords.userId, userId))
+                and(
+                    inArray(passwords.id, body.ids),
+                    eq(passwords.userId, userId)
+                )
             );
 
         return {
-            status: "success",
+            status: true,
             message: "passwords moved to vault successfully",
         };
     }

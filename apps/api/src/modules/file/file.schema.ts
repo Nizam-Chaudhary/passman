@@ -1,16 +1,4 @@
-import { createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
-
-import { files } from "../../db/schema/schema";
-import { responseSchema } from "../../utils/basicSchema";
-
-export const selectFileSchema = createSelectSchema(files).describe(
-    "Schema for file selection"
-);
-
-export const uploadFileResponseSchema = responseSchema
-    .and(z.object({ data: selectFileSchema }))
-    .describe("Schema for file upload response");
+import { z } from "zod/v4";
 
 const allowedMimeTypes = [
     "image/jpeg",
@@ -23,3 +11,7 @@ const allowedMimeTypes = [
 export const validFileTypesSchema = z
     .enum(allowedMimeTypes)
     .describe("Schema for allowed file MIME types");
+
+export const uploadFileBodySchema = z.object({
+    file: z.file(),
+});

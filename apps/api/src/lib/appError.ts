@@ -1,7 +1,7 @@
 import type { FastifyError } from "fastify";
 
 export default class AppError extends Error implements FastifyError {
-    name: string;
+    override name: string;
     statusCode: number;
     code: string;
     isOperational: boolean;

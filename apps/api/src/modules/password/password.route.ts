@@ -1,176 +1,125 @@
-import type { FastifyInstance } from "fastify";
-import type { ZodTypeProvider } from "fastify-type-provider-zod";
-
+import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
 import {
-    errorSchema,
-    idParamsSchema,
-    responseSchema,
-} from "../../utils/basicSchema";
-import passwordController from "./password.controller";
-import {
-    addOrUpdateOrDeletePasswordResponseSchema,
     addPasswordSchema,
-    deleteMultiplePasswrodsBodySchema,
-    getPasswordResponseSchema,
+    deleteMultiplePasswordsBodySchema,
     getPasswordsQueryStringSchema,
-    getPasswordsResponseSchema,
-    importPasswordResponseSchema,
     importPasswordsSchema,
     movePasswordsVaultBodySchema,
     updatePasswordSchema,
 } from "./password.schema";
+import passwordService from "./password.service";
+import { idParamsSchema } from "../../utils/basicSchema";
+import { bearerAuth } from "../../middlewares/auth";
+import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
 
-export default async (fastify: FastifyInstance) => {
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "POST",
-        url: "/",
-        schema: {
-            tags: ["Password"],
-            summary: "Add a new password",
-            description: "add password",
-            security: [{ jwtAuth: [] }],
-            body: addPasswordSchema,
-            response: {
-                "200": addOrUpdateOrDeletePasswordResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: passwordController.addPassword,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "POST",
-        url: "/import",
-        schema: {
-            tags: ["Password"],
-            summary: "Import multiple passwords",
-            description: "import passwords",
-            security: [{ jwtAuth: [] }],
-            body: importPasswordsSchema,
-            response: {
-                "200": importPasswordResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: passwordController.importPasswords,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "GET",
-        url: "/",
-        schema: {
-            tags: ["Password"],
-            summary: "Get all passwords",
-            description: "fetch passwords",
-            security: [{ jwtAuth: [] }],
-            querystring: getPasswordsQueryStringSchema,
-            response: {
-                "200": getPasswordsResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: passwordController.getPasswords,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "GET",
-        url: "/:id",
-        schema: {
-            tags: ["Password"],
-            summary: "Get password by ID",
-            description: "fetch password",
-            security: [{ jwtAuth: [] }],
-            params: idParamsSchema,
-            response: {
-                "200": getPasswordResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: passwordController.getPasswordById,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "PUT",
-        url: "/:id",
-        schema: {
-            tags: ["Password"],
-            summary: "Update password by ID",
-            description: "update password",
-            security: [{ jwtAuth: [] }],
-            params: idParamsSchema,
-            body: updatePasswordSchema,
-            response: {
-                "200": addOrUpdateOrDeletePasswordResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: passwordController.updatePassword,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "DELETE",
-        url: "/:id",
-        schema: {
-            tags: ["Password"],
-            summary: "Delete password by ID",
-            description: "delete password",
-            security: [{ jwtAuth: [] }],
-            params: idParamsSchema,
-            response: {
-                "200": addOrUpdateOrDeletePasswordResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: passwordController.deletePassword,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "DELETE",
-        url: "/many",
-        schema: {
-            tags: ["Password"],
-            summary: "Delete multiple passwords",
-            description: "delete passwords",
-            security: [{ jwtAuth: [] }],
-            body: deleteMultiplePasswrodsBodySchema,
-            response: {
-                "200": responseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: passwordController.deleteMultiplePasswords,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "POST",
-        url: "/move-vaults",
-        schema: {
-            tags: ["Password"],
-            summary: "Move multiple passwords to a different vault",
-            description: "move passwords to vault",
-            security: [{ jwtAuth: [] }],
-            body: movePasswordsVaultBodySchema,
-            response: {
-                "200": responseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: passwordController.movePasswordsToVault,
-    });
-};
+export const passwordRoutes = new Hono()
+    .use("*", bearerAuth)
+    .post(
+        "/",
+        zValidator("json", addPasswordSchema, zValidatorCustomFunc),
+        async (c) => {
+            const body = c.req.valid("json");
+            const user = c.get("user");
+            const response = await passwordService.addPassword(user.id, body);
+            return c.json(response, 201);
+        }
+    )
+    .get(
+        "/",
+        zValidator(
+            "query",
+            getPasswordsQueryStringSchema,
+            zValidatorCustomFunc
+        ),
+        async (c) => {
+            const { vaultId, search } = c.req.valid("query");
+            const user = c.get("user");
+            const response = await passwordService.getPasswords(
+                user.id,
+                vaultId,
+                search
+            );
+            return c.json(response);
+        }
+    )
+    .get(
+        "/:id",
+        zValidator("param", idParamsSchema, zValidatorCustomFunc),
+        async (c) => {
+            const { id } = c.req.valid("param");
+            const user = c.get("user");
+            const response = await passwordService.getPassword(user.id, id);
+            return c.json(response);
+        }
+    )
+    .patch(
+        "/:id",
+        zValidator("param", idParamsSchema, zValidatorCustomFunc),
+        zValidator("json", updatePasswordSchema, zValidatorCustomFunc),
+        async (c) => {
+            const { id } = c.req.valid("param");
+            const body = c.req.valid("json");
+            const user = c.get("user");
+            const response = await passwordService.updatePassword(
+                id,
+                body,
+                user.id
+            );
+            return c.json(response);
+        }
+    )
+    .delete(
+        "/multiple",
+        zValidator(
+            "json",
+            deleteMultiplePasswordsBodySchema,
+            zValidatorCustomFunc
+        ),
+        async (c) => {
+            const { ids } = c.req.valid("json");
+            const user = c.get("user");
+            const response = await passwordService.deleteMultiplePasswords(
+                user.id,
+                ids
+            );
+            return c.json(response);
+        }
+    )
+    .delete(
+        "/:id{[0-9]+}",
+        zValidator("param", idParamsSchema, zValidatorCustomFunc),
+        async (c) => {
+            const { id } = c.req.valid("param");
+            const user = c.get("user");
+            const response = await passwordService.deletePassword(id, user.id);
+            return c.json(response);
+        }
+    )
+    .post(
+        "/import",
+        bearerAuth,
+        zValidator("json", importPasswordsSchema, zValidatorCustomFunc),
+        async (c) => {
+            const body = c.req.valid("json");
+            const user = c.get("user");
+            const response = await passwordService.importPasswords(
+                user.id,
+                body
+            );
+            return c.json(response, 201);
+        }
+    )
+    .post(
+        "/move-vaults",
+        zValidator("json", movePasswordsVaultBodySchema, zValidatorCustomFunc),
+        async (c) => {
+            const body = c.req.valid("json");
+            const user = c.get("user");
+            const response = await passwordService.movePasswordsToVault(
+                user.id,
+                body
+            );
+            return c.json(response);
+        }
+    );

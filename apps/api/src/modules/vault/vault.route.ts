@@ -1,109 +1,51 @@
-import type { FastifyInstance } from "fastify";
-import type { ZodTypeProvider } from "fastify-type-provider-zod";
+import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
+import { addVaultBodySchema, updateVaultBodySchema } from "./vault.schema";
+import vaultService from "./vault.service";
+import { idParamsSchema } from "../../utils/basicSchema";
+import { bearerAuth } from "../../middlewares/auth";
+import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
 
-import { errorSchema, idParamsSchema } from "../../utils/basicSchema";
-import vaultController from "./vault.controller";
-import {
-    addUpdateVaultBodySchema,
-    addVaultResponseSchema,
-    deleteVaultResponseSchema,
-    getVaultsResponseSchema,
-    updateVaultResponseSchema,
-} from "./vault.schema";
-
-export default async (fastify: FastifyInstance) => {
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "GET",
-        url: "/",
-        schema: {
-            tags: ["Vaults"],
-            summary: "Get vaults",
-            description: "Get vaults",
-            security: [{ jwtAuth: [] }],
-            response: {
-                "200": getVaultsResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: vaultController.getVaults,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "POST",
-        url: "/",
-        schema: {
-            tags: ["Vaults"],
-            summary: "Add vault",
-            description: "Add vault",
-            security: [{ jwtAuth: [] }],
-            body: addUpdateVaultBodySchema,
-            response: {
-                "200": addVaultResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: vaultController.addVault,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "PUT",
-        url: "/:id",
-        schema: {
-            tags: ["Vaults"],
-            summary: "Update vault",
-            description: "Update vault",
-            security: [{ jwtAuth: [] }],
-            params: idParamsSchema,
-            body: addUpdateVaultBodySchema,
-            response: {
-                "200": updateVaultResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: vaultController.updateVault,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "DELETE",
-        url: "/:id",
-        schema: {
-            tags: ["Vaults"],
-            summary: "Add vault",
-            description: "Add vault",
-            security: [{ jwtAuth: [] }],
-            params: idParamsSchema,
-            response: {
-                "200": deleteVaultResponseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        preHandler: [fastify.authenticate],
-        handler: vaultController.deleteVault,
-    });
-
-    // fastify.withTypeProvider<ZodTypeProvider>().route({
-    //     method: "GET",
-    //     url: "/passwords",
-    //     schema: {
-    //         tags: ["Vaults"],
-    //         summary: "Get vaults with passwords",
-    //         description: "Get vaults with passwords",
-    //         security: [{ jwtAuth: [] }],
-    //         querystring: getVaultWithResourceQuerySchema,
-    //         response: {
-    //             200: signUpUserResponseSchema,
-    //             "4xx": errorSchema,
-    //             "5xx": errorSchema,
-    //         },
-    //     },
-    //     preHandler: [fastify.authenticate],
-    //     handler: vaultController.getVaultsWithPasswords,
-    // });
-};
+export const vaultRoutes = new Hono()
+    .use("*", bearerAuth)
+    .get("/", async (c) => {
+        const user = c.get("user");
+        const response = await vaultService.getVaults(user.id);
+        return c.json(response);
+    })
+    .post(
+        "/",
+        zValidator("json", addVaultBodySchema, zValidatorCustomFunc),
+        async (c) => {
+            const body = await c.req.json();
+            const user = c.get("user");
+            const response = await vaultService.addVault(body.name, user.id);
+            return c.json(response, 201);
+        }
+    )
+    .patch(
+        "/:id",
+        zValidator("param", idParamsSchema, zValidatorCustomFunc),
+        zValidator("json", updateVaultBodySchema, zValidatorCustomFunc),
+        async (c) => {
+            const { id } = c.req.valid("param");
+            const body = c.req.valid("json");
+            const user = c.get("user");
+            const response = await vaultService.updateVault(
+                id,
+                body.name,
+                user.id
+            );
+            return c.json(response);
+        }
+    )
+    .delete(
+        "/:id",
+        zValidator("param", idParamsSchema, zValidatorCustomFunc),
+        async (c) => {
+            const { id } = c.req.valid("param");
+            const user = c.get("user");
+            const response = await vaultService.deleteVault(id, user.id);
+            return c.json(response);
+        }
+    );
