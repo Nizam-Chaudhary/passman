@@ -1,8 +1,8 @@
-import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { loginUserBodySchema, refreshTokenBodySchema } from "./auth.schema";
 import authService from "./auth.service";
 import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
+import { zValidator } from "@hono/zod-validator";
 
 export const authRoutes = new Hono()
     .post(

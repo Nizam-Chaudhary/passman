@@ -5,5 +5,6 @@ export const errorHandler = (err: unknown, c: Context) => {
     if (err instanceof HTTPException) {
         return err.getResponse();
     }
-    return c.json({ error: "Internal Server Error" }, 500);
+    console.error("error", err);
+    return c.json({ status: false, message: "Internal Server Error" }, 500);
 };

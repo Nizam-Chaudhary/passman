@@ -11,8 +11,7 @@
         "lint": "nx eslint:lint",
         "lint:fix": "nx eslint:lint --fix",
         "format": "prettier . --write",
-        "preview": "nx vite:preview",
-        "gen-api-client": "nx exec -- orval"
+        "preview": "nx vite:preview"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.10.0",
@@ -70,24 +69,5 @@
         "typescript": "~5.6.3",
         "typescript-eslint": "^8.11.0",
         "vite": "^5.4.14"
-    },
-    "nx": {
-        "targets": {
-            "build": {
-                "dependsOn": [
-                    "gen-api-client"
-                ]
-            },
-            "dev": {
-                "dependsOn": [
-                    "gen-api-client"
-                ]
-            },
-            "serve": {
-                "dependsOn": [
-                    "gen-api-client"
-                ]
-            }
-        }
     }
 }

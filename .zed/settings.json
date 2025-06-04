@@ -12,7 +12,7 @@
             "format_on_save": "prettier",
             "code_actions_on_format": {
                 "source.addMissingImports.ts": true,
-                "source.sortImports": true
+                "source.sortImports.prettier": true
             }
         },
         "TSX": {
@@ -20,7 +20,7 @@
             "format_on_save": "prettier",
             "code_actions_on_format": {
                 "source.addMissingImports.ts": true,
-                "source.sortImports": true
+                "source.sortImports.prettier": true
             }
         },
         "JavaScript": {
@@ -28,23 +28,8 @@
             "format_on_save": "prettier",
             "code_actions_on_format": {
                 "source.addMissingImports.ts": true,
-                "source.sortImports": true
+                "source.sortImports.prettier": true
             }
         }
-    },
-    "prettier": {
-        "allowed": true,
-        "plugins": [],
-        "singleQuote": false,
-        "arrowParens": "always",
-        "jsxSingleQuote": false,
-        "tabWidth": 4,
-        "quoteProps": "as-needed",
-        "singleAttributePerLine": false,
-        "printWidth": 80,
-        "trailingComma": "es5",
-        "semi": true,
-        "useTabs": false,
-        "bracketSpacing": true
     }
 }
