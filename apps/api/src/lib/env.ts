@@ -1,4 +1,4 @@
-import { z, ZodError } from "zod/v4";
+import { z } from "zod/v4";
 
 const envSchema = z.object({
     PORT: z.coerce.number().min(1),

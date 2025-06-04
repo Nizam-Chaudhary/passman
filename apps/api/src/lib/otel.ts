@@ -21,7 +21,7 @@ import {
     ATTR_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
 import appPackage from "../../package.json";
-import env from "./env";
+import { env } from "./env";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: fastifyOtel } = require("@fastify/otel");

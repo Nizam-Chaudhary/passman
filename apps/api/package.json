@@ -20,6 +20,7 @@
         "start": "bun src/server.ts",
         "dev": "bun --watch src/server.ts",
         "debug": "bun --watch --inspect src/server.ts",
+        "lint:type": "tsc --noEmit",
         "lint": "nx eslint:lint",
         "lint:fix": "nx eslint:lint --fix",
         "format": "prettier --write .",

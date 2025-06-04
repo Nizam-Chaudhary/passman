@@ -2,7 +2,10 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "../../db/index";
 import * as schema from "../../db/schema";
-import { NotFoundException } from "../../lib/responseExceptions";
+import {
+    BadRequestException,
+    NotFoundException,
+} from "../../lib/responseExceptions";
 
 class UserService {
     async getVaults(userId: number) {
@@ -26,10 +29,8 @@ class UserService {
         });
 
         if (vault) {
-            throw new AppError(
-                "VAULT_ALREADY_EXISTS",
-                `Vault with name "${name}" already exists`,
-                400
+            throw new BadRequestException(
+                `Vault with name "${name}" already exists`
             );
         }
         await db.insert(schema.vaults).values({

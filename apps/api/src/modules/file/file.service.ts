@@ -29,7 +29,7 @@ class FileService {
         const bytesWritten = await s3.write(fileKey, file);
 
         if (bytesWritten !== file.size) {
-            throw new AppError("FILE_UPLOAD_FAILED", "File upload failed", 400);
+            throw new BadRequestException("File upload failed");
         }
 
         const url = `https://${env.S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${fileKey}`;
