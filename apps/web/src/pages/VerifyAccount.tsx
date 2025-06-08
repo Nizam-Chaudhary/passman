@@ -2,10 +2,10 @@ import type { VerifyAccountFormData } from "@/types/auth";
 
 import type { SubmitHandler } from "react-hook-form";
 import type { z } from "zod";
-import {
-    usePatchApiV1AuthVerify,
-    usePostApiV1AuthResendOtp,
-} from "@/api-client/api";
+// import {
+//     usePatchApiV1AuthVerify,
+//     usePostApiV1AuthResendOtp,
+// } from "@/api-client/api";
 import Timer from "@/components/Timer";
 import { Button } from "@/components/ui/button";
 import {

@@ -1,4 +1,4 @@
-import { useGetApiV1Vaults } from "@/api-client/api";
+// import { useGetApiV1Vaults } from "@/api-client/api";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/store/store";
 import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";

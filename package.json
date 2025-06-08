@@ -1,12 +1,37 @@
 {
     "name": "passman",
     "version": "1.0.0",
-    "description": "Passman monorepo",
+    "author": "",
     "main": "index.js",
+    "devDependencies": {
+        "@commitlint/cli": "^19.8.1",
+        "@commitlint/config-conventional": "^19.8.1",
+        "@nx/eslint": "21.1.2",
+        "@nx/vite": "21.1.2",
+        "@nx/web": "21.1.2",
+        "@vitest/ui": "^3.2.1",
+        "eslint": "~8.57.1",
+        "husky": "^9.1.7",
+        "jiti": "2.4.2",
+        "lint-staged": "^16.1.0",
+        "nx": "21.1.2",
+        "prettier": "^3.5.3",
+        "schema": "^0.2.1",
+        "typescript": "^5.8.3",
+        "vite": "^6.3.5",
+        "vitest": "^3.2.1"
+    },
+    "description": "Passman monorepo",
+    "engines": {
+        "node": ">=24.1.0"
+    },
+    "keywords": [],
+    "license": "ISC",
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
+    },
+    "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977",
     "private": true,
-    "workspaces": [
-        "apps/*"
-    ],
     "scripts": {
         "clean": "nx run-many -t clean --output-style=stream",
         "cleanAll": "nx run-many -t clean --output-style=stream; rm -rf node_modules; rm -rf apps/*/node_modules",
@@ -14,32 +39,9 @@
         "format": "prettier --write .",
         "prepare": "husky"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "engines": {
-        "node": ">=24.1.0"
-    },
     "type": "module",
-    "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977",
-    "devDependencies": {
-        "@commitlint/cli": "^19.8.1",
-        "@commitlint/config-conventional": "^19.8.1",
-        "@nx/eslint": "21.1.2",
-        "@nx/vite": "21.1.2",
-        "@nx/web": "21.1.2",
-        "@vitest/ui": "^3.0.0",
-        "eslint": "~8.57.0",
-        "husky": "^9.1.7",
-        "jiti": "2.4.2",
-        "lint-staged": "^16.1.0",
-        "nx": "21.1.2",
-        "prettier": "^3.5.3",
-        "vite": "^6.0.0",
-        "vitest": "^3.0.0"
-    },
-    "dependencies": {},
-    "lint-staged": {
-        "**/*": "prettier --write --ignore-unknown"
-    }
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ]
 }

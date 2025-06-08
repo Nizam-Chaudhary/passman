@@ -1,6 +1,6 @@
 import type { ResetPasswordForm } from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
-import { usePatchApiV1AuthResetPassword } from "@/api-client/api";
+// import { usePatchApiV1AuthResetPassword } from "@/api-client/api";
 import { Button } from "@/components/ui/button";
 import {
     Card,

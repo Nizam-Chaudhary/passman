@@ -1,6 +1,6 @@
 import type { VerifyMasterPasswordFormData } from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
-import { usePostApiV1AuthVerifyMasterPassword } from "@/api-client/api";
+// import { usePostApiV1AuthVerifyMasterPassword } from "@/api-client/api";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";

@@ -1,5 +1,5 @@
 import type { SubmitHandler } from "react-hook-form";
-import { usePostApiV1AuthResetPasswordMail } from "@/api-client/api";
+// import { usePostApiV1AuthResetPasswordMail } from "@/api-client/api";
 import { Button } from "@/components/ui/button";
 import {
     Card,

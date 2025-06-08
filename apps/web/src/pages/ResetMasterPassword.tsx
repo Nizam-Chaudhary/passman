@@ -1,6 +1,6 @@
 import type { UpdateMasterPasswordFormData } from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
-import { usePatchApiV1AuthMasterPassword } from "@/api-client/api";
+// import { usePatchApiV1AuthMasterPassword } from "@/api-client/api";
 import RecoveryKeyDialog from "@/components/RecoverKeyDialog";
 import { Button } from "@/components/ui/button";
 import {

@@ -1,5 +1,8 @@
 import { Hono } from "hono";
-import { loginUserBodySchema, refreshTokenBodySchema } from "./auth.schema";
+import {
+    loginUserBodySchema,
+    refreshTokenBodySchema,
+} from "@passman/schema/api/auth";
 import authService from "./auth.service";
 import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
 import { zValidator } from "@hono/zod-validator";

@@ -1,6 +1,6 @@
 import type { SignUpUserData } from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
-import { usePostApiV1AuthSignUp } from "@/api-client/api";
+// import { usePostApiV1AuthSignUp } from "@/api-client/api";
 import { Button } from "@/components/ui/button";
 import {
     Card,

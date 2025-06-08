@@ -1,0 +1,27 @@
+{
+    "name": "@passman/schema",
+    "version": "1.0.0",
+    "author": "Nizam Chaudhary",
+    "exports": {
+        "./api": {
+            "import": "./src/api/index.ts"
+        },
+        "./api/*": {
+            "import": "./src/api/*.ts"
+        }
+    },
+    "description": "Passman zod schema",
+    "keywords": [],
+    "license": "ISC",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "zod": "^3.25.51"
+    },
+    "devDependencies": {
+        "typescript": "^5.8.3"
+    }
+}

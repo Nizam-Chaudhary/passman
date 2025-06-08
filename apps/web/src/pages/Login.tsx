@@ -1,5 +1,4 @@
 import type { LoginUserData } from "@/types/auth";
-import { usePostApiV1AuthSignIn } from "@/api-client/api";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -29,11 +28,12 @@ import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { PasswordInput } from "../components/ui/password-input";
+import { useLoginUser } from "@/services/mutations/auth";
 
 export default function Login() {
     const { toast } = useToast();
     const navigate = useNavigate();
-    const mutateLoginUser = usePostApiV1AuthSignIn();
+    const mutateLoginUser = useLoginUser();
 
     const { setUserEmail, setIsEmailVerified } = useStore(
         useShallow((state) => ({
@@ -51,43 +51,41 @@ export default function Login() {
     });
 
     function onSubmit(data: LoginUserData) {
-        mutateLoginUser.mutate(
-            { data },
-            {
-                onError: (error, variables) => {
-                    if (
-                        error.message ==
-                        "Email not verified. Please verify first!"
-                    ) {
-                        setIsEmailVerified(false);
-                        setUserEmail(variables.data.email);
-                        navigate(ROUTES.VERIFY_ACCOUNT);
-                    } else {
-                        toast({
-                            className: "bg-red-700",
-                            title: error?.message,
-                        });
-                    }
-                },
-                onSuccess: async (response, variables) => {
-                    setToken(response.data.token);
-                    setRefreshToken(response.data.refreshToken);
-                    setIsEmailVerified(response.data.isVerified);
+        console.log("data", data);
+        mutateLoginUser.mutate(data, {
+            onError: (error, variables) => {
+                console.log("error", error);
+                if (
+                    error.message == "Email not verified. Please verify first!"
+                ) {
+                    setIsEmailVerified(false);
+                    setUserEmail(variables.email);
+                    navigate(ROUTES.VERIFY_ACCOUNT);
+                } else {
                     toast({
-                        className: "bg-green-700",
-                        title: "Logged in successfully",
+                        className: "bg-red-700",
+                        title: error?.message,
                     });
-                    if (response.data.masterKey == null) {
-                        navigate(ROUTES.MASTER_PASSWORD.CREATE);
-                    } else if (response.data.isVerified) {
-                        navigate(ROUTES.MASTER_PASSWORD.VERIFY);
-                    } else {
-                        setUserEmail(variables.data.email);
-                        navigate(ROUTES.VERIFY_ACCOUNT);
-                    }
-                },
-            }
-        );
+                }
+            },
+            onSuccess: async (response, variables) => {
+                setToken(response.data.token);
+                setRefreshToken(response.data.refreshToken);
+                setIsEmailVerified(true);
+                toast({
+                    className: "bg-green-700",
+                    title: "Logged in successfully",
+                });
+                // if (response.data.masterKey == null) {
+                //     navigate(ROUTES.MASTER_PASSWORD.CREATE);
+                // } else if (response.data.isVerified) {
+                //     navigate(ROUTES.MASTER_PASSWORD.VERIFY);
+                // } else {
+                //     setUserEmail(variables.email);
+                //     navigate(ROUTES.VERIFY_ACCOUNT);
+                // }
+            },
+        });
     }
 
     return (

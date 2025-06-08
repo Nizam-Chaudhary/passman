@@ -1,4 +1,4 @@
-import { useGetApiV1Passwords } from "@/api-client/api";
+// import { useGetApiV1Passwords } from "@/api-client/api";
 import { useStore } from "@/store/store";
 import { useSearchParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";

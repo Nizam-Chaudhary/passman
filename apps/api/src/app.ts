@@ -5,18 +5,17 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { timeout } from "hono/timeout";
-import { env } from "./lib/env";
 import { errorHandler } from "./middlewares/errorHandler";
+import { env } from "./lib/env";
 
 const app = new Hono();
 
 app.use(trimTrailingSlash());
 app.use("*", logger());
 app.use(
-    "/api",
+    "/api/*",
     cors({
         origin: [env.FE_URL],
-        allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     })
 );
 app.use(secureHeaders());

@@ -35,6 +35,7 @@
         "db:seed": "tsx src/db/seed.ts"
     },
     "dependencies": {
+        "@passman/schema": "workspace:*",
         "@aws-sdk/client-ses": "^3.750.0",
         "@grpc/grpc-js": "^1.12.6",
         "@hono/zod-validator": "^0.7.0",
