@@ -10,10 +10,6 @@
             "outputs": ["{projectRoot}/src/db/migrations"],
             "cache": true
         },
-        "gen-api-client": {
-            "outputs": ["{projectRoot}/src/api-client"],
-            "cache": true
-        },
         "lint": {
             "cache": true
         },

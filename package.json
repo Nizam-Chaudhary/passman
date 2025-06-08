@@ -1,8 +1,19 @@
 {
     "name": "passman",
     "version": "1.0.0",
-    "author": "",
-    "main": "index.js",
+    "author": "Nizam Chaudhary",
+    "description": "Passman monorepo",
+    "keywords": [],
+    "private": true,
+    "license": "ISC",
+    "type": "module",
+    "scripts": {
+        "clean": "nx run-many -t clean --output-style=stream",
+        "cleanAll": "nx run-many -t clean --output-style=stream; rm -rf node_modules; rm -rf apps/*/node_modules",
+        "lint": "eslint .",
+        "format": "prettier --write .",
+        "prepare": "husky"
+    },
     "devDependencies": {
         "@commitlint/cli": "^19.8.1",
         "@commitlint/config-conventional": "^19.8.1",
@@ -10,7 +21,7 @@
         "@nx/vite": "21.1.2",
         "@nx/web": "21.1.2",
         "@vitest/ui": "^3.2.1",
-        "eslint": "~8.57.1",
+        "eslint": "^9.28.0",
         "husky": "^9.1.7",
         "jiti": "2.4.2",
         "lint-staged": "^16.1.0",
@@ -21,27 +32,9 @@
         "vite": "^6.3.5",
         "vitest": "^3.2.1"
     },
-    "description": "Passman monorepo",
-    "engines": {
-        "node": ">=24.1.0"
-    },
-    "keywords": [],
-    "license": "ISC",
     "lint-staged": {
-        "**/*": "prettier --write --ignore-unknown"
+        "**/*": "prettier --write --ignore-unknown",
+        "**/*.{js,ts,tsx}": "eslint --fix"
     },
-    "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977",
-    "private": true,
-    "scripts": {
-        "clean": "nx run-many -t clean --output-style=stream",
-        "cleanAll": "nx run-many -t clean --output-style=stream; rm -rf node_modules; rm -rf apps/*/node_modules",
-        "lint": "eslint .",
-        "format": "prettier --write .",
-        "prepare": "husky"
-    },
-    "type": "module",
-    "workspaces": [
-        "apps/*",
-        "packages/*"
-    ]
+    "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac"
 }

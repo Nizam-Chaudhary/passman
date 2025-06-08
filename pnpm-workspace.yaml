@@ -1,0 +1,9 @@
+packages:
+  - packages/*
+  - apps/*
+
+ignoredBuiltDependencies:
+  - nx
+  - '@swc/core'
+  - esbuild
+  - protobufjs

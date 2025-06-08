@@ -1,4 +1,4 @@
-import path from "node:path";
+import path from "path";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 
