@@ -3,33 +3,54 @@
 // For a full list of overridable settings, and general information on folder-specific settings,
 // see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
-    "format_on_save": "prettier",
-    "formatter": "prettier",
+    "format_on_save": "language_server",
+    "formatter": "language_server",
+    "tab_size": 4,
     "languages": {
         // Refer https://zed.dev/docs/languages/javascript and https://zed.dev/docs/languages/typescript for more info
         "TypeScript": {
             "formatter": "prettier",
             "format_on_save": "prettier",
             "code_actions_on_format": {
-                "source.addMissingImports.ts": true,
-                "source.sortImports.prettier": true
+                "source.fixAll.prettier": true,
+                "source.organizeImports.prettier": true
             }
         },
         "TSX": {
             "formatter": "prettier",
             "format_on_save": "prettier",
             "code_actions_on_format": {
-                "source.addMissingImports.ts": true,
-                "source.sortImports.prettier": true
+                "source.fixAll.prettier": true,
+                "source.organizeImports.prettier": true
             }
         },
         "JavaScript": {
             "formatter": "prettier",
             "format_on_save": "prettier",
             "code_actions_on_format": {
-                "source.addMissingImports.ts": true,
-                "source.sortImports.prettier": true
+                "source.fixAll.prettier": true,
+                "source.organizeImports.prettier": true
             }
+        },
+        "JSON": {
+            "formatter": "prettier",
+            "format_on_save": "prettier"
+        },
+        "JSONC": {
+            "formatter": "prettier",
+            "format_on_save": "prettier"
+        },
+        "YAML": {
+            "formatter": "prettier",
+            "format_on_save": "prettier"
+        },
+        "TOML": {
+            "formatter": "prettier",
+            "format_on_save": "prettier"
+        },
+        "Markdown": {
+            "formatter": "prettier",
+            "format_on_save": "prettier"
         }
     }
 }
