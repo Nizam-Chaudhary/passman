@@ -7,8 +7,8 @@ import {
 } from "../../lib/responseExceptions";
 import { env } from "../../lib/env";
 import s3 from "../../lib/s3";
-import { validFileTypesSchema } from "./file.schema";
 import { and, eq } from "drizzle-orm";
+import { validFileTypesSchema } from "@passman/schema/api";
 
 class FileService {
     async uploadFile(file: File, userId: number) {

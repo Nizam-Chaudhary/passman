@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-const allowedMimeTypes = [
+export const allowedMimeTypes = [
     "image/jpeg",
     "image/png",
     "image/jpg",
@@ -8,9 +8,9 @@ const allowedMimeTypes = [
     "application/json",
 ] as const;
 
-export const validFileTypesSchema = z
-    .enum(allowedMimeTypes)
-    .describe("Schema for allowed file MIME types");
+export const validFileTypesSchema = z.enum(allowedMimeTypes, {
+    error: "Invalid file type",
+});
 
 export const uploadFileBodySchema = z.object({
     file: z.file(),

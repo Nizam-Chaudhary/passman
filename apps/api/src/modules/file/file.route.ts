@@ -1,15 +1,16 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { uploadFileBodySchema } from "./file.schema";
 import fileService from "./file.service";
-import { idParamsSchema } from "../../utils/basicSchema";
+import { idParamsSchema } from "@passman/schema/api";
 import { bearerAuth } from "../../middlewares/auth";
 import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
+import { headerSchema, uploadFileBodySchema } from "@passman/schema/api";
 
 export const fileRoutes = new Hono()
-    .use("*", bearerAuth)
     .post(
         "/upload",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("form", uploadFileBodySchema, zValidatorCustomFunc),
         async (c) => {
             const { file } = c.req.valid("form");
@@ -20,6 +21,8 @@ export const fileRoutes = new Hono()
     )
     .delete(
         "/:id",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("param", idParamsSchema, zValidatorCustomFunc),
         async (c) => {
             const { id } = c.req.valid("param");

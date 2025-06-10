@@ -4,19 +4,21 @@ import {
     addPasswordSchema,
     deleteMultiplePasswordsBodySchema,
     getPasswordsQueryStringSchema,
+    headerSchema,
     importPasswordsSchema,
-    movePasswordsVaultBodySchema,
+    moveMultiplePasswordsVaultBodySchema,
     updatePasswordSchema,
-} from "./password.schema";
+} from "@passman/schema/api";
 import passwordService from "./password.service";
-import { idParamsSchema } from "../../utils/basicSchema";
+import { idParamsSchema } from "@passman/schema/api";
 import { bearerAuth } from "../../middlewares/auth";
 import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
 
 export const passwordRoutes = new Hono()
-    .use("*", bearerAuth)
     .post(
         "/",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("json", addPasswordSchema, zValidatorCustomFunc),
         async (c) => {
             const body = c.req.valid("json");
@@ -27,6 +29,8 @@ export const passwordRoutes = new Hono()
     )
     .get(
         "/",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator(
             "query",
             getPasswordsQueryStringSchema,
@@ -45,6 +49,8 @@ export const passwordRoutes = new Hono()
     )
     .get(
         "/:id",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("param", idParamsSchema, zValidatorCustomFunc),
         async (c) => {
             const { id } = c.req.valid("param");
@@ -55,6 +61,8 @@ export const passwordRoutes = new Hono()
     )
     .patch(
         "/:id",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("param", idParamsSchema, zValidatorCustomFunc),
         zValidator("json", updatePasswordSchema, zValidatorCustomFunc),
         async (c) => {
@@ -71,6 +79,8 @@ export const passwordRoutes = new Hono()
     )
     .delete(
         "/multiple",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator(
             "json",
             deleteMultiplePasswordsBodySchema,
@@ -88,6 +98,8 @@ export const passwordRoutes = new Hono()
     )
     .delete(
         "/:id{[0-9]+}",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("param", idParamsSchema, zValidatorCustomFunc),
         async (c) => {
             const { id } = c.req.valid("param");
@@ -99,6 +111,7 @@ export const passwordRoutes = new Hono()
     .post(
         "/import",
         bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("json", importPasswordsSchema, zValidatorCustomFunc),
         async (c) => {
             const body = c.req.valid("json");
@@ -112,7 +125,13 @@ export const passwordRoutes = new Hono()
     )
     .post(
         "/move-vaults",
-        zValidator("json", movePasswordsVaultBodySchema, zValidatorCustomFunc),
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
+        zValidator(
+            "json",
+            moveMultiplePasswordsVaultBodySchema,
+            zValidatorCustomFunc
+        ),
         async (c) => {
             const body = c.req.valid("json");
             const user = c.get("user");

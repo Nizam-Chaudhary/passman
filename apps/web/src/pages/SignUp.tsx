@@ -1,6 +1,4 @@
-import type { SignUpUserData } from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
-// import { usePostApiV1AuthSignUp } from "@/api-client/api";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -23,17 +21,21 @@ import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { useToast } from "@/hooks/use-toast";
 import { ROUTES } from "@/lib/constants";
 import { useStore } from "@/store/store";
-import { signUpUserSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { PasswordInput } from "../components/ui/password-input";
+import {
+    registerUserBodySchema,
+    type RegisterUserBody,
+} from "@passman/schema/api/user";
+import { useRegisterUser } from "@/services/mutations/user";
 
 export default function SignUp() {
     const { toast } = useToast();
     const navigate = useNavigate();
-    const mutateSignUpUser = usePostApiV1AuthSignUp();
+    const registerUserMutation = useRegisterUser();
 
     const { setUserEmail, setIsEmailVerified } = useStore(
         useShallow((state) => ({
@@ -42,8 +44,8 @@ export default function SignUp() {
         }))
     );
 
-    const signUpForm = useForm<SignUpUserData>({
-        resolver: zodResolver(signUpUserSchema),
+    const signUpForm = useForm<RegisterUserBody>({
+        resolver: zodResolver(registerUserBodySchema),
         defaultValues: {
             userName: "",
             email: "",
@@ -51,28 +53,25 @@ export default function SignUp() {
         },
     });
 
-    const onSubmit: SubmitHandler<SignUpUserData> = async (data) => {
-        mutateSignUpUser.mutate(
-            { data },
-            {
-                onError: (error) => {
-                    toast({
-                        className: "bg-red-700",
-                        title: error.message,
-                    });
-                },
-                onSuccess: async (response, variables) => {
-                    toast({
-                        className: "bg-green-700",
-                        title: "Signed up successfully!",
-                    });
-                    console.log("response", response);
-                    setUserEmail(variables.data.email);
-                    setIsEmailVerified(false);
-                    await navigate(ROUTES.VERIFY_ACCOUNT);
-                },
-            }
-        );
+    const onSubmit: SubmitHandler<RegisterUserBody> = async (data) => {
+        registerUserMutation.mutate(data, {
+            onError: (error) => {
+                toast({
+                    className: "bg-red-700",
+                    title: error.message,
+                });
+            },
+            onSuccess: async (response, variables) => {
+                toast({
+                    className: "bg-green-700",
+                    title: "Signed up successfully!",
+                });
+                console.log("response", response);
+                setUserEmail(variables.email);
+                setIsEmailVerified(false);
+                await navigate(ROUTES.VERIFY_ACCOUNT);
+            },
+        });
     };
 
     return (
@@ -140,9 +139,9 @@ export default function SignUp() {
                             <Button
                                 type="submit"
                                 className="w-20"
-                                disabled={mutateSignUpUser.isPending}
+                                disabled={registerUserMutation.isPending}
                             >
-                                {mutateSignUpUser.isPending ? (
+                                {registerUserMutation.isPending ? (
                                     <LoadingSpinner />
                                 ) : (
                                     "Sign Up"

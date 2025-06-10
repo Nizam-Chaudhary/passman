@@ -1,9 +1,9 @@
 import type {
     AddPasswordBody,
     ImportPasswordsBody,
-    MovePasswordsVaultBody,
+    MoveMultiplePasswordsVaultBody,
     UpdatePasswordBody,
-} from "./password.schema";
+} from "@passman/schema/api";
 
 import { and, desc, eq, like, inArray, or } from "drizzle-orm";
 
@@ -138,7 +138,10 @@ class PasswordService {
         };
     }
 
-    async movePasswordsToVault(userId: number, body: MovePasswordsVaultBody) {
+    async movePasswordsToVault(
+        userId: number,
+        body: MoveMultiplePasswordsVaultBody
+    ) {
         await db
             .update(passwords)
             .set({ vaultId: body.vaultId })

@@ -4,12 +4,12 @@ import type {
     ResetPasswordBody,
     ResetPasswordJwtTokenPayload,
     sendResetPasswordEmailBody,
-    SignUpUserBody,
+    RegisterUserBody,
     UpdateMasterPasswordBody,
     UpdateUserDetailsBody,
     VerifyMasterPasswordBody,
     VerifyUserEmailBody,
-} from "./user.schema";
+} from "@passman/schema/api";
 import { sendMail } from "../../lib/mailer";
 import * as userTemplates from "../../templates/user";
 import { generateOtp } from "../../utils/generator";
@@ -26,7 +26,7 @@ import {
 } from "../../lib/responseExceptions";
 
 class UserService {
-    async signUpUser(input: SignUpUserBody) {
+    async registerUser(input: RegisterUserBody) {
         const alreadyRegistered = await db.query.users.findFirst({
             columns: {
                 id: true,

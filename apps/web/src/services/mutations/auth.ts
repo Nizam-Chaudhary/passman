@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { LoginUserBody } from "@passman/schema/api/auth";
+import type { LoginUserBody } from "@passman/schema/api/auth";
 import { api } from "../api";
 
 export const useLoginUser = () => {

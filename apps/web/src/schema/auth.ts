@@ -1,63 +1,7 @@
 import type { ApiResponse } from "./common";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { ecryptedValueSchema } from "./common";
-
-const passwordSchema = z
-    .string()
-    .min(8, "Must contain at least 8 characters")
-    .regex(/[A-Z]/, "Must contain at least one capital letter")
-    .regex(/[a-z]/, "Must contain at least one lowercase letter")
-    .regex(/\d/, "Must contain at least one digit")
-    .regex(/[^A-Z0-9]/i, "Must contain at least one special character");
-
-export const signUpUserSchema = z.object({
-    userName: z.string().min(3, "Please Enter user name"),
-    email: z.string().email("Please enter valid email"),
-    password: passwordSchema,
-});
-
-export type SignUpUserData = z.infer<typeof signUpUserSchema>;
-
-export const loginSchema = z.object({
-    email: z.string().email("Please enter valid email"),
-    password: z.string().min(8, "Must contain at least 8 characters"),
-});
-
-export type LoginResponse = ApiResponse & {
-    data: {
-        token: string;
-        refreshToken: string;
-        id: number;
-        email: string;
-        userName: string;
-        masterKey: { iv: string; encrypted: string } | null;
-        isVerified: boolean;
-    };
-};
-
-export interface RefreshTokenPayload {
-    refreshToken: string;
-}
-
-export type RefreshTokenResponse = ApiResponse & {
-    data: {
-        token: string;
-        refreshToken: string;
-    };
-};
-
-export type LoginUserData = z.infer<typeof loginSchema>;
-
-export const verifyAccountFormSchema = z.object({
-    otp: z.string().length(6, "OTP must be exact 6 digits"),
-});
-
-export type VerifyAccountFormData = z.infer<typeof verifyAccountFormSchema>;
-
-export interface VerifyAccountPayload {
-    email: string;
-    otp: string;
-}
+import { passwordSchema } from "@passman/schema/api/user";
 
 export const createMasterPasswordFormSchema = z
     .object({

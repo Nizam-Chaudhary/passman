@@ -1,4 +1,3 @@
-import type { LoginUserData } from "@/types/auth";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -22,13 +21,14 @@ import { useToast } from "@/hooks/use-toast";
 import { setRefreshToken, setToken } from "@/lib/auth";
 import { ROUTES } from "@/lib/constants";
 import { useStore } from "@/store/store";
-import { loginSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { PasswordInput } from "../components/ui/password-input";
 import { useLoginUser } from "@/services/mutations/auth";
+import type { LoginUserBody } from "@passman/schema/api/auth";
+import { loginUserBodySchema } from "@passman/schema/api/auth";
 
 export default function Login() {
     const { toast } = useToast();
@@ -42,19 +42,18 @@ export default function Login() {
         }))
     );
 
-    const loginForm = useForm<LoginUserData>({
-        resolver: zodResolver(loginSchema),
+    const loginForm = useForm<LoginUserBody>({
+        resolver: zodResolver(loginUserBodySchema),
         defaultValues: {
             email: "",
             password: "",
         },
     });
 
-    function onSubmit(data: LoginUserData) {
+    function onSubmit(data: LoginUserBody) {
         console.log("data", data);
         mutateLoginUser.mutate(data, {
             onError: (error, variables) => {
-                console.log("error", error);
                 if (
                     error.message == "Email not verified. Please verify first!"
                 ) {
@@ -68,7 +67,7 @@ export default function Login() {
                     });
                 }
             },
-            onSuccess: async (response, variables) => {
+            onSuccess: async (response) => {
                 setToken(response.data.token);
                 setRefreshToken(response.data.refreshToken);
                 setIsEmailVerified(true);

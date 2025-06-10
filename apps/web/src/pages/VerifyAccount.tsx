@@ -1,11 +1,4 @@
-import type { VerifyAccountFormData } from "@/types/auth";
-
 import type { SubmitHandler } from "react-hook-form";
-import type { z } from "zod";
-// import {
-//     usePatchApiV1AuthVerify,
-//     usePostApiV1AuthResendOtp,
-// } from "@/api-client/api";
 import Timer from "@/components/Timer";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,12 +26,19 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { ROUTES } from "@/lib/constants";
 import { useStore } from "@/store/store";
-import { verifyAccountFormSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+import {
+    verifyUserEmailFormSchema,
+    type VerifyUserEmailForm,
+} from "@/schema/user";
+import {
+    useSendVerificationOtp,
+    useVerifyUserEmail,
+} from "@/services/mutations/user";
 
 export default function VerifyAccount() {
     const { timer, decreaseTimer, setTimer } = useStore(
@@ -58,8 +58,8 @@ export default function VerifyAccount() {
     }, [decreaseTimer]);
 
     const { toast } = useToast();
-    const form = useForm<z.infer<typeof verifyAccountFormSchema>>({
-        resolver: zodResolver(verifyAccountFormSchema),
+    const form = useForm<VerifyUserEmailForm>({
+        resolver: zodResolver(verifyUserEmailFormSchema),
         defaultValues: {
             otp: "",
         },
@@ -71,40 +71,37 @@ export default function VerifyAccount() {
         }))
     );
 
-    const resendOTPMutation = usePostApiV1AuthResendOtp();
+    const resendOTPMutation = useSendVerificationOtp();
     useEffect(() => {
         if (email && timer <= 0) {
-            resendOTPMutation.mutate({ data: { email } });
+            resendOTPMutation.mutate({ email });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [email]);
 
-    const verifyUserEmailMutation = usePatchApiV1AuthVerify();
+    const verifyUserEmailMutation = useVerifyUserEmail();
     const navigate = useNavigate();
 
-    const onSubmit: SubmitHandler<VerifyAccountFormData> = (data) => {
+    const onSubmit: SubmitHandler<VerifyUserEmailForm> = (data) => {
         const payload = {
             email: email!,
             otp: data.otp,
         };
-        verifyUserEmailMutation.mutate(
-            { data: payload },
-            {
-                onError: (error) => {
-                    toast({
-                        className: "bg-red-700 text-white",
-                        title: error.message,
-                    });
-                },
-                onSuccess: () => {
-                    toast({
-                        className: "bg-green-700 text-white",
-                        title: "Email verified successfully",
-                    });
-                    navigate(ROUTES.LOGIN);
-                },
-            }
-        );
+        verifyUserEmailMutation.mutate(payload, {
+            onError: (error) => {
+                toast({
+                    className: "bg-red-700 text-white",
+                    title: error.message,
+                });
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-700 text-white",
+                    title: "Email verified successfully",
+                });
+                navigate(ROUTES.LOGIN);
+            },
+        });
     };
 
     return (
@@ -160,7 +157,7 @@ export default function VerifyAccount() {
                                 e.preventDefault();
                                 if (email) {
                                     resendOTPMutation.mutate({
-                                        data: { email },
+                                        email,
                                     });
                                 }
                                 setTimer(120);

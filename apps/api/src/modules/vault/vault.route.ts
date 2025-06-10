@@ -1,20 +1,30 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { addVaultBodySchema, updateVaultBodySchema } from "./vault.schema";
+import {
+    addVaultBodySchema,
+    headerSchema,
+    updateVaultBodySchema,
+} from "@passman/schema/api";
 import vaultService from "./vault.service";
-import { idParamsSchema } from "../../utils/basicSchema";
+import { idParamsSchema } from "@passman/schema/api";
 import { bearerAuth } from "../../middlewares/auth";
 import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
 
 export const vaultRoutes = new Hono()
-    .use("*", bearerAuth)
-    .get("/", async (c) => {
-        const user = c.get("user");
-        const response = await vaultService.getVaults(user.id);
-        return c.json(response);
-    })
+    .get(
+        "/",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
+        async (c) => {
+            const user = c.get("user");
+            const response = await vaultService.getVaults(user.id);
+            return c.json(response);
+        }
+    )
     .post(
         "/",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("json", addVaultBodySchema, zValidatorCustomFunc),
         async (c) => {
             const body = await c.req.json();
@@ -25,6 +35,8 @@ export const vaultRoutes = new Hono()
     )
     .patch(
         "/:id",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("param", idParamsSchema, zValidatorCustomFunc),
         zValidator("json", updateVaultBodySchema, zValidatorCustomFunc),
         async (c) => {
@@ -41,6 +53,8 @@ export const vaultRoutes = new Hono()
     )
     .delete(
         "/:id",
+        bearerAuth,
+        zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("param", idParamsSchema, zValidatorCustomFunc),
         async (c) => {
             const { id } = c.req.valid("param");
