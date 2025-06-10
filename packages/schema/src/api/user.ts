@@ -40,7 +40,7 @@ export const verifyUserEmailBodySchema = z.object({
 
 export type VerifyUserEmailBody = z.infer<typeof verifyUserEmailBodySchema>;
 
-const masterPasswordSchema = z
+export const masterPasswordSchema = z
     .string()
     .min(10, "Master password must be at least 10 characters")
     .regex(/[A-Z]/, "Must contain at least one capital letter")
@@ -73,7 +73,7 @@ export const resendOtpBodySchema = z.object({
 
 export const sendResetPasswordEmailBodySchema = resendOtpBodySchema;
 export type ResendOtpBody = z.infer<typeof resendOtpBodySchema>;
-export type sendResetPasswordEmailBody = ResendOtpBody;
+export type SendResetPasswordEmailBody = ResendOtpBody;
 
 // Reset password
 export interface ResetPasswordJwtTokenPayload {

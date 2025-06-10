@@ -1,5 +1,4 @@
 import type { SubmitHandler } from "react-hook-form";
-// import { usePostApiV1AuthResetPasswordMail } from "@/api-client/api";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -20,14 +19,15 @@ import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { useToast } from "@/hooks/use-toast";
 import { ROUTES } from "@/lib/constants";
-import { sendResetPassswordEmailFormSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { sendResetPasswordEmailBodySchema } from "@passman/schema/api";
+import { useSendResetPasswordMail } from "@/services/mutations/user";
 
 function ResetPasswordSendMail() {
     const form = useForm({
-        resolver: zodResolver(sendResetPassswordEmailFormSchema),
+        resolver: zodResolver(sendResetPasswordEmailBodySchema),
         defaultValues: {
             email: "",
         },
@@ -35,28 +35,25 @@ function ResetPasswordSendMail() {
     const { toast } = useToast();
     const navigate = useNavigate();
 
-    const sendResetPasswordEmailMutation = usePostApiV1AuthResetPasswordMail();
+    const sendResetPasswordEmailMutation = useSendResetPasswordMail();
 
     const onSubmit: SubmitHandler<{ email: string }> = async (data) => {
-        sendResetPasswordEmailMutation.mutate(
-            { data },
-            {
-                onSuccess: () => {
-                    toast({
-                        title: "Reset link sent to registered email.",
-                        className: "bg-green-700",
-                    });
+        sendResetPasswordEmailMutation.mutate(data, {
+            onSuccess: () => {
+                toast({
+                    title: "Reset link sent to registered email.",
+                    className: "bg-green-700",
+                });
 
-                    navigate(ROUTES.LOGIN, { replace: true });
-                },
-                onError: (error) => {
-                    toast({
-                        title: error.message,
-                        className: "bg-red-700",
-                    });
-                },
-            }
-        );
+                navigate(ROUTES.LOGIN, { replace: true });
+            },
+            onError: (error) => {
+                toast({
+                    title: error.message,
+                    className: "bg-red-700",
+                });
+            },
+        });
     };
     return (
         <div className="flex justify-center items-center h-screen">

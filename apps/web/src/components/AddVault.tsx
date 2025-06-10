@@ -5,7 +5,7 @@ import type { SubmitHandler } from "react-hook-form";
 // } from "@/api-client/api";
 import { useToast } from "@/hooks/use-toast";
 import { useStore } from "@/store/store";
-import { addVaultSchema } from "@/types/vault";
+import { addVaultSchema } from "@/schema/vault";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";

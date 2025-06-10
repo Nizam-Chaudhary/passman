@@ -4,8 +4,8 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "dev": "nx exec -- bunx --bun vite",
-        "build": "nx exec -- bunx --bun vite build",
+        "dev": "bunx --bun vite",
+        "build": "bunx --bun vite build",
         "clean": "rm -rf dist",
         "lint": "nx eslint:lint",
         "lint:fix": "nx eslint:lint --fix",

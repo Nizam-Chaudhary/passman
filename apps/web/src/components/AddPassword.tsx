@@ -1,4 +1,4 @@
-import type { Password } from "@/types/password";
+import type { Password } from "@/schema/password";
 import type { SubmitHandler } from "react-hook-form";
 // import {
 //     getGetApiV1PasswordsQueryKey,
@@ -7,7 +7,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { encrypt } from "@/lib/encryption.helper";
 import { useStore } from "@/store/store";
-import { passwordPayloadSchema, passwordSchema } from "@/types/password";
+import { passwordPayloadSchema, passwordSchema } from "@/schema/password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";

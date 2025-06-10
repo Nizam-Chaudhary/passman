@@ -1,13 +1,8 @@
-import type {
-    UserDetails,
-    VerifyRecoveryMasterPasswordFormData,
-} from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
 // import { useGetApiV1Users } from "@/api-client/api";
 import { useToast } from "@/hooks/use-toast";
 import { decrypt, deriveKey } from "@/lib/encryption.helper";
 import { useStore } from "@/store/store";
-import { verifyRecoveryMasterPasswordFormSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";

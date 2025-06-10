@@ -1,6 +1,4 @@
-import type { VerifyMasterPasswordFormData } from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
-// import { usePostApiV1AuthVerifyMasterPassword } from "@/api-client/api";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";
@@ -9,7 +7,6 @@ import { ROUTES } from "@/lib/constants";
 import { decrypt, deriveKey, importKey } from "@/lib/encryption.helper";
 import { replaceRouteParams } from "@/lib/utils";
 import { useStore } from "@/store/store";
-import { verifyMasterPasswordFormSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -32,6 +29,11 @@ import {
     FormLabel,
     FormMessage,
 } from "../components/ui/form";
+import {
+    verifyMasterPasswordBodySchema,
+    type VerifyMasterPasswordBody,
+} from "@passman/schema/api/user";
+import { useVerifyMasterPassword } from "@/services/mutations/user";
 
 export default function VerifyMasterPassword() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,54 +48,49 @@ export default function VerifyMasterPassword() {
     const { toast } = useToast();
 
     const form = useForm({
-        resolver: zodResolver(verifyMasterPasswordFormSchema),
+        resolver: zodResolver(verifyMasterPasswordBodySchema),
         defaultValues: {
             masterPassword: "",
         },
     });
 
-    const verifyMasterPasswordMutation = usePostApiV1AuthVerifyMasterPassword();
+    const verifyMasterPasswordMutation = useVerifyMasterPassword();
     const refreshTokenMutation = useRefreshToken();
 
-    const onSubmit: SubmitHandler<VerifyMasterPasswordFormData> = async (
+    const onSubmit: SubmitHandler<VerifyMasterPasswordBody> = async (
         data,
         event
     ) => {
         event?.preventDefault();
         setIsSubmitting(true);
-        await verifyMasterPasswordMutation.mutateAsync(
-            {
-                data: { masterPassword: data.masterPassword },
-            },
-            {
-                onSuccess: async (response) => {
-                    const userKey = await deriveKey(
-                        data.masterPassword,
-                        response.data.masterKey.salt
-                    );
+        await verifyMasterPasswordMutation.mutateAsync(data, {
+            onSuccess: async (response) => {
+                const userKey = await deriveKey(
+                    data.masterPassword,
+                    response.data.masterKey.salt
+                );
 
-                    setIsSubmitting(false);
-                    const decryptedMasterKey = await decrypt(
-                        response.data.masterKey,
-                        userKey
-                    );
-                    const masterKey = await importKey(decryptedMasterKey);
-                    setMasterkey(masterKey);
-                    setIsMasterPasswordSet(true);
-                    navigate(ROUTES.HOME, { replace: true });
-                },
-                onError: (error) => {
-                    setIsSubmitting(false);
-                    toast({
-                        title: error.message,
-                        className: "bg-red-700",
-                    });
-                    if (error.message === "Access token expired") {
-                        refreshTokenMutation.mutate();
-                    }
-                },
-            }
-        );
+                setIsSubmitting(false);
+                const decryptedMasterKey = await decrypt(
+                    response.data.masterKey,
+                    userKey
+                );
+                const masterKey = await importKey(decryptedMasterKey);
+                setMasterkey(masterKey);
+                setIsMasterPasswordSet(true);
+                navigate(ROUTES.HOME, { replace: true });
+            },
+            onError: (error) => {
+                setIsSubmitting(false);
+                toast({
+                    title: error.message,
+                    className: "bg-red-700",
+                });
+                if (error.message === "Access token expired") {
+                    refreshTokenMutation.mutate();
+                }
+            },
+        });
     };
     return (
         <div className="flex justify-center items-center h-screen">

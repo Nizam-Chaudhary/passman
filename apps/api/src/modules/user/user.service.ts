@@ -3,7 +3,7 @@ import type {
     ResendOtpBody,
     ResetPasswordBody,
     ResetPasswordJwtTokenPayload,
-    sendResetPasswordEmailBody,
+    SendResetPasswordEmailBody,
     RegisterUserBody,
     UpdateMasterPasswordBody,
     UpdateUserDetailsBody,
@@ -263,7 +263,7 @@ class UserService {
         };
     }
 
-    async sendResetPasswordEmail(body: sendResetPasswordEmailBody) {
+    async sendResetPasswordEmail(body: SendResetPasswordEmailBody) {
         const user = await db.query.users.findFirst({
             where: like(users.email, body.email.toLowerCase()),
         });

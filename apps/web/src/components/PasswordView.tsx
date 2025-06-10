@@ -1,4 +1,4 @@
-import type { Password } from "@/types/password";
+import type { Password } from "@/schema/password";
 import type { SubmitHandler } from "react-hook-form";
 // import {
 //     getGetApiV1PasswordsQueryKey,
@@ -9,7 +9,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import { decrypt, encrypt } from "@/lib/encryption.helper";
 import { useStore } from "@/store/store";
-import { passwordSchema, updatePasswordPayloadSchema } from "@/types/password";
+import { passwordSchema, updatePasswordPayloadSchema } from "@/schema/password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ClipboardCopyIcon, TrashIcon } from "lucide-react";

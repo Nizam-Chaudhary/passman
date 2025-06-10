@@ -67,7 +67,7 @@ export default function Login() {
                     });
                 }
             },
-            onSuccess: async (response) => {
+            onSuccess: async (response, variables) => {
                 setToken(response.data.token);
                 setRefreshToken(response.data.refreshToken);
                 setIsEmailVerified(true);
@@ -75,14 +75,14 @@ export default function Login() {
                     className: "bg-green-700",
                     title: "Logged in successfully",
                 });
-                // if (response.data.masterKey == null) {
-                //     navigate(ROUTES.MASTER_PASSWORD.CREATE);
-                // } else if (response.data.isVerified) {
-                //     navigate(ROUTES.MASTER_PASSWORD.VERIFY);
-                // } else {
-                //     setUserEmail(variables.email);
-                //     navigate(ROUTES.VERIFY_ACCOUNT);
-                // }
+                if (response.data.masterKey == null) {
+                    navigate(ROUTES.MASTER_PASSWORD.CREATE);
+                } else if (response.data.isVerified) {
+                    navigate(ROUTES.MASTER_PASSWORD.VERIFY);
+                } else {
+                    setUserEmail(variables.email);
+                    navigate(ROUTES.VERIFY_ACCOUNT);
+                }
             },
         });
     }

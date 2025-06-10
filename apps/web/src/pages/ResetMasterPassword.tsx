@@ -1,4 +1,3 @@
-import type { UpdateMasterPasswordFormData } from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
 // import { usePatchApiV1AuthMasterPassword } from "@/api-client/api";
 import RecoveryKeyDialog from "@/components/RecoverKeyDialog";
@@ -32,7 +31,6 @@ import {
     generateSalt,
 } from "@/lib/encryption.helper";
 import { useStore } from "@/store/store";
-import { updateMasterPasswordFormSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";

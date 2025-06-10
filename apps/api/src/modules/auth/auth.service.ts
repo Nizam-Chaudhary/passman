@@ -3,7 +3,7 @@ import type {
     JwtUserData,
     LoginUserBody,
     RefreshTokenBody,
-} from "./auth.schema";
+} from "@passman/schema/api";
 import { db } from "../../db/index";
 import { users } from "../../db/schema";
 import * as jwt from "hono/jwt";
@@ -70,6 +70,8 @@ class AuthService {
             data: {
                 token,
                 refreshToken,
+                isVerified: userData.isVerified,
+                masterKey: userData.masterKey,
             },
         };
     }

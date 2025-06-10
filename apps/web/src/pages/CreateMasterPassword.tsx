@@ -1,6 +1,4 @@
-import type { CreateMasterPasswordFormData } from "@/types/auth";
 import type { SubmitHandler } from "react-hook-form";
-// import { usePatchApiV1AuthCreateMasterKey } from "@/api-client/api";
 import RecoveryKeyDialog from "@/components/RecoverKeyDialog";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -14,7 +12,6 @@ import {
     generateSalt,
 } from "@/lib/encryption.helper";
 import { useStore } from "@/store/store";
-import { createMasterPasswordFormSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
@@ -34,6 +31,11 @@ import {
     FormLabel,
     FormMessage,
 } from "../components/ui/form";
+import {
+    createMasterPasswordFormSchema,
+    type CreateMasterPasswordForm,
+} from "@/schema/user";
+import { useCreateMasterPassword } from "@/services/mutations/user";
 
 export default function CreateMasterPassword() {
     const { setOpenRecoveryKeyDialog, setRecoveryKey } = useStore(
@@ -53,12 +55,10 @@ export default function CreateMasterPassword() {
         },
     });
 
-    const createMasterPasswordMutation = usePatchApiV1AuthCreateMasterKey();
+    const createMasterPasswordMutation = useCreateMasterPassword();
     const refreshTokenMutation = useRefreshToken();
 
-    const onSubmit: SubmitHandler<CreateMasterPasswordFormData> = async (
-        data
-    ) => {
+    const onSubmit: SubmitHandler<CreateMasterPasswordForm> = async (data) => {
         const masterKey = generateMasterKey();
         const recoveryKey = generateRecoveryKey();
         setRecoveryKey(recoveryKey);
@@ -93,13 +93,11 @@ export default function CreateMasterPassword() {
 
         await createMasterPasswordMutation.mutateAsync(
             {
-                data: {
-                    masterPassword: data.masterPassword,
-                    masterKey: { ...encryptedMasterKey, salt: userKeySalt },
-                    recoveryKey: {
-                        ...encryptedRecoveryKey,
-                        salt: recoveryKeySalt,
-                    },
+                masterPassword: data.masterPassword,
+                masterKey: { ...encryptedMasterKey, salt: userKeySalt },
+                recoveryKey: {
+                    ...encryptedRecoveryKey,
+                    salt: recoveryKeySalt,
                 },
             },
             {
