@@ -16,6 +16,7 @@ import {
     CommandList,
 } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { useGetVaults } from "@/services/queries/vault";
 
 export function VaultComboBox() {
     const [open, setOpen] = useState(false);
@@ -27,7 +28,7 @@ export function VaultComboBox() {
             setOpenAddVaultDialog: state.setOpenAddVaultDialog,
         }))
     );
-    const { data: response } = useGetApiV1Vaults();
+    const { data: response } = useGetVaults();
 
     useEffect(() => {
         if (response?.data) {

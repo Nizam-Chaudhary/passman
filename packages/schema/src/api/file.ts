@@ -15,3 +15,5 @@ export const validFileTypesSchema = z.enum(allowedMimeTypes, {
 export const uploadFileBodySchema = z.object({
     file: z.file(),
 });
+
+export type UploadFileBody = z.infer<typeof uploadFileBodySchema>;

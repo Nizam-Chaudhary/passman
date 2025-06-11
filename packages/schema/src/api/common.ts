@@ -22,6 +22,8 @@ export const masterKeySchema = z.object({
     salt: z.string().min(1, "salt is required"),
 });
 
+export type MasterKey = z.infer<typeof masterKeySchema>;
+
 // auth header schema
 export const headerSchema = z.object({
     Authorization: z.string().min(1, "Authorization is required"),

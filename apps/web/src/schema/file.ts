@@ -7,7 +7,7 @@ export interface FileDetails {
 }
 
 export interface FileUploadResponse {
-    status: "success" | "error" | "fail";
+    status: boolean;
     message: string;
     data: FileDetails;
 }

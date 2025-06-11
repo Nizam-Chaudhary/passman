@@ -1,4 +1,4 @@
-import type { FileUploadResponse } from "@/types/file";
+import type { FileUploadResponse } from "@/schema/file";
 import type { SubmitHandler } from "react-hook-form";
 // import {
 //     getGetApiV1UsersQueryKey,
@@ -25,10 +25,12 @@ import { Input } from "../ui/input";
 import Loading from "../ui/loading";
 import LoadingSpinner from "../ui/loadingSpinner";
 import { getInitials } from "@/lib/utils";
+import { useGetUserDetails } from "@/services/queries/user";
+import { useUpdateUser } from "@/services/mutations/user";
 
 function Profile() {
     const queryClient = useQueryClient();
-    const { data: response, isPending, isError } = useGetApiV1Users();
+    const { data: response, isPending, isError } = useGetUserDetails();
     const userDetails = response?.data;
 
     const userNameForm = useForm<{ userName: string }>({
@@ -46,7 +48,7 @@ function Profile() {
     });
     const { toast } = useToast();
 
-    const updateUserMutation = usePatchApiV1Users();
+    const updateUserMutation = useUpdateUser();
 
     if (isPending) {
         return (
@@ -66,31 +68,26 @@ function Profile() {
     }
 
     const onSubmit: SubmitHandler<{ userName: string }> = (data) => {
-        updateUserMutation.mutate(
-            { data },
-            {
-                onSuccess: () => {
-                    queryClient.invalidateQueries({
-                        queryKey: getGetApiV1UsersQueryKey(),
-                        exact: true,
-                    });
-                    toast({
-                        title: "Username updated successfully.",
-                        className: "bg-green-700 text-white",
-                    });
-                },
-            }
-        );
+        updateUserMutation.mutate(data, {
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["users"],
+                });
+                toast({
+                    title: "Username updated successfully.",
+                    className: "bg-green-700 text-white",
+                });
+            },
+        });
     };
 
     const onFileUploadSuccess = (response: FileUploadResponse) => {
         updateUserMutation.mutate(
-            { data: { fileId: response.data.id } },
+            { fileId: response.data.id },
             {
                 onSuccess: () => {
                     queryClient.invalidateQueries({
-                        queryKey: getGetApiV1UsersQueryKey(),
-                        exact: true,
+                        queryKey: ["users"],
                     });
                     toast({
                         title: "Profile picture updated successfully.",

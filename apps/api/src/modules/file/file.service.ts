@@ -51,8 +51,12 @@ class FileService {
             where: eq(files.id, uploadedFile.id),
         });
 
+        if (!uploadedFileData) {
+            throw new BadRequestException("File upload failed");
+        }
+
         return {
-            status: "success",
+            status: true,
             message: "File uploaded successfully",
             data: uploadedFileData,
         };

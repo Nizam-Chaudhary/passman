@@ -26,8 +26,9 @@ export const updateUserDetailsBodySchema = z.object({
     userName: z
         .string()
         .min(2, "Username is required")
-        .max(255, "Username must be 255 characters or less"),
-    fileId: z.number().positive(),
+        .max(255, "Username must be 255 characters or less")
+        .optional(),
+    fileId: z.number().positive().optional(),
 });
 
 export type UpdateUserDetailsBody = z.infer<typeof updateUserDetailsBodySchema>;

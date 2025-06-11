@@ -18,11 +18,20 @@ import {
 } from "./ui/form";
 import LoadingSpinner from "./ui/loadingSpinner";
 import { PasswordInput } from "./ui/password-input";
+import { useGetUserDetails } from "@/services/queries/user";
+import {
+    verifyMasterPasswordBodySchema,
+    type MasterKey,
+    type VerifyMasterPasswordBody,
+} from "@passman/schema/api";
+import { ROUTES } from "@/lib/constants";
+import { useNavigate } from "react-router";
 
 function VerifyRecoveryMasterPassword() {
     const { toast } = useToast();
+    const navigate = useNavigate();
     const form = useForm({
-        resolver: zodResolver(verifyRecoveryMasterPasswordFormSchema),
+        resolver: zodResolver(verifyMasterPasswordBodySchema),
         defaultValues: {
             masterPassword: "",
         },
@@ -34,13 +43,14 @@ function VerifyRecoveryMasterPassword() {
         }))
     );
 
-    const { data: response, isPending, isError } = useGetApiV1Users();
+    const { data: response, isPending, isError } = useGetUserDetails();
     const userDetails = response?.data;
 
     const verifyMasterPasswordMutation = useMutation({
-        mutationFn: async (
-            data: UserDetails & VerifyRecoveryMasterPasswordFormData
-        ) => {
+        mutationFn: async (data: {
+            masterPassword: string;
+            masterKey: MasterKey;
+        }) => {
             const derivedUsedKey = await deriveKey(
                 data.masterPassword,
                 data.masterKey.salt
@@ -65,12 +75,14 @@ function VerifyRecoveryMasterPassword() {
         },
     });
 
-    const onSubmit: SubmitHandler<VerifyRecoveryMasterPasswordFormData> = (
-        data
-    ) => {
+    const onSubmit: SubmitHandler<VerifyMasterPasswordBody> = (data) => {
+        if (!userDetails || !userDetails.masterKey) {
+            navigate(ROUTES.MASTER_PASSWORD.CREATE);
+            return;
+        }
         verifyMasterPasswordMutation.mutate({
-            ...userDetails!,
-            ...data,
+            masterKey: userDetails.masterKey,
+            masterPassword: data.masterPassword,
         });
     };
 

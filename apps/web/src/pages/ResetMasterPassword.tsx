@@ -1,5 +1,4 @@
 import type { SubmitHandler } from "react-hook-form";
-// import { usePatchApiV1AuthMasterPassword } from "@/api-client/api";
 import RecoveryKeyDialog from "@/components/RecoverKeyDialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,6 +35,11 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+import {
+    updateMasterPasswordFormSchema,
+    type UpdateMasterPasswordForm,
+} from "@/schema/user";
+import { useUpdateMasterPassword } from "@/services/mutations/user";
 
 function ResetMasterPassword() {
     const { type } = useParams();
@@ -64,7 +68,7 @@ function ResetMasterPassword() {
         },
     });
 
-    const updateMasterPasswordMutation = usePatchApiV1AuthMasterPassword();
+    const updateMasterPasswordMutation = useUpdateMasterPassword();
     const refreshTokenMutation = useRefreshToken();
 
     useEffect(() => {
@@ -74,7 +78,7 @@ function ResetMasterPassword() {
     }, [type, navigate]);
 
     const updateMasterPassword: SubmitHandler<
-        UpdateMasterPasswordFormData
+        UpdateMasterPasswordForm
     > = async (data) => {
         if (!masterKeyForUpdate) {
             toast({
@@ -121,13 +125,11 @@ function ResetMasterPassword() {
 
         await updateMasterPasswordMutation.mutateAsync(
             {
-                data: {
-                    masterPassword: data.masterPassword,
-                    masterKey: { ...encryptedMasterKey, salt: userKeySalt },
-                    recoveryKey: {
-                        ...encryptedRecoveryKey,
-                        salt: recoveryKeySalt,
-                    },
+                masterPassword: data.masterPassword,
+                masterKey: { ...encryptedMasterKey, salt: userKeySalt },
+                recoveryKey: {
+                    ...encryptedRecoveryKey,
+                    salt: recoveryKeySalt,
                 },
             },
             {

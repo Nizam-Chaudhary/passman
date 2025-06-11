@@ -13,6 +13,7 @@ interface Props {
 }
 
 export function PasswordRow({ name, id, url, username, faviconUrl }: Props) {
+    console.log({ name, id, url, username, faviconUrl });
     const [searchParams, setSearchParams] = useSearchParams();
 
     return (
@@ -33,8 +34,8 @@ export function PasswordRow({ name, id, url, username, faviconUrl }: Props) {
                         <AvatarFallback>
                             {name
                                 ? getInitials(name)
-                                : faviconUrl
-                                  ? getInitials(faviconUrl)
+                                : url
+                                  ? getInitials(url)
                                   : ""}
                         </AvatarFallback>
                     </Avatar>

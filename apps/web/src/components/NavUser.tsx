@@ -1,7 +1,3 @@
-"use client";
-
-// import { useGetApiV1Users } from "@/api-client/api";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -27,9 +23,10 @@ import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import NavUserSkeleton from "./skeletons/NavUserSkeleton";
 import { getInitials } from "@/lib/utils";
+import { useGetUserDetails } from "@/services/queries/user";
 
 export function NavUser() {
-    const { data: response, isPending, isError } = useGetApiV1Users();
+    const { data: response, isPending, isError } = useGetUserDetails();
     const user = response?.data;
 
     const {

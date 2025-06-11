@@ -1,15 +1,11 @@
-import type { Password } from "@/schema/password";
 import type { SubmitHandler } from "react-hook-form";
-// import {
-//     getGetApiV1PasswordsQueryKey,
-//     useDeleteApiV1PasswordsId,
-//     useGetApiV1PasswordsId,
-//     usePutApiV1PasswordsId,
-// } from "@/api-client/api";
 import { toast } from "@/hooks/use-toast";
 import { decrypt, encrypt } from "@/lib/encryption.helper";
 import { useStore } from "@/store/store";
-import { passwordSchema, updatePasswordPayloadSchema } from "@/schema/password";
+import {
+    upddatePasswordForm,
+    type UpdatePasswordForm,
+} from "@/schema/password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ClipboardCopyIcon, TrashIcon } from "lucide-react";
@@ -36,16 +32,20 @@ import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import { getInitials } from "@/lib/utils";
+import { useGetPasswordById } from "@/services/queries/password";
+import {
+    useDeletePassword,
+    useUpdatePassword,
+} from "@/services/mutations/password";
 
 export function PasswordView() {
     const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const { setOpenDeletePasswordDialog, masterKey, currentVault } = useStore(
+    const { setOpenDeletePasswordDialog, masterKey } = useStore(
         useShallow((state) => ({
             setOpenDeletePasswordDialog: state.setOpenDeletePasswordDialog,
             masterKey: state.masterKey,
-            currentVault: state.currentVault,
         }))
     );
     const passwordId = searchParams.get("p");
@@ -53,11 +53,9 @@ export function PasswordView() {
         data: response,
         isPending,
         isError,
-    } = useGetApiV1PasswordsId(Number(passwordId), {
-        query: { enabled: !!passwordId },
-    });
-    const editPasswordMutation = usePutApiV1PasswordsId();
-    const deletePasswordMutation = useDeleteApiV1PasswordsId();
+    } = useGetPasswordById({ id: Number(passwordId) });
+    const editPasswordMutation = useUpdatePassword();
+    const deletePasswordMutation = useDeletePassword();
 
     const { data: password } = useQuery({
         queryKey: ["decryptPassword", { id: passwordId }],
@@ -68,8 +66,8 @@ export function PasswordView() {
         enabled: !!response?.data.password && masterKey != null,
     });
 
-    const editPasswordForm = useForm<Password>({
-        resolver: zodResolver(passwordSchema),
+    const editPasswordForm = useForm<UpdatePasswordForm>({
+        resolver: zodResolver(upddatePasswordForm),
         defaultValues: {
             url: "",
             username: "",
@@ -132,7 +130,7 @@ export function PasswordView() {
         );
     }
 
-    const onEditSubmit: SubmitHandler<Password> = async (data) => {
+    const onEditSubmit: SubmitHandler<UpdatePasswordForm> = async (data) => {
         if (!masterKey) {
             toast({
                 title: "Error encrypting password!",
@@ -142,13 +140,13 @@ export function PasswordView() {
             return;
         }
         const encryptedPassword = await encrypt(data.password, masterKey);
-        const updatedPassword = updatePasswordPayloadSchema.parse({
+        const updatedPassword = {
             ...data,
             password: encryptedPassword,
-        });
+        };
 
         editPasswordMutation.mutate(
-            { data: updatedPassword, id: Number(passwordId) },
+            { body: updatedPassword, param: { id: Number(passwordId) } },
             {
                 onError: (error) => {
                     toast({
@@ -158,9 +156,10 @@ export function PasswordView() {
                 },
                 onSuccess: () => {
                     queryClient.invalidateQueries({
-                        queryKey: getGetApiV1PasswordsQueryKey({
-                            vaultId: currentVault!.id,
-                        }),
+                        queryKey: ["passwords"],
+                    });
+                    queryClient.invalidateQueries({
+                        queryKey: ["decryptPassword"],
                     });
                     toast({
                         title: "Password updated successfully.",
@@ -184,16 +183,8 @@ export function PasswordView() {
                 onSuccess: () => {
                     searchParams.delete("p");
                     setSearchParams(searchParams);
-                    console.log(
-                        "queryKey",
-                        getGetApiV1PasswordsQueryKey({
-                            vaultId: currentVault!.id,
-                        })
-                    );
                     queryClient.invalidateQueries({
-                        queryKey: getGetApiV1PasswordsQueryKey({
-                            vaultId: currentVault!.id,
-                        }),
+                        queryKey: ["passwords"],
                     });
                     toast({
                         title: "Password deleted successfully.",

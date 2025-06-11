@@ -1,11 +1,6 @@
 import type { SubmitHandler } from "react-hook-form";
-// import {
-//     getGetApiV1VaultsQueryKey,
-//     usePostApiV1Vaults,
-// } from "@/api-client/api";
 import { useToast } from "@/hooks/use-toast";
 import { useStore } from "@/store/store";
-import { addVaultSchema } from "@/schema/vault";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
@@ -29,6 +24,8 @@ import {
 import { Input } from "./ui/input";
 import LoadingSpinner from "./ui/loadingSpinner";
 import { useQueryClient } from "@tanstack/react-query";
+import { addVaultBodySchema } from "@passman/schema/api";
+import { useAddVault } from "@/services/mutations/vault";
 
 export default function AddVault() {
     const queryClient = useQueryClient();
@@ -42,37 +39,34 @@ export default function AddVault() {
     const { toast } = useToast();
 
     const form = useForm<{ name: string }>({
-        resolver: zodResolver(addVaultSchema),
+        resolver: zodResolver(addVaultBodySchema),
         defaultValues: {
             name: "",
         },
     });
 
-    const addVaultMutation = usePostApiV1Vaults();
+    const addVaultMutation = useAddVault();
 
     const onSubmit: SubmitHandler<{ name: string }> = (data) => {
-        addVaultMutation.mutate(
-            { data },
-            {
-                onError: (error) => {
-                    toast({
-                        title: error.message,
-                        className: "bg-red-700",
-                    });
-                },
-                onSuccess: () => {
-                    queryClient.invalidateQueries({
-                        queryKey: getGetApiV1VaultsQueryKey(),
-                    });
-                    toast({
-                        title: "Vault added successfully.",
-                        className: "bg-green-700",
-                    });
-                    setOpen(false);
-                    form.reset();
-                },
-            }
-        );
+        addVaultMutation.mutate(data, {
+            onError: (error) => {
+                toast({
+                    title: error.message,
+                    className: "bg-red-700",
+                });
+            },
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["vaults"],
+                });
+                toast({
+                    title: "Vault added successfully.",
+                    className: "bg-green-700",
+                });
+                setOpen(false);
+                form.reset();
+            },
+        });
     };
     return (
         <Dialog open={open} onOpenChange={setOpen}>

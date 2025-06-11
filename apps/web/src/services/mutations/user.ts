@@ -5,6 +5,8 @@ import type {
     ResendOtpBody,
     ResetPasswordBody,
     SendResetPasswordEmailBody,
+    UpdateMasterPasswordBody,
+    UpdateUserDetailsBody,
     VerifyMasterPasswordBody,
     VerifyUserEmailBody,
 } from "@passman/schema/api";
@@ -55,6 +57,40 @@ export const useCreateMasterPassword = () => {
         mutationFn: async (body: CreateMasterKeyBody) => {
             const token = getToken();
             const response = await api.users["master-key"].$post({
+                header: {
+                    Authorization: `Bearer ${token}`,
+                },
+                json: body,
+            });
+
+            if (!response.ok) throw await response.json();
+            return await response.json();
+        },
+    });
+};
+
+export const useUpdateMasterPassword = () => {
+    return useMutation({
+        mutationFn: async (body: UpdateMasterPasswordBody) => {
+            const token = getToken();
+            const response = await api.users["update-master-password"].$patch({
+                header: {
+                    Authorization: `Bearer ${token}`,
+                },
+                json: body,
+            });
+
+            if (!response.ok) throw await response.json();
+            return await response.json();
+        },
+    });
+};
+
+export const useUpdateUser = () => {
+    return useMutation({
+        mutationFn: async (body: UpdateUserDetailsBody) => {
+            const token = getToken();
+            const response = await api.users.$patch({
                 header: {
                     Authorization: `Bearer ${token}`,
                 },

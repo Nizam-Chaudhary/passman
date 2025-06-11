@@ -1,5 +1,4 @@
 import { relations } from "drizzle-orm";
-import type { MasterKeyType } from "../../utils/basicSchema";
 
 import {
     boolean,
@@ -11,6 +10,7 @@ import {
 } from "drizzle-orm/mysql-core";
 
 import { files, passwords, vaults } from "../schema";
+import type { MasterKey } from "@passman/schema/api";
 
 export const users = mysqlTable("users", {
     id: int("id").autoincrement().primaryKey(),
@@ -18,8 +18,8 @@ export const users = mysqlTable("users", {
     email: varchar("email", { length: 255 }).notNull().unique(),
     password: varchar("password", { length: 255 }).notNull(),
     masterPassword: varchar("master_password", { length: 255 }),
-    masterKey: json("master_key").$type<MasterKeyType>(),
-    recoveryKey: json("recovery_key").$type<MasterKeyType>(),
+    masterKey: json("master_key").$type<MasterKey>(),
+    recoveryKey: json("recovery_key").$type<MasterKey>(),
     isVerified: boolean("is_verified").default(false).notNull(),
     otp: varchar("otp", { length: 6 }).notNull(),
     fileId: int().references(() => files.id, { onDelete: "set null" }),

@@ -1,5 +1,4 @@
 import type { SubmitHandler } from "react-hook-form";
-// import { useGetApiV1Users } from "@/api-client/api";
 import { useToast } from "@/hooks/use-toast";
 import { decrypt, deriveKey } from "@/lib/encryption.helper";
 import { useStore } from "@/store/store";
@@ -18,11 +17,20 @@ import {
 } from "./ui/form";
 import LoadingSpinner from "./ui/loadingSpinner";
 import { PasswordInput } from "./ui/password-input";
+import {
+    verifyRecoveryKeyFormSchema,
+    type VerifyRecoveryKeyForm,
+} from "@/schema/user";
+import { useGetUserDetails } from "@/services/queries/user";
+import type { MasterKey } from "@passman/schema/api";
+import { ROUTES } from "@/lib/constants";
+import { useNavigate } from "react-router";
 
 function VerifyRecoverKey() {
     const { toast } = useToast();
+    const navigate = useNavigate();
     const form = useForm({
-        resolver: zodResolver(verifyRecoverKeyFormSchema),
+        resolver: zodResolver(verifyRecoveryKeyFormSchema),
         defaultValues: {
             recoveryKey: "",
         },
@@ -34,11 +42,14 @@ function VerifyRecoverKey() {
         }))
     );
 
-    const { data: response, isPending, isError } = useGetApiV1Users();
+    const { data: response, isPending, isError } = useGetUserDetails();
     const userDetails = response?.data;
 
     const verifyMasterPasswordMutation = useMutation({
-        mutationFn: async (data: UserDetails & { userRecoveryKey: string }) => {
+        mutationFn: async (data: {
+            recoveryKey: MasterKey;
+            userRecoveryKey: string;
+        }) => {
             const derivedRecoveryDecryptKey = await deriveKey(
                 data.userRecoveryKey,
                 data.recoveryKey.salt
@@ -63,9 +74,13 @@ function VerifyRecoverKey() {
         },
     });
 
-    const onSubmit: SubmitHandler<VerifyRecoverKeyFormData> = async (data) => {
+    const onSubmit: SubmitHandler<VerifyRecoveryKeyForm> = async (data) => {
+        if (!userDetails || !userDetails.recoveryKey) {
+            navigate(ROUTES.MASTER_PASSWORD.CREATE);
+            return;
+        }
         verifyMasterPasswordMutation.mutateAsync({
-            ...userDetails!,
+            recoveryKey: userDetails.recoveryKey,
             userRecoveryKey: data.recoveryKey,
         });
     };

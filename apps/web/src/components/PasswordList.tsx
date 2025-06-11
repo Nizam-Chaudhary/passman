@@ -6,6 +6,7 @@ import { PasswordRow } from "./PasswordRow";
 import { Card, CardContent } from "./ui/card";
 import Loading from "./ui/loading";
 import { ScrollArea } from "./ui/scroll-area";
+import { useGetPasswordListForVault } from "@/services/queries/password";
 
 export function PasswordList() {
     const [searchParams] = useSearchParams();
@@ -18,13 +19,10 @@ export function PasswordList() {
         data: passwords,
         isPending,
         isError,
-    } = useGetApiV1Passwords(
-        {
-            vaultId: currentVault?.id as any,
-            search: searchParams.get("q") ?? undefined,
-        },
-        { query: { enabled: !!currentVault?.id } }
-    );
+    } = useGetPasswordListForVault({
+        vaultId: currentVault?.id as any,
+        search: searchParams.get("q") ?? undefined,
+    });
 
     if (isPending) {
         return (

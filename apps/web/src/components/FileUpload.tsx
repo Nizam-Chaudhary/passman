@@ -1,18 +1,18 @@
-import type { FileUploadResponse } from "@/types/file";
-// import { usePostApiV1FilesUpload } from "@/api-client/api";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "./ui/input";
+import type { FileUploadResponse } from "@/schema/file";
+import { useUploadFile } from "@/services/mutations/file";
 
 interface Props {
     onSuccess: (
         data: FileUploadResponse,
-        variables?: { data: unknown },
+        variables?: { file: File },
         context?: unknown
     ) => void;
 }
 
 function FileUpload({ onSuccess }: Props): React.ReactElement {
-    const uploadFileMutation = usePostApiV1FilesUpload();
+    const uploadFileMutation = useUploadFile();
     const { toast } = useToast();
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -25,7 +25,7 @@ function FileUpload({ onSuccess }: Props): React.ReactElement {
         });
 
         uploadFileMutation.mutate(
-            { data: { file: file as any } },
+            { file },
             {
                 onSuccess,
             }

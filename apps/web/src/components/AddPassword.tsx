@@ -1,13 +1,8 @@
-import type { Password } from "@/schema/password";
 import type { SubmitHandler } from "react-hook-form";
-// import {
-//     getGetApiV1PasswordsQueryKey,
-//     usePostApiV1Passwords,
-// } from "@/api-client/api";
 import { useToast } from "@/hooks/use-toast";
 import { encrypt } from "@/lib/encryption.helper";
 import { useStore } from "@/store/store";
-import { passwordPayloadSchema, passwordSchema } from "@/schema/password";
+import { addPasswordFormSchema, type AddPasswordForm } from "@/schema/password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
@@ -33,6 +28,7 @@ import LoadingSpinner from "./ui/loadingSpinner";
 import { PasswordInput } from "./ui/password-input";
 import { Textarea } from "./ui/textarea";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAddPassword } from "@/services/mutations/password";
 
 export default function AddPassword() {
     const queryClient = useQueryClient();
@@ -51,9 +47,9 @@ export default function AddPassword() {
     );
     const { toast } = useToast();
 
-    const addPasswordMutation = usePostApiV1Passwords();
-    const form = useForm<Password>({
-        resolver: zodResolver(passwordSchema),
+    const addPasswordMutation = useAddPassword();
+    const form = useForm<AddPasswordForm>({
+        resolver: zodResolver(addPasswordFormSchema),
         defaultValues: {
             username: "",
             password: "",
@@ -62,7 +58,7 @@ export default function AddPassword() {
         },
     });
 
-    const onSubmit: SubmitHandler<Password> = async (data) => {
+    const onSubmit: SubmitHandler<AddPasswordForm> = async (data) => {
         if (!masterKey) {
             toast({
                 className: "bg-red-700",
@@ -72,36 +68,31 @@ export default function AddPassword() {
             return;
         }
         const encryptedPassword = await encrypt(data.password, masterKey);
-        const payload = passwordPayloadSchema.parse({
+        const payload = {
             ...data,
             password: encryptedPassword,
             vaultId: currentVault?.id,
-        });
+        };
 
-        addPasswordMutation.mutate(
-            { data: payload },
-            {
-                onError: (error) => {
-                    toast({
-                        className: "bg-red-500",
-                        description: error.message,
-                    });
-                },
-                onSuccess: () => {
-                    queryClient.invalidateQueries({
-                        queryKey: getGetApiV1PasswordsQueryKey({
-                            vaultId: currentVault!.id,
-                        }),
-                    });
-                    toast({
-                        title: "Password added successfully.",
-                        className: "bg-green-700",
-                    });
-                    setOpenAddPasswordDialog(false);
-                    form.reset();
-                },
-            }
-        );
+        addPasswordMutation.mutate(payload, {
+            onError: (error) => {
+                toast({
+                    className: "bg-red-500",
+                    description: error.message,
+                });
+            },
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["passwords"],
+                });
+                toast({
+                    title: "Password added successfully.",
+                    className: "bg-green-700",
+                });
+                setOpenAddPasswordDialog(false);
+                form.reset();
+            },
+        });
     };
 
     const onOpenChange = (value: boolean) => {

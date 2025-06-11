@@ -97,7 +97,7 @@ export const passwordRoutes = new Hono()
         }
     )
     .delete(
-        "/:id{[0-9]+}",
+        "/:id",
         bearerAuth,
         zValidator("header", headerSchema, zValidatorCustomFunc),
         zValidator("param", idParamsSchema, zValidatorCustomFunc),

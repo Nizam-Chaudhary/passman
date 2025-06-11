@@ -26,6 +26,13 @@ export type CreateMasterPasswordForm = z.infer<
     typeof createMasterPasswordFormSchema
 >;
 
+// Update master password
+export const updateMasterPasswordFormSchema = createMasterPasswordFormSchema;
+
+export type UpdateMasterPasswordForm = z.infer<
+    typeof updateMasterPasswordFormSchema
+>;
+
 // Reset password
 export const resetPasswordFormSchema = z.object({
     password: masterPasswordSchema,
@@ -33,3 +40,10 @@ export const resetPasswordFormSchema = z.object({
 });
 
 export type ResetPasswordForm = z.infer<typeof resetPasswordFormSchema>;
+
+// Verify Recovery Key
+export const verifyRecoveryKeyFormSchema = z.object({
+    recoveryKey: z.string().min(1, "Please enter recovery key"),
+});
+
+export type VerifyRecoveryKeyForm = z.infer<typeof verifyRecoveryKeyFormSchema>;
