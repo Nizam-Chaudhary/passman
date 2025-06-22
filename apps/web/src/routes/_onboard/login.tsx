@@ -38,11 +38,9 @@ function Login() {
     const { toast } = useToast();
     const mutateLoginUser = useLoginUser();
 
-    const { login, setIsEmailVerified, setUserEmail } = useAuthStore(
+    const { authActions } = useAuthStore(
         useShallow((state) => ({
-            login: state.login,
-            setIsEmailVerified: state.setIsEmailVerified,
-            setUserEmail: state.setUserEmail,
+            authActions: state.actions,
         }))
     );
 
@@ -60,8 +58,8 @@ function Login() {
                 if (
                     error.message == "Email not verified. Please verify first!"
                 ) {
-                    setIsEmailVerified(false);
-                    setUserEmail(data.email);
+                    authActions.setIsEmailVerified(false);
+                    authActions.setUserEmail(data.email);
                     navigate({ to: "/verify-account" });
                 } else {
                     toast({
@@ -71,10 +69,10 @@ function Login() {
                 }
             },
             onSuccess: async (response, variables) => {
-                setIsEmailVerified(true);
+                authActions.setIsEmailVerified(true);
                 const token = response.data.token;
                 const userData = jwtDecode<JwtUserData>(token);
-                login({
+                authActions.login({
                     accessToken: token,
                     refreshToken: response.data.refreshToken,
                     isEmailVerified: true,
@@ -89,7 +87,7 @@ function Login() {
                 } else if (response.data.isVerified) {
                     navigate({ to: "/master-password/verify" });
                 } else {
-                    setUserEmail(variables.email);
+                    authActions.setUserEmail(variables.email);
                     navigate({ to: "/verify-account" });
                 }
             },

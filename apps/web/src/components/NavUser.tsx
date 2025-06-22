@@ -28,9 +28,9 @@ export function NavUser() {
     const { data: response, isPending, isError } = useGetUserDetails();
     const user = response?.data;
 
-    const { logout: logoutStorage } = useAuthStore(
+    const { authActions } = useAuthStore(
         useShallow((state) => ({
-            logout: state.logout,
+            authActions: state.actions,
         }))
     );
 
@@ -54,13 +54,13 @@ export function NavUser() {
     }
 
     const logout = () => {
-        logoutStorage();
+        authActions.logout();
         setMasterKey(null);
         setRecoveryKey("");
         navigate({ to: "/login" });
         toast({
             description: "Logged out successfully",
-            className: "bg-green-700",
+            className: "bg-green-700 text-bold",
         });
     };
 

@@ -15,10 +15,10 @@ export const passwords = mysqlTable("passwords", {
     id: int("id").autoincrement().primaryKey(),
     userId: int("user_id")
         .notNull()
-        .references(() => users.id),
+        .references(() => users.id, { onDelete: "cascade" }),
     vaultId: int("vault_id")
         .notNull()
-        .references(() => vaults.id),
+        .references(() => vaults.id, { onDelete: "cascade" }),
     name: varchar("name", { length: 255 }),
     url: varchar("url", { length: 255 }).notNull(),
     username: varchar("username", { length: 255 }).notNull(),

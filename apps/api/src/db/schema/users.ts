@@ -9,8 +9,8 @@ import {
     varchar,
 } from "drizzle-orm/mysql-core";
 
-import { files, passwords, vaults } from "../schema";
 import type { MasterKey } from "@passman/schema/api";
+import { files, passwords, vaults } from "../schema";
 
 export const users = mysqlTable("users", {
     id: int("id").autoincrement().primaryKey(),
@@ -22,7 +22,7 @@ export const users = mysqlTable("users", {
     recoveryKey: json("recovery_key").$type<MasterKey>(),
     isVerified: boolean("is_verified").default(false).notNull(),
     otp: varchar("otp", { length: 6 }).notNull(),
-    fileId: int().references(() => files.id, { onDelete: "set null" }),
+    fileId: int(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at")
         .notNull()

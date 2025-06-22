@@ -55,8 +55,14 @@ export const Route = createFileRoute("/master-password/create")({
 function CreateMasterPassword() {
     const { setOpenRecoveryKeyDialog, setRecoveryKey } = useStore(
         useShallow((state) => ({
-            setOpenRecoveryKeyDialog: state.setOpenRecoveryKeyDialog,
             setRecoveryKey: state.setRecoveryKey,
+            setOpenRecoveryKeyDialog: state.setOpenRecoveryKeyDialog,
+        }))
+    );
+
+    const { authActions } = useAuthStore(
+        useShallow((state) => ({
+            authActions: state.actions,
         }))
     );
 
@@ -118,6 +124,7 @@ function CreateMasterPassword() {
             {
                 onSuccess: async () => {
                     await refreshTokenMutation.mutate();
+                    authActions.setMasterPasswordCreated(true);
                     setOpenRecoveryKeyDialog(true);
                 },
                 onError: (error) => {

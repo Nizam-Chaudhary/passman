@@ -39,9 +39,15 @@ function Home() {
         () =>
             debounce((searchTerm: string) => {
                 if (searchTerm === "") {
-                    navigate({ to: ".", search: () => ({}) });
+                    navigate({
+                        to: ".",
+                        search: (prev) => ({ ...prev, q: undefined }),
+                    });
                 } else {
-                    navigate({ to: ".", search: () => ({ q: "" }) });
+                    navigate({
+                        to: ".",
+                        search: (prev) => ({ ...prev, q: searchTerm }),
+                    });
                 }
             }, 500),
         [navigate]

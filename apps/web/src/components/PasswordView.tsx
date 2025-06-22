@@ -1,5 +1,5 @@
 import { toast } from "@/hooks/use-toast";
-import { decrypt, encrypt } from "@/lib/encryption.helper";
+import { encrypt } from "@/lib/encryption.helper";
 import { getInitials } from "@/lib/utils";
 import {
     upddatePasswordForm,
@@ -12,7 +12,7 @@ import {
 import { useGetPasswordById } from "@/services/queries/password";
 import { useStore } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { ClipboardCopyIcon, TrashIcon } from "lucide-react";
 import { useEffect } from "react";
@@ -55,18 +55,12 @@ export function PasswordView() {
         data: response,
         isPending,
         isError,
-    } = useGetPasswordById({ id: Number(passwordId) });
+    } = useGetPasswordById({
+        param: { id: Number(passwordId) },
+        masterKey: masterKey!,
+    });
     const editPasswordMutation = useUpdatePassword();
     const deletePasswordMutation = useDeletePassword();
-
-    const { data: password } = useQuery({
-        queryKey: ["decryptPassword", { id: passwordId }],
-        queryFn: async () => {
-            if (!masterKey || !response?.data.password) return null;
-            return await decrypt(response?.data.password, masterKey);
-        },
-        enabled: !!response?.data.password && masterKey != null,
-    });
 
     const editPasswordForm = useForm<UpdatePasswordForm>({
         resolver: zodResolver(upddatePasswordForm),
@@ -82,10 +76,10 @@ export function PasswordView() {
         editPasswordForm.reset({
             url: response?.data.url || "",
             username: response?.data.username || "",
-            password: password || "",
+            password: response?.decryptedPassword || "",
             note: response?.data.note || "",
         });
-    }, [password, response, editPasswordForm]);
+    }, [response, editPasswordForm]);
 
     if (!passwordId) {
         return (

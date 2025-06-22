@@ -40,10 +40,9 @@ function SignUp() {
     const navigate = useNavigate();
     const registerUserMutation = useRegisterUser();
 
-    const { setUserEmail, setIsEmailVerified } = useAuthStore(
+    const { authActions } = useAuthStore(
         useShallow((state) => ({
-            setUserEmail: state.setUserEmail,
-            setIsEmailVerified: state.setIsEmailVerified,
+            authActions: state.actions,
         }))
     );
 
@@ -69,8 +68,8 @@ function SignUp() {
                     className: "bg-green-700",
                     title: "Signed up successfully!",
                 });
-                setUserEmail(variables.email);
-                setIsEmailVerified(false);
+                authActions.setUserEmail(variables.email);
+                authActions.setIsEmailVerified(false);
                 await navigate({ to: "/verify-account" });
             },
         });

@@ -67,9 +67,9 @@ function VerifyMasterPassword() {
             setMasterkey: state.setMasterKey,
         }))
     );
-    const { authenticate } = useAuthStore(
+    const { authActions } = useAuthStore(
         useShallow((state) => ({
-            authenticate: state.authenticate,
+            authActions: state.actions,
         }))
     );
 
@@ -110,7 +110,7 @@ function VerifyMasterPassword() {
                 );
                 const masterKey = await importKey(decryptedMasterKey);
                 setMasterkey(masterKey);
-                authenticate();
+                authActions.authenticate();
                 navigate({ to: "/", replace: true });
             },
             onError: (error) => {

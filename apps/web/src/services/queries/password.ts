@@ -1,3 +1,4 @@
+import { decrypt } from "@/lib/encryption.helper";
 import { useAuthStore } from "@/stores/auth";
 import type {
     GetPasswordsQueryOptions,
@@ -28,9 +29,12 @@ export const useGetPasswordListForVault = (query: GetPasswordsQueryOptions) => {
     });
 };
 
-export const useGetPasswordById = (param: IdParamsType) => {
+export const useGetPasswordById = (options: {
+    param: IdParamsType;
+    masterKey: CryptoKey;
+}) => {
     return useQuery({
-        queryKey: ["passwords", param],
+        queryKey: ["passwords", options.param],
         queryFn: async () => {
             const token = useAuthStore.getState().accessToken;
             const response = await api.passwords[":id"].$get({
@@ -38,13 +42,19 @@ export const useGetPasswordById = (param: IdParamsType) => {
                     Authorization: `Bearer ${token}`,
                 },
                 param: {
-                    id: param.id.toString(),
+                    id: options.param.id.toString(),
                 },
             });
 
             if (!response.ok) throw await response.json();
-            return await response.json();
+            const json = await response.json();
+
+            const decryptedPassword = await decrypt(
+                json.data.password,
+                options.masterKey
+            );
+            return { data: json.data, decryptedPassword };
         },
-        enabled: !!param.id,
+        enabled: !!options.param.id,
     });
 };

@@ -14,7 +14,7 @@ interface Props {
 
 export function PasswordRow({ name, id, url, username, faviconUrl }: Props) {
     return (
-        <Link from="/" to="." search={{ p: parseInt(id) }}>
+        <Link from="/" to="." search={(prev) => ({ ...prev, p: parseInt(id) })}>
             <div className="flex ml-1 items-center justify-center p-2 cursor-pointer">
                 <div className="flex items-center justify-center w-8 cursor-pointer">
                     <Avatar className="w-10 h-10 rounded-lg">

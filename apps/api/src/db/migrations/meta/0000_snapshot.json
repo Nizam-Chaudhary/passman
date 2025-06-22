@@ -1,7 +1,7 @@
 {
     "version": "5",
     "dialect": "mysql",
-    "id": "e913231d-a82a-4a1c-a84d-4eb014bd4b5b",
+    "id": "f914ac2e-8691-4a8c-9fcf-19209b5559fc",
     "prevId": "00000000-0000-0000-0000-000000000000",
     "tables": {
         "files": {
@@ -53,7 +53,17 @@
                 }
             },
             "indexes": {},
-            "foreignKeys": {},
+            "foreignKeys": {
+                "files_user_id_users_id_fk": {
+                    "name": "files_user_id_users_id_fk",
+                    "tableFrom": "files",
+                    "tableTo": "users",
+                    "columnsFrom": ["user_id"],
+                    "columnsTo": ["id"],
+                    "onDelete": "cascade",
+                    "onUpdate": "no action"
+                }
+            },
             "compositePrimaryKeys": {
                 "files_id": {
                     "name": "files_id",
@@ -239,7 +249,7 @@
                     "tableTo": "users",
                     "columnsFrom": ["user_id"],
                     "columnsTo": ["id"],
-                    "onDelete": "no action",
+                    "onDelete": "cascade",
                     "onUpdate": "no action"
                 },
                 "passwords_vault_id_vaults_id_fk": {
@@ -248,7 +258,7 @@
                     "tableTo": "vaults",
                     "columnsFrom": ["vault_id"],
                     "columnsTo": ["id"],
-                    "onDelete": "no action",
+                    "onDelete": "cascade",
                     "onUpdate": "no action"
                 }
             },
@@ -353,17 +363,7 @@
                 }
             },
             "indexes": {},
-            "foreignKeys": {
-                "users_fileId_files_id_fk": {
-                    "name": "users_fileId_files_id_fk",
-                    "tableFrom": "users",
-                    "tableTo": "files",
-                    "columnsFrom": ["fileId"],
-                    "columnsTo": ["id"],
-                    "onDelete": "set null",
-                    "onUpdate": "no action"
-                }
-            },
+            "foreignKeys": {},
             "compositePrimaryKeys": {
                 "users_id": {
                     "name": "users_id",
@@ -427,7 +427,7 @@
                     "tableTo": "users",
                     "columnsFrom": ["user_id"],
                     "columnsTo": ["id"],
-                    "onDelete": "no action",
+                    "onDelete": "cascade",
                     "onUpdate": "no action"
                 }
             },

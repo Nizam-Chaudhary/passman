@@ -35,7 +35,6 @@ export function replaceRouteParams(
 }
 
 export function getInitials(value: string) {
-    console.log("value", value);
     const words = value.split(" ");
     const initials =
         words[0].charAt(0).toUpperCase() +

@@ -35,12 +35,14 @@ function RecoveryKeyDialog() {
                     Save this recovery key somewhere safe. This key will be
                     required to recover your account.
                 </DialogDescription>
-                <Input value={recoveryKey} onChange={() => {}} />
+                <Input value={recoveryKey ?? ""} onChange={() => {}} />
                 <DialogFooter>
                     {buttonType === "copy" ? (
                         <Button
                             onClick={() => {
-                                navigator.clipboard.writeText(recoveryKey);
+                                navigator.clipboard.writeText(
+                                    recoveryKey ?? ""
+                                );
                                 setButtonType("okay");
                                 toast({
                                     title: "Copied to clipboard",

@@ -7,11 +7,10 @@ import { useNavigate } from "@tanstack/react-router";
 import { useShallow } from "zustand/react/shallow";
 
 export function useRefreshToken() {
-    const { logoutStorage, refreshToken, setTokens } = useAuthStore(
+    const { refreshToken, authActions } = useAuthStore(
         useShallow((state) => ({
-            logoutStorage: state.logout,
             refreshToken: state.refreshToken,
-            setTokens: state.setTokens,
+            authActions: state.actions,
         }))
     );
     const { setMasterKey, setRecoveryKey } = useStore(
@@ -27,7 +26,7 @@ export function useRefreshToken() {
 
     const mutate = async () => {
         const onRefreshTokenError = () => {
-            logoutStorage();
+            authActions.logout();
             setMasterKey(null);
             setRecoveryKey("");
             navigate({ to: "/login", replace: true });
@@ -42,7 +41,7 @@ export function useRefreshToken() {
             { refreshToken: refreshToken },
             {
                 onSuccess: (response) => {
-                    setTokens({
+                    authActions.setTokens({
                         accessToken: response.data.token,
                         refreshToken: response.data.refreshToken,
                     });

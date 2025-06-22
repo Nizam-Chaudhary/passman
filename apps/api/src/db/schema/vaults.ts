@@ -8,7 +8,7 @@ export const vaults = mysqlTable("vaults", {
     name: varchar("name", { length: 255 }).notNull(),
     userId: int("user_id")
         .notNull()
-        .references(() => users.id),
+        .references(() => users.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
         .defaultNow()

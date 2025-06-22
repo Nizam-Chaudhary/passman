@@ -71,6 +71,7 @@ function VerifyAccount() {
 
     const { email } = useAuthStore(
         useShallow((state) => ({
+            authActions: state.actions,
             email: state.userEmail,
         }))
     );
@@ -82,6 +83,10 @@ function VerifyAccount() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [email]);
+
+    useEffect(() => {
+        setTimer(120);
+    }, []);
 
     const verifyUserEmailMutation = useVerifyUserEmail();
     const navigate = useNavigate();

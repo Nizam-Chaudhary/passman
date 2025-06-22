@@ -60,9 +60,9 @@ CREATE TABLE `vaults` (
 	CONSTRAINT `vaults_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
+ALTER TABLE `files` ADD CONSTRAINT `files_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `notes` ADD CONSTRAINT `notes_userId_users_id_fk` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `notes` ADD CONSTRAINT `notes_vaultId_vaults_id_fk` FOREIGN KEY (`vaultId`) REFERENCES `vaults`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `passwords` ADD CONSTRAINT `passwords_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `passwords` ADD CONSTRAINT `passwords_vault_id_vaults_id_fk` FOREIGN KEY (`vault_id`) REFERENCES `vaults`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `users` ADD CONSTRAINT `users_fileId_files_id_fk` FOREIGN KEY (`fileId`) REFERENCES `files`(`id`) ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `vaults` ADD CONSTRAINT `vaults_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `passwords` ADD CONSTRAINT `passwords_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `passwords` ADD CONSTRAINT `passwords_vault_id_vaults_id_fk` FOREIGN KEY (`vault_id`) REFERENCES `vaults`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `vaults` ADD CONSTRAINT `vaults_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE cascade ON UPDATE no action;
