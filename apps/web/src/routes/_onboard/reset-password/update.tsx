@@ -1,12 +1,5 @@
-import type { SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Form,
     FormControl,
@@ -18,12 +11,23 @@ import {
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useToast } from "@/hooks/use-toast";
-import { ROUTES } from "@/lib/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useNavigate, useSearchParams } from "react-router";
-import { useResetPassword } from "@/services/mutations/user";
 import { resetPasswordFormSchema, type ResetPasswordForm } from "@/schema/user";
+import { useResetPassword } from "@/services/mutations/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import z from "zod/v4";
+
+const resetPasswordSearchSchema = z.object({
+    token: z.jwt(),
+});
+
+export const Route = createFileRoute("/_onboard/reset-password/update")({
+    component: ResetPassword,
+    validateSearch: zodValidator(resetPasswordSearchSchema),
+});
 
 function ResetPassword() {
     const form = useForm({
@@ -35,19 +39,13 @@ function ResetPassword() {
     });
     const { toast } = useToast();
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const { token } = Route.useSearch();
 
     const resetPasswordMutation = useResetPassword();
 
     const onSubmit: SubmitHandler<ResetPasswordForm> = async (data) => {
-        const token = searchParams.get("token");
         if (!token) {
-            toast({
-                title: "Invalid token signature! redirecting...",
-                className: "bg-red-700",
-            });
-
-            navigate(ROUTES.LOGIN, { replace: true });
+            navigate({ to: "/login", replace: true });
             return;
         }
 
@@ -63,7 +61,7 @@ function ResetPassword() {
                         className: "bg-green-700",
                     });
 
-                    navigate(ROUTES.LOGIN, { replace: true });
+                    navigate({ to: "/login", replace: true });
                 },
             }
         );
@@ -72,8 +70,7 @@ function ResetPassword() {
         <div className="flex justify-center items-center h-screen">
             <Card className="w-full max-w-md">
                 <CardHeader>
-                    <CardTitle>Reset password</CardTitle>
-                    <CardDescription>Send reset password email</CardDescription>
+                    <CardTitle>Reset account password</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
@@ -132,5 +129,3 @@ function ResetPassword() {
         </div>
     );
 }
-
-export default ResetPassword;

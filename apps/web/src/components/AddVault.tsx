@@ -1,7 +1,10 @@
-import type { SubmitHandler } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
-import { useStore } from "@/store/store";
+import { useAddVault } from "@/services/mutations/vault";
+import { useStore } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addVaultBodySchema } from "@passman/schema/api";
+import { useQueryClient } from "@tanstack/react-query";
+import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "./ui/button";
@@ -23,9 +26,6 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import LoadingSpinner from "./ui/loadingSpinner";
-import { useQueryClient } from "@tanstack/react-query";
-import { addVaultBodySchema } from "@passman/schema/api";
-import { useAddVault } from "@/services/mutations/vault";
 
 export default function AddVault() {
     const queryClient = useQueryClient();

@@ -1,12 +1,12 @@
 import { Hono } from "hono";
-import { logger } from "hono/logger";
-import { routes } from "./route";
-import { trimTrailingSlash } from "hono/trailing-slash";
 import { cors } from "hono/cors";
+import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 import { timeout } from "hono/timeout";
-import { errorHandler } from "./middlewares/errorHandler";
+import { trimTrailingSlash } from "hono/trailing-slash";
 import { env } from "./lib/env";
+import { errorHandler } from "./middlewares/errorHandler";
+import { routes } from "./route";
 
 const app = new Hono();
 
@@ -15,7 +15,7 @@ app.use("*", logger());
 app.use(
     "/api/*",
     cors({
-        origin: [env.FE_URL],
+        origin: env.NODE_ENV === "production" ? [env.FE_URL] : "*",
     })
 );
 app.use(secureHeaders());

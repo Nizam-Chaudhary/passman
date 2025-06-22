@@ -1,4 +1,3 @@
-import type { SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -18,26 +17,30 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useToast } from "@/hooks/use-toast";
-import { ROUTES } from "@/lib/constants";
-import { useStore } from "@/store/store";
+import { useRegisterUser } from "@/services/mutations/user";
+import { useAuthStore } from "@/stores/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router";
-import { useShallow } from "zustand/react/shallow";
-import { PasswordInput } from "../components/ui/password-input";
 import {
     registerUserBodySchema,
     type RegisterUserBody,
 } from "@passman/schema/api/user";
-import { useRegisterUser } from "@/services/mutations/user";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
 
-export default function SignUp() {
+export const Route = createFileRoute("/_onboard/signup")({
+    component: SignUp,
+});
+
+function SignUp() {
     const { toast } = useToast();
     const navigate = useNavigate();
     const registerUserMutation = useRegisterUser();
 
-    const { setUserEmail, setIsEmailVerified } = useStore(
+    const { setUserEmail, setIsEmailVerified } = useAuthStore(
         useShallow((state) => ({
             setUserEmail: state.setUserEmail,
             setIsEmailVerified: state.setIsEmailVerified,
@@ -61,15 +64,14 @@ export default function SignUp() {
                     title: error.message,
                 });
             },
-            onSuccess: async (response, variables) => {
+            onSuccess: async (_response, variables) => {
                 toast({
                     className: "bg-green-700",
                     title: "Signed up successfully!",
                 });
-                console.log("response", response);
                 setUserEmail(variables.email);
                 setIsEmailVerified(false);
-                await navigate(ROUTES.VERIFY_ACCOUNT);
+                await navigate({ to: "/verify-account" });
             },
         });
     };
@@ -151,13 +153,9 @@ export default function SignUp() {
                     </Form>
                 </CardContent>
                 <CardFooter>
-                    <NavLink
-                        to={ROUTES.LOGIN}
-                        className="text-blue-600"
-                        replace
-                    >
+                    <Link to="/login" className="text-blue-600" replace={true}>
                         Already have an account? Login
-                    </NavLink>
+                    </Link>
                 </CardFooter>
             </Card>
         </div>

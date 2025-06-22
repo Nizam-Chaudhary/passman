@@ -3,10 +3,9 @@
 //     postApiV1AuthRefreshToken,
 // } from "@/api-client/api";
 // import { PostApiV1AuthRefreshToken200 } from "@/api-client/api.schemas";
-import { useStore } from "@/store/store";
+import { useStore } from "@/stores";
 import {
     getRefreshToken,
-    getToken,
     isTokenExpired,
     removeRefreshToken,
     removeToken,
@@ -36,7 +35,7 @@ function getUrl(contextUrl: string): string {
 }
 
 function getHeaders(headers?: HeadersInit): HeadersInit {
-    const token = getToken();
+    const token = useAuthStore.getState().accessToken;
     return {
         ...headers,
         Authorization: token ? `Bearer ${token}` : "",

@@ -25,3 +25,11 @@ export const getVaultWithResourceQuerySchema = z
 export type getVaultResourceQueryOptions = z.infer<
     typeof getVaultWithResourceQuerySchema
 >;
+
+export interface Vault {
+    id: number;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    userId: number;
+}

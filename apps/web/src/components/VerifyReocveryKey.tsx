@@ -1,9 +1,16 @@
-import type { SubmitHandler } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { decrypt, deriveKey } from "@/lib/encryption.helper";
-import { useStore } from "@/store/store";
+import {
+    verifyRecoveryKeyFormSchema,
+    type VerifyRecoveryKeyForm,
+} from "@/schema/user";
+import { useGetUserDetails } from "@/services/queries/user";
+import { useStore } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { MasterKey } from "@passman/schema/api";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "./ui/button";
@@ -17,14 +24,6 @@ import {
 } from "./ui/form";
 import LoadingSpinner from "./ui/loadingSpinner";
 import { PasswordInput } from "./ui/password-input";
-import {
-    verifyRecoveryKeyFormSchema,
-    type VerifyRecoveryKeyForm,
-} from "@/schema/user";
-import { useGetUserDetails } from "@/services/queries/user";
-import type { MasterKey } from "@passman/schema/api";
-import { ROUTES } from "@/lib/constants";
-import { useNavigate } from "react-router";
 
 function VerifyRecoverKey() {
     const { toast } = useToast();
@@ -76,7 +75,7 @@ function VerifyRecoverKey() {
 
     const onSubmit: SubmitHandler<VerifyRecoveryKeyForm> = async (data) => {
         if (!userDetails || !userDetails.recoveryKey) {
-            navigate(ROUTES.MASTER_PASSWORD.CREATE);
+            navigate({ to: "/master-password/create", replace: true });
             return;
         }
         verifyMasterPasswordMutation.mutateAsync({

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useStore } from "@/store/store";
+import { useStore } from "@/stores";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "./ui/button";
 import {

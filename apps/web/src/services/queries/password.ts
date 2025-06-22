@@ -1,16 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../api";
-import { getToken } from "@/lib/auth";
+import { useAuthStore } from "@/stores/auth";
 import type {
     GetPasswordsQueryOptions,
     IdParamsType,
 } from "@passman/schema/api";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../api";
 
 export const useGetPasswordListForVault = (query: GetPasswordsQueryOptions) => {
     return useQuery({
         queryKey: ["passwords", query],
         queryFn: async () => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.passwords.$get({
                 header: {
                     Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ export const useGetPasswordById = (param: IdParamsType) => {
     return useQuery({
         queryKey: ["passwords", param],
         queryFn: async () => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.passwords[":id"].$get({
                 header: {
                     Authorization: `Bearer ${token}`,

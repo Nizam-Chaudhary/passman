@@ -1,15 +1,17 @@
 // import { useGetApiV1Passwords } from "@/api-client/api";
-import { useStore } from "@/store/store";
-import { useSearchParams } from "react-router";
+import { useGetPasswordListForVault } from "@/services/queries/password";
+import { useStore } from "@/stores";
+import { getRouteApi } from "@tanstack/react-router";
 import { useShallow } from "zustand/react/shallow";
 import { PasswordRow } from "./PasswordRow";
 import { Card, CardContent } from "./ui/card";
 import Loading from "./ui/loading";
 import { ScrollArea } from "./ui/scroll-area";
-import { useGetPasswordListForVault } from "@/services/queries/password";
 
+const routeApi = getRouteApi("/_auth/");
 export function PasswordList() {
-    const [searchParams] = useSearchParams();
+    const searchParams = routeApi.useSearch();
+
     const { currentVault } = useStore(
         useShallow((state) => ({
             currentVault: state.currentVault,
@@ -21,7 +23,7 @@ export function PasswordList() {
         isError,
     } = useGetPasswordListForVault({
         vaultId: currentVault?.id as any,
-        search: searchParams.get("q") ?? undefined,
+        search: searchParams.q ?? undefined,
     });
 
     if (isPending) {

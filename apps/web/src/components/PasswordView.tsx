@@ -1,17 +1,23 @@
-import type { SubmitHandler } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import { decrypt, encrypt } from "@/lib/encryption.helper";
-import { useStore } from "@/store/store";
+import { getInitials } from "@/lib/utils";
 import {
     upddatePasswordForm,
     type UpdatePasswordForm,
 } from "@/schema/password";
+import {
+    useDeletePassword,
+    useUpdatePassword,
+} from "@/services/mutations/password";
+import { useGetPasswordById } from "@/services/queries/password";
+import { useStore } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getRouteApi } from "@tanstack/react-router";
 import { ClipboardCopyIcon, TrashIcon } from "lucide-react";
 import { useEffect } from "react";
+import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import ConfirmDialog from "./ConfirmDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -31,16 +37,12 @@ import { PasswordInput } from "./ui/password-input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
-import { getInitials } from "@/lib/utils";
-import { useGetPasswordById } from "@/services/queries/password";
-import {
-    useDeletePassword,
-    useUpdatePassword,
-} from "@/services/mutations/password";
 
+const routeApi = getRouteApi("/_auth/");
 export function PasswordView() {
     const queryClient = useQueryClient();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParams = routeApi.useSearch();
+    const navigate = routeApi.useNavigate();
 
     const { setOpenDeletePasswordDialog, masterKey } = useStore(
         useShallow((state) => ({
@@ -48,7 +50,7 @@ export function PasswordView() {
             masterKey: state.masterKey,
         }))
     );
-    const passwordId = searchParams.get("p");
+    const passwordId = searchParams.p;
     const {
         data: response,
         isPending,
@@ -181,8 +183,7 @@ export function PasswordView() {
                     });
                 },
                 onSuccess: () => {
-                    searchParams.delete("p");
-                    setSearchParams(searchParams);
+                    navigate({ search: (prev) => ({ ...prev, p: undefined }) });
                     queryClient.invalidateQueries({
                         queryKey: ["passwords"],
                     });

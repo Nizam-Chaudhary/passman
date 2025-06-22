@@ -1,12 +1,12 @@
-import { getToken } from "@/lib/auth";
+import { useAuthStore } from "@/stores/auth";
+import type { UploadFileBody } from "@passman/schema/api";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../api";
-import type { UploadFileBody } from "@passman/schema/api";
 
 export const useUploadFile = () => {
     return useMutation({
         mutationFn: async (form: UploadFileBody) => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.files["upload"].$post({
                 header: {
                     Authorization: `Bearer ${token}`,

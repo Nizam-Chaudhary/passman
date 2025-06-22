@@ -47,7 +47,7 @@ export function isTokenExpired(token: string): boolean {
 }
 
 export function checkAuthStatus() {
-    const token = getToken();
+    const token = useAuthStore.getState().accessToken;
 
     if (!token) {
         return { isAuthenticated: false, userData: null };

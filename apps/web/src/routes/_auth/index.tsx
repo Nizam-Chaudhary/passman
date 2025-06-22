@@ -1,48 +1,50 @@
+import AddPassword from "@/components/AddPassword";
 import { AppSidebar } from "@/components/AppSidebar";
 import { PasswordList } from "@/components/PasswordList";
+import { PasswordView } from "@/components/PasswordView";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { useStore } from "@/store/store";
-import debounce from "lodash/debounce";
+import { VaultComboBox } from "@/components/VaultComboBox";
+import { useStore } from "@/stores";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { debounce } from "lodash";
 import { KeyRound, LockIcon, Search } from "lucide-react";
 import { useEffect, useMemo } from "react";
-import { useSearchParams } from "react-router";
+import z from "zod/v4";
 import { useShallow } from "zustand/react/shallow";
-import AddPassword from "../components/AddPassword";
-import { PasswordView } from "../components/PasswordView";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { VaultComboBox } from "../components/VaultComboBox";
 
-export default function Home() {
-    const [searchParams, setSearchParams] = useSearchParams();
+const homeSearchSchema = z.object({
+    q: z.string().default("").optional(),
+    p: z.number().min(1).optional(),
+});
 
+export const Route = createFileRoute("/_auth/")({
+    component: Home,
+    validateSearch: zodValidator(homeSearchSchema),
+});
+
+function Home() {
     const { setOpenAddPasswordDialog } = useStore(
         useShallow((state) => ({
             setOpenAddPasswordDialog: state.setOpenAddPasswordDialog,
         }))
     );
 
-    // const refreshTokenMutation = useRefreshToken();
-
-    // useLayoutEffect(() => {
-    //   const token = getToken();
-    //   if (token) {
-    //     setRequestInterceptor();
-    //   }
-    //   setResponseInterceptor(refreshTokenMutation);
-    // }, [refreshTokenMutation]);
+    const searchParams = Route.useSearch();
+    const navigate = useNavigate();
 
     const debouncedSearch = useMemo(
         () =>
             debounce((searchTerm: string) => {
                 if (searchTerm === "") {
-                    searchParams.delete("q");
+                    navigate({ to: ".", search: () => ({}) });
                 } else {
-                    searchParams.set("q", searchTerm);
+                    navigate({ to: ".", search: () => ({ q: "" }) });
                 }
-                setSearchParams(searchParams);
             }, 500),
-        [searchParams, setSearchParams]
+        [navigate]
     );
 
     // Cleanup the debounced function on unmount
@@ -74,7 +76,7 @@ export default function Home() {
                                         const searchTerm = e.target.value;
                                         debouncedSearch(searchTerm);
                                     }}
-                                    defaultValue={searchParams.get("q") || ""}
+                                    defaultValue={searchParams.q ?? ""}
                                 />
                                 <Search className="absolute right-3 w-5 h-5 text-gray-500 pointer-events-none" />
                             </div>

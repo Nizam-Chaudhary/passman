@@ -1,18 +1,4 @@
-import type { SubmitHandler } from "react-hook-form";
-import LoadingSpinner from "@/components/ui/loadingSpinner";
-import { PasswordInput } from "@/components/ui/password-input";
-import { useRefreshToken } from "@/hooks/refresh-token";
-import { useToast } from "@/hooks/use-toast";
-import { ROUTES } from "@/lib/constants";
-import { decrypt, deriveKey, importKey } from "@/lib/encryption.helper";
-import { replaceRouteParams } from "@/lib/utils";
-import { useStore } from "@/store/store";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router";
-import { useShallow } from "zustand/react/shallow";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
@@ -20,7 +6,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "../components/ui/card";
+} from "@/components/ui/card";
 import {
     Form,
     FormControl,
@@ -28,19 +14,62 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "../components/ui/form";
+} from "@/components/ui/form";
+import LoadingSpinner from "@/components/ui/loadingSpinner";
+import { PasswordInput } from "@/components/ui/password-input";
+import { useRefreshToken } from "@/hooks/refresh-token";
+import { useToast } from "@/hooks/use-toast";
+import { decrypt, deriveKey, importKey } from "@/lib/encryption.helper";
+import { useVerifyMasterPassword } from "@/services/mutations/user";
+import { useStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     verifyMasterPasswordBodySchema,
     type VerifyMasterPasswordBody,
 } from "@passman/schema/api/user";
-import { useVerifyMasterPassword } from "@/services/mutations/user";
+import {
+    createFileRoute,
+    Link,
+    redirect,
+    useNavigate,
+} from "@tanstack/react-router";
+import { useState } from "react";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
 
-export default function VerifyMasterPassword() {
+export const Route = createFileRoute("/master-password/verify")({
+    beforeLoad: () => {
+        const { isLoggedIn, isMasterPasswordCreated, isAuthenticated } =
+            useAuthStore.getState();
+        if (!isLoggedIn) {
+            throw redirect({
+                to: "/login",
+            });
+        } else if (!isMasterPasswordCreated) {
+            throw redirect({
+                to: "/master-password/create",
+            });
+        } else if (isAuthenticated) {
+            throw redirect({
+                to: "/",
+            });
+        }
+    },
+    component: VerifyMasterPassword,
+});
+
+function VerifyMasterPassword() {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { setIsMasterPasswordSet, setMasterkey } = useStore(
+    const { setMasterkey } = useStore(
         useShallow((state) => ({
-            setIsMasterPasswordSet: state.setIsMasterPasswordSet,
-            setMasterkey: state.setMasterkey,
+            setMasterkey: state.setMasterKey,
+        }))
+    );
+    const { authenticate } = useAuthStore(
+        useShallow((state) => ({
+            authenticate: state.authenticate,
         }))
     );
 
@@ -65,6 +94,10 @@ export default function VerifyMasterPassword() {
         setIsSubmitting(true);
         await verifyMasterPasswordMutation.mutateAsync(data, {
             onSuccess: async (response) => {
+                if (!response.data.masterKey) {
+                    navigate({ to: "/master-password/create", replace: true });
+                    return;
+                }
                 const userKey = await deriveKey(
                     data.masterPassword,
                     response.data.masterKey.salt
@@ -77,8 +110,8 @@ export default function VerifyMasterPassword() {
                 );
                 const masterKey = await importKey(decryptedMasterKey);
                 setMasterkey(masterKey);
-                setIsMasterPasswordSet(true);
-                navigate(ROUTES.HOME, { replace: true });
+                authenticate();
+                navigate({ to: "/", replace: true });
             },
             onError: (error) => {
                 setIsSubmitting(false);
@@ -134,14 +167,15 @@ export default function VerifyMasterPassword() {
                     </Form>
                 </CardContent>
                 <CardFooter>
-                    <NavLink
+                    <Link
                         className="text-blue-600"
-                        to={replaceRouteParams(ROUTES.MASTER_PASSWORD.RESET, {
+                        to={"/master-password/reset/$type"}
+                        params={{
                             type: "recover",
-                        })}
+                        }}
                     >
                         Forgot master password
-                    </NavLink>
+                    </Link>
                 </CardFooter>
             </Card>
         </div>

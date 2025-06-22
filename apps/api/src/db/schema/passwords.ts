@@ -1,5 +1,4 @@
 import { relations } from "drizzle-orm";
-import type { EncryptedValueType } from "../../utils/basicSchema";
 
 import {
     int,
@@ -9,6 +8,7 @@ import {
     varchar,
 } from "drizzle-orm/mysql-core";
 
+import type { EncryptedPassword } from "@passman/schema/api";
 import { users, vaults } from "../schema";
 
 export const passwords = mysqlTable("passwords", {
@@ -22,7 +22,7 @@ export const passwords = mysqlTable("passwords", {
     name: varchar("name", { length: 255 }),
     url: varchar("url", { length: 255 }).notNull(),
     username: varchar("username", { length: 255 }).notNull(),
-    password: json("password").$type<EncryptedValueType>().notNull(),
+    password: json("password").$type<EncryptedPassword>().notNull(),
     faviconUrl: varchar("favicon_url", { length: 255 }),
     note: varchar("note", { length: 500 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),

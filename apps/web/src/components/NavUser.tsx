@@ -15,34 +15,28 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar";
 import { useToast } from "@/hooks/use-toast";
-import { removeRefreshToken, removeToken } from "@/lib/auth";
-import { ROUTES } from "@/lib/constants";
-import { useStore } from "@/store/store";
-import { ChevronsUpDown, LogOut, Settings2Icon } from "lucide-react";
-import { useNavigate } from "react-router";
-import { useShallow } from "zustand/react/shallow";
-import NavUserSkeleton from "./skeletons/NavUserSkeleton";
 import { getInitials } from "@/lib/utils";
 import { useGetUserDetails } from "@/services/queries/user";
+import { useStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ChevronsUpDown, LogOut, Settings2Icon } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
+import NavUserSkeleton from "./skeletons/NavUserSkeleton";
 
 export function NavUser() {
     const { data: response, isPending, isError } = useGetUserDetails();
     const user = response?.data;
 
-    const {
-        setIsAuthenticated,
-        setIsEmailVerified,
-        setIsMasterPasswordSet,
-        setUserKey,
-        setMasterkey,
-        setRecoveryKey,
-    } = useStore(
+    const { logout: logoutStorage } = useAuthStore(
         useShallow((state) => ({
-            setIsAuthenticated: state.setIsAuthenticated,
-            setIsEmailVerified: state.setIsEmailVerified,
-            setIsMasterPasswordSet: state.setIsMasterPasswordSet,
-            setUserKey: state.setUserKey,
-            setMasterkey: state.setMasterkey,
+            logout: state.logout,
+        }))
+    );
+
+    const { setMasterKey, setRecoveryKey } = useStore(
+        useShallow((state) => ({
+            setMasterKey: state.setMasterKey,
             setRecoveryKey: state.setRecoveryKey,
         }))
     );
@@ -59,20 +53,11 @@ export function NavUser() {
         return <NavUserSkeleton />;
     }
 
-    const openSettings = () => {
-        navigate(ROUTES.SETTINGS);
-    };
-
     const logout = () => {
-        removeToken();
-        removeRefreshToken();
-        setIsAuthenticated(false);
-        setIsEmailVerified(null);
-        setIsMasterPasswordSet(null);
-        setUserKey(null);
-        setMasterkey(null);
+        logoutStorage();
+        setMasterKey(null);
         setRecoveryKey("");
-        navigate(ROUTES.LOGIN);
+        navigate({ to: "/login" });
         toast({
             description: "Logged out successfully",
             className: "bg-green-700",
@@ -143,10 +128,12 @@ export function NavUser() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={openSettings}>
-                                <Settings2Icon />
-                                Settings
-                            </DropdownMenuItem>
+                            <Link to="/settings">
+                                <DropdownMenuItem>
+                                    <Settings2Icon />
+                                    Settings
+                                </DropdownMenuItem>
+                            </Link>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={logout}>

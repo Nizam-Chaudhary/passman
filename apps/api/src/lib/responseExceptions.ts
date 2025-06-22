@@ -28,12 +28,20 @@ interface CreateResponseOptions {
 export const createResponse = ({
     status,
     data,
-    headers = { "Content-Type": "application/json" },
-}: CreateResponseOptions) =>
-    new Response(JSON.stringify(data), {
-        headers: headers,
-        status: status,
+    headers = {},
+}: CreateResponseOptions): Response => {
+    const finalHeaders = new Headers({
+        "Content-Type": "application/json",
+        ...(headers instanceof Headers
+            ? Object.fromEntries(headers.entries())
+            : headers),
     });
+
+    return new Response(JSON.stringify(data), {
+        headers: finalHeaders,
+        status,
+    });
+};
 
 // Base exception class with standardized error format
 class BaseException extends HTTPException {

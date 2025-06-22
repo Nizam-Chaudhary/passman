@@ -1,4 +1,3 @@
-import type { SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -18,12 +17,16 @@ import {
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { useToast } from "@/hooks/use-toast";
-import { ROUTES } from "@/lib/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
-import { sendResetPasswordEmailBodySchema } from "@passman/schema/api";
 import { useSendResetPasswordMail } from "@/services/mutations/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { sendResetPasswordEmailBodySchema } from "@passman/schema/api";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+
+export const Route = createFileRoute("/_onboard/reset-password/send-email")({
+    component: ResetPasswordSendMail,
+});
 
 function ResetPasswordSendMail() {
     const form = useForm({
@@ -45,7 +48,7 @@ function ResetPasswordSendMail() {
                     className: "bg-green-700",
                 });
 
-                navigate(ROUTES.LOGIN, { replace: true });
+                navigate({ to: "/login", replace: true });
             },
             onError: (error) => {
                 toast({
@@ -104,5 +107,3 @@ function ResetPasswordSendMail() {
         </div>
     );
 }
-
-export default ResetPasswordSendMail;

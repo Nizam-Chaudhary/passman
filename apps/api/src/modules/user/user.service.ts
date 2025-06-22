@@ -1,29 +1,29 @@
 import type {
     CreateMasterKeyBody,
+    RegisterUserBody,
     ResendOtpBody,
     ResetPasswordBody,
     ResetPasswordJwtTokenPayload,
     SendResetPasswordEmailBody,
-    RegisterUserBody,
     UpdateMasterPasswordBody,
     UpdateUserDetailsBody,
     VerifyMasterPasswordBody,
     VerifyUserEmailBody,
 } from "@passman/schema/api";
-import { sendMail } from "../../lib/mailer";
-import * as userTemplates from "../../templates/user";
-import { generateOtp } from "../../utils/generator";
 import { eq, like } from "drizzle-orm";
 import { db } from "../../db/index";
 import { files, users, vaults } from "../../db/schema";
-import fileService from "../file/file.service";
 import { env } from "../../lib/env";
-import { createToken, verifyToken } from "../../utils/tokenHelper";
+import { sendMail } from "../../lib/mailer";
 import {
     BadRequestException,
     ConflictException,
     NotFoundException,
 } from "../../lib/responseExceptions";
+import * as userTemplates from "../../templates/user";
+import { generateOtp } from "../../utils/generator";
+import { createToken, verifyToken } from "../../utils/tokenHelper";
+import fileService from "../file/file.service";
 
 class UserService {
     async registerUser(input: RegisterUserBody) {

@@ -15,6 +15,13 @@
         },
         "lint:fix": {
             "cache": true
+        },
+        "typecheck": {
+            "cache": true
+        },
+        "dev": {
+            "continuous": true,
+            "cache": false
         }
     },
     "plugins": [

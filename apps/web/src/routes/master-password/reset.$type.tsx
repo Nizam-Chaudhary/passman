@@ -1,4 +1,3 @@
-import type { SubmitHandler } from "react-hook-form";
 import RecoveryKeyDialog from "@/components/RecoverKeyDialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,27 +21,43 @@ import VerifyRecoveryMasterPassword from "@/components/VerifyRecoveryMasterPassw
 import VerifyRecoverKey from "@/components/VerifyReocveryKey";
 import { useRefreshToken } from "@/hooks/refresh-token";
 import { useToast } from "@/hooks/use-toast";
-import { ROUTES } from "@/lib/constants";
 import {
     deriveKey,
     encrypt,
     generateRecoveryKey,
     generateSalt,
 } from "@/lib/encryption.helper";
-import { useStore } from "@/store/store";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router";
-import { useShallow } from "zustand/react/shallow";
 import {
     updateMasterPasswordFormSchema,
     type UpdateMasterPasswordForm,
 } from "@/schema/user";
 import { useUpdateMasterPassword } from "@/services/mutations/user";
+import { useStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
+
+export const Route = createFileRoute("/master-password/reset/$type")({
+    beforeLoad: () => {
+        const { isLoggedIn, isMasterPasswordCreated } = useAuthStore.getState();
+        if (!isLoggedIn) {
+            throw redirect({
+                to: "/login",
+            });
+        } else if (!isMasterPasswordCreated) {
+            throw redirect({
+                to: "/master-password/create",
+            });
+        }
+    },
+    component: ResetMasterPassword,
+});
 
 function ResetMasterPassword() {
-    const { type } = useParams();
+    const { type } = Route.useParams();
     const { toast } = useToast();
     const {
         masterKeyForUpdate,
@@ -58,8 +73,6 @@ function ResetMasterPassword() {
         }))
     );
 
-    const navigate = useNavigate();
-
     const form = useForm({
         resolver: zodResolver(updateMasterPasswordFormSchema),
         defaultValues: {
@@ -70,12 +83,6 @@ function ResetMasterPassword() {
 
     const updateMasterPasswordMutation = useUpdateMasterPassword();
     const refreshTokenMutation = useRefreshToken();
-
-    useEffect(() => {
-        if (type == null || !["recover", "update"].includes(type)) {
-            navigate(ROUTES.LOGIN, { replace: true });
-        }
-    }, [type, navigate]);
 
     const updateMasterPassword: SubmitHandler<
         UpdateMasterPasswordForm

@@ -1,8 +1,8 @@
-import { useSearchParams } from "react-router";
+import { getInitials } from "@/lib/utils";
+import { Link } from "@tanstack/react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
-import { getInitials } from "@/lib/utils";
 
 interface Props {
     name?: string;
@@ -13,16 +13,8 @@ interface Props {
 }
 
 export function PasswordRow({ name, id, url, username, faviconUrl }: Props) {
-    console.log({ name, id, url, username, faviconUrl });
-    const [searchParams, setSearchParams] = useSearchParams();
-
     return (
-        <div
-            onClick={() => {
-                searchParams.set("p", id);
-                setSearchParams(searchParams);
-            }}
-        >
+        <Link from="/" to="." search={{ p: parseInt(id) }}>
             <div className="flex ml-1 items-center justify-center p-2 cursor-pointer">
                 <div className="flex items-center justify-center w-8 cursor-pointer">
                     <Avatar className="w-10 h-10 rounded-lg">
@@ -52,6 +44,6 @@ export function PasswordRow({ name, id, url, username, faviconUrl }: Props) {
             <div className="mx-2 my-1">
                 <Separator />
             </div>
-        </div>
+        </Link>
     );
 }

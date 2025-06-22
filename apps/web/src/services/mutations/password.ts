@@ -1,16 +1,16 @@
-import { getToken } from "@/lib/auth";
-import { useMutation } from "@tanstack/react-query";
-import { api } from "../api";
+import { useAuthStore } from "@/stores/auth";
 import type {
     AddPasswordBody,
     IdParamsType,
     UpdatePasswordBody,
 } from "@passman/schema/api";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "../api";
 
 export const useAddPassword = () => {
     return useMutation({
         mutationFn: async (body: AddPasswordBody) => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.passwords.$post({
                 header: {
                     Authorization: `Bearer ${token}`,
@@ -33,7 +33,7 @@ export const useUpdatePassword = () => {
             body: UpdatePasswordBody;
             param: IdParamsType;
         }) => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.passwords[":id"].$patch({
                 header: {
                     Authorization: `Bearer ${token}`,
@@ -53,7 +53,7 @@ export const useUpdatePassword = () => {
 export const useDeletePassword = () => {
     return useMutation({
         mutationFn: async (param: IdParamsType) => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.passwords[":id"].$delete({
                 header: {
                     Authorization: `Bearer ${token}`,

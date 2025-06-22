@@ -1,9 +1,9 @@
-// import { useGetApiV1Vaults } from "@/api-client/api";
 import { cn } from "@/lib/utils";
-import { useStore } from "@/store/store";
+import { useGetVaults } from "@/services/queries/vault";
+import { useStore } from "@/stores";
+import { getRouteApi } from "@tanstack/react-router";
 import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import AddVault from "./AddVault";
 import { Button } from "./ui/button";
@@ -16,11 +16,11 @@ import {
     CommandList,
 } from "./ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { useGetVaults } from "@/services/queries/vault";
 
+const routeApi = getRouteApi("/_auth/");
 export function VaultComboBox() {
     const [open, setOpen] = useState(false);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = routeApi.useNavigate();
     const { currentVault, setCurrentVault, setOpenAddVaultDialog } = useStore(
         useShallow((state) => ({
             currentVault: state.currentVault,
@@ -64,8 +64,12 @@ export function VaultComboBox() {
                                         value={vault.name}
                                         onSelect={(vault) => {
                                             if (vault != currentVault?.name) {
-                                                searchParams.delete("p");
-                                                setSearchParams(searchParams);
+                                                navigate({
+                                                    search: {
+                                                        q: undefined,
+                                                        p: undefined,
+                                                    },
+                                                });
                                             }
                                             setCurrentVault(
                                                 response?.data.find(

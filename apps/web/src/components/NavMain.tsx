@@ -1,13 +1,13 @@
 "use client";
 
-import type { LucideIcon } from "lucide-react";
 import {
     SidebarGroup,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useStore } from "@/store/store";
+import { useStore } from "@/stores";
+import type { LucideIcon } from "lucide-react";
 import { Lock } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 

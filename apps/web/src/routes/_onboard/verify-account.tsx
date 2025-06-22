@@ -1,4 +1,3 @@
-import type { SubmitHandler } from "react-hook-form";
 import Timer from "@/components/Timer";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,13 +23,6 @@ import {
     InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useToast } from "@/hooks/use-toast";
-import { ROUTES } from "@/lib/constants";
-import { useStore } from "@/store/store";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
-import { useShallow } from "zustand/react/shallow";
 import {
     verifyUserEmailFormSchema,
     type VerifyUserEmailForm,
@@ -39,12 +31,24 @@ import {
     useSendVerificationOtp,
     useVerifyUserEmail,
 } from "@/services/mutations/user";
+import { useStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
 
-export default function VerifyAccount() {
+export const Route = createFileRoute("/_onboard/verify-account")({
+    component: VerifyAccount,
+});
+
+function VerifyAccount() {
     const { timer, decreaseTimer, setTimer } = useStore(
         useShallow((store) => ({
             timer: store.otpTimer,
-            decreaseTimer: store.decreateOtpTime,
+            decreaseTimer: store.decreaseOtpTimer,
             setTimer: store.setOtpTimer,
         }))
     );
@@ -65,7 +69,7 @@ export default function VerifyAccount() {
         },
     });
 
-    const { email } = useStore(
+    const { email } = useAuthStore(
         useShallow((state) => ({
             email: state.userEmail,
         }))
@@ -99,7 +103,7 @@ export default function VerifyAccount() {
                     className: "bg-green-700 text-white",
                     title: "Email verified successfully",
                 });
-                navigate(ROUTES.LOGIN);
+                navigate({ to: "/login", replace: true });
             },
         });
     };

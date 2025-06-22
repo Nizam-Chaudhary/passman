@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/auth";
 import type {
     CreateMasterKeyBody,
     RegisterUserBody,
@@ -10,8 +10,8 @@ import type {
     VerifyMasterPasswordBody,
     VerifyUserEmailBody,
 } from "@passman/schema/api";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../api";
-import { getToken } from "@/lib/auth";
 
 export const useRegisterUser = () => {
     return useMutation({
@@ -55,7 +55,7 @@ export const useSendVerificationOtp = () => {
 export const useCreateMasterPassword = () => {
     return useMutation({
         mutationFn: async (body: CreateMasterKeyBody) => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.users["master-key"].$post({
                 header: {
                     Authorization: `Bearer ${token}`,
@@ -72,7 +72,7 @@ export const useCreateMasterPassword = () => {
 export const useUpdateMasterPassword = () => {
     return useMutation({
         mutationFn: async (body: UpdateMasterPasswordBody) => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.users["update-master-password"].$patch({
                 header: {
                     Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ export const useUpdateMasterPassword = () => {
 export const useUpdateUser = () => {
     return useMutation({
         mutationFn: async (body: UpdateUserDetailsBody) => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.users.$patch({
                 header: {
                     Authorization: `Bearer ${token}`,
@@ -106,7 +106,7 @@ export const useUpdateUser = () => {
 export const useVerifyMasterPassword = () => {
     return useMutation({
         mutationFn: async (body: VerifyMasterPasswordBody) => {
-            const token = getToken();
+            const token = useAuthStore.getState().accessToken;
             const response = await api.users["verify-master-password"].$post({
                 header: {
                     Authorization: `Bearer ${token}`,

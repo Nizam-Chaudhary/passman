@@ -1,4 +1,4 @@
-import type { Store } from "@/types/store";
+import type { Store } from "@/stores";
 import type { StateCreator } from "zustand";
 
 interface SidebarStates {

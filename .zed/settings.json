@@ -1,35 +1,33 @@
-// Folder-specific settings
-//
-// For a full list of overridable settings, and general information on folder-specific settings,
-// see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
     "format_on_save": "language_server",
     "formatter": "language_server",
     "tab_size": 4,
     "languages": {
-        // Refer https://zed.dev/docs/languages/javascript and https://zed.dev/docs/languages/typescript for more info
         "TypeScript": {
             "formatter": "prettier",
             "format_on_save": "prettier",
             "code_actions_on_format": {
-                "source.fixAll.prettier": true,
-                "source.organizeImports.prettier": true
+                "source.fixAll.eslint": true,
+                "source.organizeImports": true,
+                "source.addMissingImports.ts": true
             }
         },
         "TSX": {
             "formatter": "prettier",
             "format_on_save": "prettier",
             "code_actions_on_format": {
-                "source.fixAll.prettier": true,
-                "source.organizeImports.prettier": true
+                "source.fixAll.eslint": true,
+                "source.organizeImports": true,
+                "source.addMissingImports.ts": true
             }
         },
         "JavaScript": {
             "formatter": "prettier",
             "format_on_save": "prettier",
             "code_actions_on_format": {
-                "source.fixAll.prettier": true,
-                "source.organizeImports.prettier": true
+                "source.fixAll.eslint": true,
+                "source.organizeImports": true,
+                "source.addMissingImports.ts": true
             }
         },
         "JSON": {

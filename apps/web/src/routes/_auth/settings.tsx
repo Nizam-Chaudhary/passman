@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
     ArrowLeftIcon,
     FileDownIcon,
@@ -15,9 +16,11 @@ import {
     ShieldIcon,
     UserIcon,
 } from "lucide-react";
-// passman-fe/src/pages/Settings.tsx
 import { useState } from "react";
-import { useNavigate } from "react-router";
+
+export const Route = createFileRoute("/_auth/settings")({
+    component: Settings,
+});
 
 const settingsNavItems = [
     {
@@ -62,7 +65,7 @@ function Settings() {
                 <Button
                     variant="link"
                     onClick={() => {
-                        navigate(-1);
+                        navigate({ to: ".." });
                     }}
                 >
                     <ArrowLeftIcon />
@@ -111,5 +114,3 @@ function Settings() {
         </div>
     );
 }
-
-export default Settings;

@@ -1,4 +1,5 @@
-import type { Store } from "@/types/store";
+import type { Store } from "@/stores";
+import type { Prettify } from "@/vite-env";
 import type { StateCreator } from "zustand";
 
 interface PasswordStates {
@@ -16,7 +17,7 @@ const initialState: PasswordStates = {
     openAddPasswordDialog: false,
 };
 
-export type PasswordSlice = PasswordStates & PasswordActions;
+export type PasswordSlice = Prettify<PasswordStates & PasswordActions>;
 
 export const createPasswordSlice: StateCreator<
     Store,

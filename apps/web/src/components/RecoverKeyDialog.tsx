@@ -1,8 +1,7 @@
 import { useToast } from "@/hooks/use-toast";
-import { ROUTES } from "@/lib/constants";
-import { useStore } from "@/store/store";
+import { useStore } from "@/stores";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "./ui/button";
 import {
@@ -59,7 +58,7 @@ function RecoveryKeyDialog() {
                             onClick={() => {
                                 onOpenChange(false);
                                 setButtonType("copy");
-                                navigate(ROUTES.MASTER_PASSWORD.VERIFY);
+                                navigate({ to: "/master-password/verify" });
                             }}
                         >
                             Okay

@@ -18,25 +18,29 @@ import {
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { useToast } from "@/hooks/use-toast";
-import { setRefreshToken, setToken } from "@/lib/auth";
-import { ROUTES } from "@/lib/constants";
-import { useStore } from "@/store/store";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router";
-import { useShallow } from "zustand/react/shallow";
-import { PasswordInput } from "../components/ui/password-input";
 import { useLoginUser } from "@/services/mutations/auth";
-import type { LoginUserBody } from "@passman/schema/api/auth";
+import { useAuthStore } from "@/stores/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { JwtUserData, LoginUserBody } from "@passman/schema/api/auth";
 import { loginUserBodySchema } from "@passman/schema/api/auth";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { jwtDecode } from "jwt-decode";
+import { useForm } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
+import { PasswordInput } from "../../components/ui/password-input";
 
-export default function Login() {
-    const { toast } = useToast();
+export const Route = createFileRoute("/_onboard/login")({
+    component: Login,
+});
+
+function Login() {
     const navigate = useNavigate();
+    const { toast } = useToast();
     const mutateLoginUser = useLoginUser();
 
-    const { setUserEmail, setIsEmailVerified } = useStore(
+    const { login, setIsEmailVerified, setUserEmail } = useAuthStore(
         useShallow((state) => ({
+            login: state.login,
             setIsEmailVerified: state.setIsEmailVerified,
             setUserEmail: state.setUserEmail,
         }))
@@ -51,15 +55,14 @@ export default function Login() {
     });
 
     function onSubmit(data: LoginUserBody) {
-        console.log("data", data);
         mutateLoginUser.mutate(data, {
-            onError: (error, variables) => {
+            onError: (error) => {
                 if (
                     error.message == "Email not verified. Please verify first!"
                 ) {
                     setIsEmailVerified(false);
-                    setUserEmail(variables.email);
-                    navigate(ROUTES.VERIFY_ACCOUNT);
+                    setUserEmail(data.email);
+                    navigate({ to: "/verify-account" });
                 } else {
                     toast({
                         className: "bg-red-700",
@@ -68,20 +71,26 @@ export default function Login() {
                 }
             },
             onSuccess: async (response, variables) => {
-                setToken(response.data.token);
-                setRefreshToken(response.data.refreshToken);
                 setIsEmailVerified(true);
+                const token = response.data.token;
+                const userData = jwtDecode<JwtUserData>(token);
+                login({
+                    accessToken: token,
+                    refreshToken: response.data.refreshToken,
+                    isEmailVerified: true,
+                    user: userData,
+                });
                 toast({
                     className: "bg-green-700",
                     title: "Logged in successfully",
                 });
                 if (response.data.masterKey == null) {
-                    navigate(ROUTES.MASTER_PASSWORD.CREATE);
+                    navigate({ to: "/master-password/create" });
                 } else if (response.data.isVerified) {
-                    navigate(ROUTES.MASTER_PASSWORD.VERIFY);
+                    navigate({ to: "/master-password/verify" });
                 } else {
                     setUserEmail(variables.email);
-                    navigate(ROUTES.VERIFY_ACCOUNT);
+                    navigate({ to: "/verify-account" });
                 }
             },
         });
@@ -145,20 +154,20 @@ export default function Login() {
                                         "Login"
                                     )}
                                 </Button>
-                                <NavLink
-                                    to={ROUTES.RESET_PASSWORD.EMAIL}
+                                <Link
+                                    to={"/reset-password/send-email"}
                                     className="text-blue-600"
                                 >
                                     Forgot password
-                                </NavLink>
+                                </Link>
                             </div>
                         </form>
                     </Form>
                 </CardContent>
                 <CardFooter>
-                    <NavLink to={ROUTES.SIGN_UP} className="text-blue-600">
+                    <Link to="/signup" className="text-blue-600">
                         Create a new account
-                    </NavLink>
+                    </Link>
                 </CardFooter>
             </Card>
         </div>

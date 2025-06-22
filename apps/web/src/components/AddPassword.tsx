@@ -1,9 +1,11 @@
-import type { SubmitHandler } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { encrypt } from "@/lib/encryption.helper";
-import { useStore } from "@/store/store";
 import { addPasswordFormSchema, type AddPasswordForm } from "@/schema/password";
+import { useAddPassword } from "@/services/mutations/password";
+import { useStore } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "./ui/button";
@@ -27,8 +29,6 @@ import { Input } from "./ui/input";
 import LoadingSpinner from "./ui/loadingSpinner";
 import { PasswordInput } from "./ui/password-input";
 import { Textarea } from "./ui/textarea";
-import { useQueryClient } from "@tanstack/react-query";
-import { useAddPassword } from "@/services/mutations/password";
 
 export default function AddPassword() {
     const queryClient = useQueryClient();
@@ -64,6 +64,14 @@ export default function AddPassword() {
                 className: "bg-red-700",
                 title: "Error encrypting password!",
                 description: "User key not found",
+            });
+            return;
+        }
+        if (!currentVault) {
+            toast({
+                className: "bg-red-700",
+                title: "Error adding password!",
+                description: "Please select any vault",
             });
             return;
         }

@@ -1,5 +1,20 @@
-import type { SubmitHandler } from "react-hook-form";
 import RecoveryKeyDialog from "@/components/RecoverKeyDialog";
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
 import LoadingSpinner from "@/components/ui/loadingSpinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";
@@ -11,33 +26,33 @@ import {
     generateRecoveryKey,
     generateSalt,
 } from "@/lib/encryption.helper";
-import { useStore } from "@/store/store";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useShallow } from "zustand/react/shallow";
-import { Button } from "../components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "../components/ui/card";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "../components/ui/form";
 import {
     createMasterPasswordFormSchema,
     type CreateMasterPasswordForm,
 } from "@/schema/user";
 import { useCreateMasterPassword } from "@/services/mutations/user";
+import { useStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
 
-export default function CreateMasterPassword() {
+export const Route = createFileRoute("/master-password/create")({
+    beforeLoad: () => {
+        const isLoggedIn = useAuthStore.getState().isLoggedIn;
+
+        if (!isLoggedIn) {
+            throw redirect({
+                to: "/login",
+            });
+        }
+    },
+    component: CreateMasterPassword,
+});
+
+function CreateMasterPassword() {
     const { setOpenRecoveryKeyDialog, setRecoveryKey } = useStore(
         useShallow((state) => ({
             setOpenRecoveryKeyDialog: state.setOpenRecoveryKeyDialog,
