@@ -1,13 +1,13 @@
 {
-    "compilerOptions": {
-        "lib": ["ESNext"],
-        "target": "ESNext",
-        "module": "Preserve",
-        "declaration": true,
-        "outDir": "./dist",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true
-    },
-    "include": ["src"]
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "Preserve",
+    "strict": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
 }

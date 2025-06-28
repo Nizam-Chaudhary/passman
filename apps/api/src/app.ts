@@ -13,10 +13,10 @@ const app = new Hono();
 app.use(trimTrailingSlash());
 app.use("*", logger());
 app.use(
-    "/api/*",
-    cors({
-        origin: env.NODE_ENV === "production" ? [env.FE_URL] : "*",
-    })
+  "/api/*",
+  cors({
+    origin: env.NODE_ENV === "production" ? [env.FE_URL] : "*",
+  })
 );
 app.use(secureHeaders());
 app.onError(errorHandler);

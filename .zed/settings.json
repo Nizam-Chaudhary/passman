@@ -1,54 +1,54 @@
 {
-    "format_on_save": "language_server",
-    "formatter": "language_server",
-    "tab_size": 4,
-    "languages": {
-        "TypeScript": {
-            "formatter": "prettier",
-            "format_on_save": "prettier",
-            "code_actions_on_format": {
-                "source.fixAll.eslint": true,
-                "source.organizeImports": true,
-                "source.addMissingImports.ts": true
-            }
-        },
-        "TSX": {
-            "formatter": "prettier",
-            "format_on_save": "prettier",
-            "code_actions_on_format": {
-                "source.fixAll.eslint": true,
-                "source.organizeImports": true,
-                "source.addMissingImports.ts": true
-            }
-        },
-        "JavaScript": {
-            "formatter": "prettier",
-            "format_on_save": "prettier",
-            "code_actions_on_format": {
-                "source.fixAll.eslint": true,
-                "source.organizeImports": true,
-                "source.addMissingImports.ts": true
-            }
-        },
-        "JSON": {
-            "formatter": "prettier",
-            "format_on_save": "prettier"
-        },
-        "JSONC": {
-            "formatter": "prettier",
-            "format_on_save": "prettier"
-        },
-        "YAML": {
-            "formatter": "prettier",
-            "format_on_save": "prettier"
-        },
-        "TOML": {
-            "formatter": "prettier",
-            "format_on_save": "prettier"
-        },
-        "Markdown": {
-            "formatter": "prettier",
-            "format_on_save": "prettier"
-        }
+  "format_on_save": "on",
+  "languages": {
+    "JavaScript": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true,
+        "source.organizeImports.prettier": true
+      }
+    },
+    "TypeScript": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true,
+        "source.organizeImports.prettier": true
+      }
+    },
+    "JSX": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true,
+        "source.organizeImports.prettier": true
+      }
+    },
+    "TSX": {
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true,
+        "source.organizeImports.prettier": true
+      }
+    },
+    "JSON": {
+      "formatter": "prettier"
+    },
+    "JSONC": {
+      "formatter": "prettier"
+    },
+    "CSS": {
+      "formatter": "prettier"
+    },
+    "GraphQL": {
+      "formatter": "prettier"
+    },
+    "Markdown": {
+      "formatter": "prettier"
+    },
+    "YAML": {
+      "formatter": "prettier"
+    },
+    "HTML": {
+      "formatter": "prettier"
     }
+  }
 }

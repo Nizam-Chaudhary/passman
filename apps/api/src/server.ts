@@ -2,7 +2,7 @@ import app from "./app";
 import "./lib/env";
 
 Bun.serve({
-    fetch: app.fetch,
+  fetch: app.fetch,
 });
 
 // eslint-disable-next-line no-console

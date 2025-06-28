@@ -1,44 +1,44 @@
 services:
-    mysql:
-        image: mysql:8.0
-        container_name: mysql
-        restart: unless-stopped
-        environment:
-            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-            MYSQL_DATABASE: passman
-        ports:
-            - "3306:3306"
-        volumes:
-            - mysql-data:/var/lib/mysql
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: passman
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
 
-    traefik:
-        image: traefik:v3.3
-        container_name: traefik
-        command:
-            - --providers.docker
-            - --api.insecure=true
-            - --providers.docker.exposedbydefault=false
-            - --entrypoints.web.address=:80
-        ports:
-            - 80:80
-            - 8080:8080
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
+  traefik:
+    image: traefik:v3.3
+    container_name: traefik
+    command:
+      - --providers.docker
+      - --api.insecure=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
-    passman-be:
-        image: passman-be
-        build:
-            context: .
-        container_name: passman-be
-        restart: always
-        env_file:
-            - .env
-        networks:
-            - web # create network separately
+  passman-be:
+    image: passman-be
+    build:
+      context: .
+    container_name: passman-be
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - web # create network separately
 
 networks:
-    web:
-        external: true
+  web:
+    external: true
 
 volumes:
-    mysql-data:
+  mysql-data:

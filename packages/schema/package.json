@@ -1,27 +1,31 @@
 {
-    "name": "@passman/schema",
-    "version": "1.0.0",
-    "author": "Nizam Chaudhary",
-    "exports": {
-        "./api": {
-            "import": "./src/api/index.ts"
-        },
-        "./api/*": {
-            "import": "./src/api/*.ts"
-        }
+  "name": "@passman/schema",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Passman zod schema",
+  "author": "Nizam Chaudhary",
+  "license": "ISC",
+  "keywords": [],
+  "exports": {
+    "./api": {
+      "import": "./src/api/index.ts"
     },
-    "description": "Passman zod schema",
-    "keywords": [],
-    "license": "ISC",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "build": "tsc"
-    },
-    "dependencies": {
-        "zod": "^3.25.51"
-    },
-    "devDependencies": {
-        "typescript": "^5.8.3"
+    "./api/*": {
+      "import": "./src/api/*.ts"
     }
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "nx eslint:lint",
+    "lint:fix": "nx eslint:lint --fix"
+  },
+  "dependencies": {
+    "zod": "^3.25.51"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.16.1",
+    "eslint": "^9.29.0",
+    "typescript": "^5.8.3"
+  }
 }

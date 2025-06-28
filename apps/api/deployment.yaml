@@ -2,60 +2,60 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: passman-be
+  labels:
     name: passman-be
-    labels:
-        name: passman-be
-        app: passman
+    app: passman
 spec:
-    template:
-        metadata:
-            labels:
-                name: passman-be
-        spec:
-            containers:
-                - name: passman-be
-                  image: ghcr.io/nizam-chaudhary/passman-be:latest
-                  ports:
-                      - containerPort: 3000
-                  envFrom:
-                      - secretRef:
-                            name: passman-be-env
-                  imagePullPolicy: Always
-            imagePullSecrets:
-                - name: ghcr-secret
-    selector:
-        matchLabels:
-            name: passman-be
-    replicas: 1
+  template:
+    metadata:
+      labels:
+        name: passman-be
+    spec:
+      containers:
+        - name: passman-be
+          image: ghcr.io/nizam-chaudhary/passman-be:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: passman-be-env
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+  selector:
+    matchLabels:
+      name: passman-be
+  replicas: 1
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    name: passman-be
+  name: passman-be
 spec:
-    type: ClusterIP
-    selector:
-        name: passman-be
-    ports:
-        - protocol: TCP
-          port: 3000
-          targetPort: 3000
+  type: ClusterIP
+  selector:
+    name: passman-be
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    name: passman-be-ingress
-    annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: /
+  name: passman-be-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-    rules:
-        - host: api.passman.live
-          http:
-              paths:
-                  - path: /
-                    pathType: Prefix
-                    backend:
-                        service:
-                            name: passman-be
-                            port:
-                                number: 3000
+  rules:
+    - host: api.passman.live
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: passman-be
+                port:
+                  number: 3000

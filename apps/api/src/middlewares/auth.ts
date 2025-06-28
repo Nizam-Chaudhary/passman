@@ -1,26 +1,22 @@
+import type { JwtUserData } from "@passman/schema/api";
 import { createMiddleware } from "hono/factory";
+import { env } from "../lib/env";
 import { UnauthorizedException } from "../lib/responseExceptions";
 import { verifyToken } from "../utils/tokenHelper";
-import type { JwtUserData } from "@passman/schema/api";
 
 export const bearerAuth = createMiddleware<{
-    Variables: { user: JwtUserData };
+  Variables: { user: JwtUserData };
 }>(async (c, next) => {
-    const token = c.req.header("Authorization")?.split(" ")[1];
-    if (!token) {
-        throw new UnauthorizedException("Unauthorized");
-    }
-    const verifyTokenResult = await verifyToken<JwtUserData>(
-        token,
-        process.env.JWT_SECRET
-    );
+  const token = c.req.header("Authorization")?.split(" ")[1];
+  if (!token) {
+    throw new UnauthorizedException("Unauthorized");
+  }
+  const verifyTokenResult = await verifyToken<JwtUserData>(token, env.JWT_SECRET);
 
-    if (!verifyTokenResult.success || !verifyTokenResult.payload) {
-        throw new UnauthorizedException(
-            verifyTokenResult.error?.message || "Unauthorized"
-        );
-    }
+  if (!verifyTokenResult.success || !verifyTokenResult.payload) {
+    throw new UnauthorizedException(verifyTokenResult.error?.message || "Unauthorized");
+  }
 
-    c.set("user", verifyTokenResult.payload);
-    await next();
+  c.set("user", verifyTokenResult.payload);
+  await next();
 });
