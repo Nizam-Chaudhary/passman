@@ -7,3 +7,6 @@ ignoredBuiltDependencies:
   - '@swc/core'
   - esbuild
   - protobufjs
+
+onlyBuiltDependencies:
+  - core-js

@@ -3,30 +3,28 @@
   "languages": {
     "JavaScript": {
       "formatter": "prettier",
+      "language_servers": ["vtsls", "eslint"],
       "code_actions_on_format": {
-        "source.fixAll.eslint": true,
-        "source.organizeImports.prettier": true
+        "source.fixAll.eslint": true
       }
     },
     "TypeScript": {
       "formatter": "prettier",
       "code_actions_on_format": {
-        "source.fixAll.eslint": true,
-        "source.organizeImports.prettier": true
+        "source.fixAll.eslint": true
       }
     },
     "JSX": {
       "formatter": "prettier",
       "code_actions_on_format": {
-        "source.fixAll.eslint": true,
-        "source.organizeImports.prettier": true
+        "source.fixAll.eslint": true
       }
     },
     "TSX": {
       "formatter": "prettier",
+      "language_servers": ["vtsls", "eslint"],
       "code_actions_on_format": {
-        "source.fixAll.eslint": true,
-        "source.organizeImports.prettier": true
+        "source.fixAll.eslint": true
       }
     },
     "JSON": {

@@ -3,7 +3,7 @@ import eslintPluginPrettier from "eslint-plugin-prettier";
 
 export default antfu({
   react: true,
-  formatters: true,
+  formatters: false,
   stylistic: false,
   ignores: ["**/routeTree.gen.ts"],
   plugins: [

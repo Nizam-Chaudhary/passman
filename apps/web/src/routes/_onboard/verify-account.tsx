@@ -31,7 +31,10 @@ import {
 } from "@/components/ui/input-otp";
 import { useToast } from "@/hooks/use-toast";
 import { verifyUserEmailFormSchema } from "@/schema/user";
-import { useSendVerificationOtp, useVerifyUserEmail } from "@/services/mutations/user";
+import {
+  useSendVerificationOtp,
+  useVerifyUserEmail,
+} from "@/services/mutations/user";
 import { useStore } from "@/stores";
 import { useAuthStore } from "@/stores/auth";
 
@@ -113,11 +116,16 @@ function VerifyAccount() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Verify Account</CardTitle>
-          <CardDescription>Please enter the one-time password sent to your Email.</CardDescription>
+          <CardDescription>
+            Please enter the one-time password sent to your Email.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-2/3 space-y-6"
+            >
               <FormField
                 control={form.control}
                 name="otp"
@@ -152,6 +160,7 @@ function VerifyAccount() {
             <Timer text="Resend OTP again in " time={timer} />
           ) : (
             <button
+              type="button"
               onClick={(e) => {
                 e.preventDefault();
                 if (email) {

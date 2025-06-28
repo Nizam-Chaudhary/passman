@@ -11,8 +11,8 @@
   "scripts": {
     "dev": "nx run-many -t dev --output-style=stream",
     "clean": "nx run-many -t clean --output-style=stream",
+    "cleanAll": "nx reset && nx run-many -t clean --output-style=stream && rm -rf node_modules && rm -rf apps/*/node_modules && rm -rf packages/*/node_modules",
     "typecheck": "nx run-many -t typecheck --output-style=stream",
-    "cleanAll": "nx run-many -t clean --output-style=stream; rm -rf node_modules; rm -rf apps/*/node_modules",
     "lint": "nx run-many -t lint --output-style=stream",
     "lint:fix": "nx run-many -t lint:fix --output-style=stream",
     "format": "prettier --write .",

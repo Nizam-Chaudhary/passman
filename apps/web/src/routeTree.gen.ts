@@ -9,18 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
+import { Route as OnboardRouteImport } from "./routes/_onboard";
 import { Route as AuthRouteImport } from "./routes/_auth";
 import { Route as AuthIndexRouteImport } from "./routes/_auth/index";
-import { Route as AuthSettingsRouteImport } from "./routes/_auth/settings";
-import { Route as OnboardRouteImport } from "./routes/_onboard";
-import { Route as OnboardLoginRouteImport } from "./routes/_onboard/login";
-import { Route as OnboardResetPasswordSendEmailRouteImport } from "./routes/_onboard/reset-password/send-email";
-import { Route as OnboardResetPasswordUpdateRouteImport } from "./routes/_onboard/reset-password/update";
-import { Route as OnboardSignupRouteImport } from "./routes/_onboard/signup";
-import { Route as OnboardVerifyAccountRouteImport } from "./routes/_onboard/verify-account";
-import { Route as MasterPasswordCreateRouteImport } from "./routes/master-password/create";
-import { Route as MasterPasswordResetTypeRouteImport } from "./routes/master-password/reset.$type";
 import { Route as MasterPasswordVerifyRouteImport } from "./routes/master-password/verify";
+import { Route as MasterPasswordCreateRouteImport } from "./routes/master-password/create";
+import { Route as OnboardVerifyAccountRouteImport } from "./routes/_onboard/verify-account";
+import { Route as OnboardSignupRouteImport } from "./routes/_onboard/signup";
+import { Route as OnboardLoginRouteImport } from "./routes/_onboard/login";
+import { Route as AuthSettingsRouteImport } from "./routes/_auth/settings";
+import { Route as MasterPasswordResetTypeRouteImport } from "./routes/master-password/reset.$type";
+import { Route as OnboardResetPasswordUpdateRouteImport } from "./routes/_onboard/reset-password/update";
+import { Route as OnboardResetPasswordSendEmailRouteImport } from "./routes/_onboard/reset-password/send-email";
 
 const OnboardRoute = OnboardRouteImport.update({
   id: "/_onboard",
@@ -70,16 +70,18 @@ const MasterPasswordResetTypeRoute = MasterPasswordResetTypeRouteImport.update({
   path: "/master-password/reset/$type",
   getParentRoute: () => rootRouteImport,
 } as any);
-const OnboardResetPasswordUpdateRoute = OnboardResetPasswordUpdateRouteImport.update({
-  id: "/reset-password/update",
-  path: "/reset-password/update",
-  getParentRoute: () => OnboardRoute,
-} as any);
-const OnboardResetPasswordSendEmailRoute = OnboardResetPasswordSendEmailRouteImport.update({
-  id: "/reset-password/send-email",
-  path: "/reset-password/send-email",
-  getParentRoute: () => OnboardRoute,
-} as any);
+const OnboardResetPasswordUpdateRoute =
+  OnboardResetPasswordUpdateRouteImport.update({
+    id: "/reset-password/update",
+    path: "/reset-password/update",
+    getParentRoute: () => OnboardRoute,
+  } as any);
+const OnboardResetPasswordSendEmailRoute =
+  OnboardResetPasswordSendEmailRouteImport.update({
+    id: "/reset-password/send-email",
+    path: "/reset-password/send-email",
+    getParentRoute: () => OnboardRoute,
+  } as any);
 
 export interface FileRoutesByFullPath {
   "/settings": typeof AuthSettingsRoute;
@@ -286,7 +288,8 @@ const OnboardRouteChildren: OnboardRouteChildren = {
   OnboardResetPasswordUpdateRoute: OnboardResetPasswordUpdateRoute,
 };
 
-const OnboardRouteWithChildren = OnboardRoute._addFileChildren(OnboardRouteChildren);
+const OnboardRouteWithChildren =
+  OnboardRoute._addFileChildren(OnboardRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
