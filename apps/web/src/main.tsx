@@ -8,7 +8,6 @@ import { routeTree } from "@/routeTree.gen.ts";
 import "@/index.css";
 
 const queryClient = new QueryClient();
-
 const router = createRouter({
   routeTree,
   context: {

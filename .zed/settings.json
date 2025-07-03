@@ -3,7 +3,6 @@
   "languages": {
     "JavaScript": {
       "formatter": "prettier",
-      "language_servers": ["vtsls", "eslint"],
       "code_actions_on_format": {
         "source.fixAll.eslint": true
       }
@@ -22,7 +21,6 @@
     },
     "TSX": {
       "formatter": "prettier",
-      "language_servers": ["vtsls", "eslint"],
       "code_actions_on_format": {
         "source.fixAll.eslint": true
       }
