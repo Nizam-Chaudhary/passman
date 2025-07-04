@@ -16,9 +16,9 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "lint": "nx eslint:lint",
-    "lint:fix": "nx eslint:lint --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "zod": "^3.25.74"

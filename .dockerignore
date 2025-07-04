@@ -15,8 +15,8 @@
 **/.tanstack
 **/.vscode
 **/.zed
-**/.nx
 **/*.md
 **/.github
 **/deployment.yaml
 **/docker-stack.yml
+**/.turbo

@@ -1,0 +1,31 @@
+{
+  "extends": ["//"],
+  "$schema": "../../node_modules/turbo/schema.json",
+  "tasks": {
+    "start": {
+      "dependsOn": ["^build"],
+      "persistent": true,
+      "cache": false
+    },
+    "debug": {
+      "dependsOn": ["^build"],
+      "persistent": true,
+      "cache": false
+    },
+    "db:generate": {
+      "outputs": ["src/db/migrations"],
+      "inputs": ["src/db/schema", "src/db/index.ts"]
+    },
+    "db:migrate": {
+      "dependsOn": ["db:generate"],
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
+    },
+    "db:studio": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}

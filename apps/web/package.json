@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "clean": "rm -rf dist",
-    "lint": "nx eslint:lint",
-    "lint:fix": "nx eslint:lint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview --port 5173"
   },

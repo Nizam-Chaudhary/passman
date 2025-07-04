@@ -1,0 +1,17 @@
+{
+  "extends": ["//"],
+  "$schema": "../../node_modules/turbo/schema.json",
+  "tasks": {
+    "dev": {
+      "with": ["@passman/api#dev"],
+      "persistent": true,
+      "cache": false
+    },
+    "preview": {
+      "dependsOn": ["build"],
+      "with": ["@passman/api#start"],
+      "persistent": true,
+      "cache": false
+    }
+  }
+}
