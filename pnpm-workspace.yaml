@@ -2,11 +2,15 @@ packages:
   - packages/*
   - apps/*
 
+syncInjectedDepsAfterScripts:
+  - build
+injectWorkspacePackages: true
+
 ignoredBuiltDependencies:
   - nx
   - '@swc/core'
   - esbuild
   - protobufjs
-
-onlyBuiltDependencies:
   - core-js
+
+  

@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "nx run-many -t dev --output-style=stream",
     "clean": "nx run-many -t clean --output-style=stream",
-    "cleanAll": "nx reset && nx run-many -t clean --output-style=stream && rm -rf node_modules && rm -rf apps/*/node_modules && rm -rf packages/*/node_modules",
+    "cleanAll": "nx reset && nx run-many -t clean --output-style=stream && rm -rf node_modules && rm -rf apps/*/node_modules && rm -rf packages/*/node_modules && rm -rf node_modules",
     "typecheck": "nx run-many -t typecheck --output-style=stream",
     "lint": "nx run-many -t lint --output-style=stream",
     "lint:fix": "nx run-many -t lint:fix --output-style=stream",
@@ -24,19 +24,18 @@
     "@nx/eslint": "21.1.2",
     "@nx/vite": "21.1.2",
     "@nx/web": "21.1.2",
-    "@vitest/ui": "^3.2.1",
-    "biome": "^0.3.3",
-    "eslint": "^9.28.0",
+    "@vitest/ui": "^3.2.4",
+    "eslint": "^9.30.1",
     "eslint-plugin-prettier": "^5.5.1",
     "husky": "^9.1.7",
     "jiti": "2.4.2",
-    "lint-staged": "^16.1.0",
+    "lint-staged": "^16.1.2",
     "nx": "21.1.2",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.13",
     "schema": "^0.2.1",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.4"
   }
 }

@@ -1,30 +1,19 @@
-# Base stage
 FROM node:22-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
-WORKDIR /app
-COPY pnpm-lock.yaml package.json /app/
-RUN pnpm fetch
-COPY . .
 
-# Install prod dependencies
-FROM base AS prod-deps
+FROM base AS prod
+WORKDIR /app
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm fetch --prod
 RUN pnpm install -r --offline --prod
+ADD . .
+RUN pnpm deploy --filter=api --prod /prod/api
 
-# Build project
-FROM base AS builder
-RUN pnpm install -r --offline
-RUN pnpm run build
-
-# Main stage
-FROM node:22-alpine
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-WORKDIR /app
-COPY package.json drizzle.config.ts rds-ca-rsa2048-g1.pem deploy.sh /app/
-COPY --from=prod-deps /app/node_modules node_modules
-COPY --from=builder /app/dist dist
-EXPOSE 3000
-ENTRYPOINT [ "pnpm", "start" ]
+FROM oven/bun:latest AS api
+COPY --from=prod /prod/api /prod/api
+WORKDIR /prod/api
+USER bun
+EXPOSE 3000/tcp
+CMD [ "bun", "start" ]
