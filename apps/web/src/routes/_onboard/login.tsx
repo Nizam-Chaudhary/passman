@@ -97,11 +97,14 @@ function Login() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Login</CardTitle>
-          <CardDescription>Login to your account</CardDescription>
+          <CardDescription>Login to your Passman account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...loginForm}>
-            <form onSubmit={loginForm.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={loginForm.handleSubmit(onSubmit)}
+              className="space-y-4"
+            >
               <FormField
                 control={loginForm.control}
                 name="email"
@@ -109,7 +112,11 @@ function Login() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter Email" type="email" {...field} />
+                      <Input
+                        placeholder="Enter Email"
+                        type="email"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -129,7 +136,11 @@ function Login() {
                 )}
               />
               <div className="flex items-center justify-between">
-                <Button type="submit" className="w-18" disabled={mutateLoginUser.isPending}>
+                <Button
+                  type="submit"
+                  className="w-18"
+                  disabled={mutateLoginUser.isPending}
+                >
                   {mutateLoginUser.isPending ? <LoadingSpinner /> : "Login"}
                 </Button>
                 <Link to="/reset-password/send-email" className="text-blue-600">
