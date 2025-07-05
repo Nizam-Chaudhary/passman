@@ -43,18 +43,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Set up SSH
-      #   uses: webfactory/ssh-agent@v0.5.3
-      #   with:
-      #     ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-
       - name: Set up SSH
-        run: |
-          mkdir ~/.ssh
-          echo ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }} > ~/.ssh/passman.pem
-          chmod 400 ~/.ssh/passman.pem
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/passman.pem
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+
+      # - name: Set up SSH
+      #   run: |
+      #     mkdir ~/.ssh
+      #     echo ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }} > ~/.ssh/passman.pem
+      #     chmod 400 ~/.ssh/passman.pem
+      #     eval "$(ssh-agent -s)"
+      #     ssh-add ~/.ssh/passman.pem
 
       - name: Create Git commit hash
         run: |
