@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronsUpDown, LogOut, Settings2Icon } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -22,7 +23,8 @@ import { getInitials } from "@/lib/utils";
 import { useGetUserDetails } from "@/services/queries/user";
 import { useStore } from "@/stores";
 import { useAuthStore } from "@/stores/auth";
-import NavUserSkeleton from "./skeletons/NavUserSkeleton";
+
+import NavUserSkeleton from "./skeletons/nav-user-skeleton";
 
 export function NavUser() {
   const { data: response, isPending, isError } = useGetUserDetails();

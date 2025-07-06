@@ -1,7 +1,10 @@
 import type { ComponentProps } from "react";
+
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
+
 import { cn } from "@/lib/utils";
+
 import { Button } from "./button";
 import { Input } from "./input";
 

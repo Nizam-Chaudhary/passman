@@ -2,10 +2,12 @@ import { getRouteApi } from "@tanstack/react-router";
 import { Check, ChevronsUpDown, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+
 import { cn } from "@/lib/utils";
 import { useGetVaults } from "@/services/queries/vault";
 import { useStore } from "@/stores";
-import AddVault from "./AddVault";
+
+import AddVault from "./add-vault";
 import { Button } from "./ui/button";
 import {
   Command,

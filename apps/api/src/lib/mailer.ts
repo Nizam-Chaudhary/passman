@@ -1,5 +1,6 @@
 import * as aws from "@aws-sdk/client-ses";
 import { createTransport } from "nodemailer";
+
 import { env } from "./env";
 
 // configuring AWS SDK

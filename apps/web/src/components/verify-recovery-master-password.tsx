@@ -1,18 +1,21 @@
 import type { MasterKey, VerifyMasterPasswordBody } from "@passman/schema/api";
 import type { SubmitHandler } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { verifyMasterPasswordBodySchema } from "@passman/schema/api";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
+
 import { useToast } from "@/hooks/use-toast";
-import { decrypt, deriveKey } from "@/lib/encryption.helper";
+import { decrypt, deriveKey } from "@/lib/encryption-helper";
 import { useGetUserDetails } from "@/services/queries/user";
 import { useStore } from "@/stores";
+
 import { Button } from "./ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
-import LoadingSpinner from "./ui/loadingSpinner";
+import LoadingSpinner from "./ui/loading-spinner";
 import { PasswordInput } from "./ui/password-input";
 
 function VerifyRecoveryMasterPassword() {

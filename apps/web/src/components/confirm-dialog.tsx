@@ -1,6 +1,8 @@
 import { useShallow } from "zustand/react/shallow";
+
 import { cn } from "@/lib/utils";
 import { useStore } from "@/stores";
+
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -10,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import LoadingSpinner from "./ui/loadingSpinner";
+import LoadingSpinner from "./ui/loading-spinner";
 
 interface Props {
   title: string;

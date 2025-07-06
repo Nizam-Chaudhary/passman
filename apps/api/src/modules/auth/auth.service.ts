@@ -1,11 +1,13 @@
 import type { JwtUserData, LoginUserBody, RefreshTokenBody } from "@passman/schema/api";
+
 import { eq, like } from "drizzle-orm";
 import * as jwt from "hono/jwt";
+
 import { db } from "../../db/index";
 import { users } from "../../db/schema";
 import { env } from "../../lib/env";
-import { UnauthorizedException } from "../../lib/responseExceptions";
-import { createToken } from "../../utils/tokenHelper";
+import { UnauthorizedException } from "../../lib/response-exceptions";
+import { createToken } from "../../utils/token-helper";
 
 class AuthService {
   async loginUser(input: LoginUserBody) {

@@ -1,8 +1,8 @@
 import type { EncryptedPassword } from "@passman/schema/api";
 
 import { relations } from "drizzle-orm";
-
 import { int, json, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+
 import { users, vaults } from "../schema";
 
 export const passwords = mysqlTable("passwords", {

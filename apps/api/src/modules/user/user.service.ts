@@ -10,7 +10,9 @@ import type {
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "@passman/schema/api";
+
 import { eq, like } from "drizzle-orm";
+
 import { db } from "../../db/index";
 import { files, users, vaults } from "../../db/schema";
 import { env } from "../../lib/env";
@@ -19,10 +21,10 @@ import {
   BadRequestException,
   ConflictException,
   NotFoundException,
-} from "../../lib/responseExceptions";
+} from "../../lib/response-exceptions";
 import * as userTemplates from "../../templates/user";
 import { generateOtp } from "../../utils/generator";
-import { createToken, verifyToken } from "../../utils/tokenHelper";
+import { createToken, verifyToken } from "../../utils/token-helper";
 import fileService from "../file/file.service";
 
 class UserService {

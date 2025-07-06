@@ -2,8 +2,9 @@
   "$schema": "./node_modules/turbo/schema.json",
   "tasks": {
     "transit": { "dependsOn": ["^transit"] },
-    "build": { "outputs": ["dist/**"] },
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
     "typecheck": { "dependsOn": ["transit"] },
+    "format": {},
     "lint": { "dependsOn": ["transit"] },
     "lint:fix": { "dependsOn": ["transit"] },
     "clean": { "cache": false },

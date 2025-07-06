@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+
 import { checkAuthStatus, getRefreshToken } from "@/lib/auth";
 import { useStore } from "@/stores";
+
 import { useRefreshToken } from "./refresh-token";
 
 function useAuth() {

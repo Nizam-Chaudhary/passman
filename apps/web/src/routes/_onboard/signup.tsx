@@ -1,10 +1,12 @@
 import type { RegisterUserBody } from "@passman/schema/api/user";
 import type { SubmitHandler } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUserBodySchema } from "@passman/schema/api/user";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,7 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LoadingSpinner from "@/components/ui/loadingSpinner";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useToast } from "@/hooks/use-toast";
 import { useRegisterUser } from "@/services/mutations/user";

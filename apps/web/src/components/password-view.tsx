@@ -1,5 +1,5 @@
 import type { SubmitHandler } from "react-hook-form";
-import type { UpdatePasswordForm } from "@/schema/password";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
@@ -7,14 +7,18 @@ import { ClipboardCopyIcon, TrashIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
+
+import type { UpdatePasswordForm } from "@/schema/password";
+
 import { toast } from "@/hooks/use-toast";
-import { encrypt } from "@/lib/encryption.helper";
+import { encrypt } from "@/lib/encryption-helper";
 import { getInitials } from "@/lib/utils";
 import { upddatePasswordForm } from "@/schema/password";
 import { useDeletePassword, useUpdatePassword } from "@/services/mutations/password";
 import { useGetPasswordById } from "@/services/queries/password";
 import { useStore } from "@/stores";
-import ConfirmDialog from "./ConfirmDialog";
+
+import ConfirmDialog from "./confirm-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";

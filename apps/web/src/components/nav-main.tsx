@@ -1,8 +1,10 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
+
 import { Lock } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
+
 import {
   SidebarGroup,
   SidebarMenu,

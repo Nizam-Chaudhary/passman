@@ -1,9 +1,12 @@
 import type { SubmitHandler } from "react-hook-form";
-import type { FileUploadResponse } from "@/schema/file";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod/v4";
+
+import type { FileUploadResponse } from "@/schema/file";
+
 // import {
 //     getGetApiV1UsersQueryKey,
 //     useGetApiV1Users,
@@ -13,13 +16,14 @@ import { useToast } from "@/hooks/use-toast";
 import { getInitials } from "@/lib/utils";
 import { useUpdateUser } from "@/services/mutations/user";
 import { useGetUserDetails } from "@/services/queries/user";
-import FileUpload from "../FileUpload";
+
+import FileUpload from "../file-upload";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import Loading from "../ui/loading";
-import LoadingSpinner from "../ui/loadingSpinner";
+import LoadingSpinner from "../ui/loading-spinner";
 
 function Profile() {
   const queryClient = useQueryClient();

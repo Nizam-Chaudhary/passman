@@ -9,7 +9,7 @@ import { and, desc, eq, inArray, like, or } from "drizzle-orm";
 
 import { db } from "../../db/index";
 import { passwords } from "../../db/schema";
-import { NotFoundException } from "../../lib/responseExceptions";
+import { NotFoundException } from "../../lib/response-exceptions";
 
 class PasswordService {
   async addPassword(userId: number, input: AddPasswordBody) {

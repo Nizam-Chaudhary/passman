@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer";
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "node:crypto";
+
 import { env } from "../lib/env";
 
 export function deriveKey(password: string, salt: string): Buffer {

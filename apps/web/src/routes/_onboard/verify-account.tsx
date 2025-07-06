@@ -1,11 +1,14 @@
 import type { SubmitHandler } from "react-hook-form";
-import type { VerifyUserEmailForm } from "@/schema/user";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
-import Timer from "@/components/Timer";
+
+import type { VerifyUserEmailForm } from "@/schema/user";
+
+import Timer from "@/components/timer";
 import { Button } from "@/components/ui/button";
 import {
   Card,

@@ -1,8 +1,9 @@
 import { zValidator } from "@hono/zod-validator";
 import { headerSchema, idParamsSchema, uploadFileBodySchema } from "@passman/schema/api";
 import { Hono } from "hono";
+
 import { bearerAuth } from "../../middlewares/auth";
-import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
+import { zValidatorCustomFunc } from "../../middlewares/z-validator-custom-func";
 import fileService from "./file.service";
 
 export const fileRoutes = new Hono()

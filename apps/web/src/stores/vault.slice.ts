@@ -1,5 +1,6 @@
 import type { Vault } from "@passman/schema/api";
 import type { StateCreator } from "zustand";
+
 import type { Store } from "@/stores";
 
 interface VaultStates {

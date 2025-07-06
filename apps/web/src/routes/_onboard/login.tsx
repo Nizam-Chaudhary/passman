@@ -1,10 +1,12 @@
 import type { JwtUserData, LoginUserBody } from "@passman/schema/api/auth";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUserBodySchema } from "@passman/schema/api/auth";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { jwtDecode } from "jwt-decode";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,10 +25,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LoadingSpinner from "@/components/ui/loadingSpinner";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useToast } from "@/hooks/use-toast";
 import { useLoginUser } from "@/services/mutations/auth";
 import { useAuthStore } from "@/stores/auth";
+
 import { PasswordInput } from "../../components/ui/password-input";
 
 export const Route = createFileRoute("/_onboard/login")({

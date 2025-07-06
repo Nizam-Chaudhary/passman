@@ -8,11 +8,12 @@ import {
   UserIcon,
 } from "lucide-react";
 import { useState } from "react";
-import Export from "@/components/settings/Export";
-import Import from "@/components/settings/Import";
-import Profile from "@/components/settings/Profile";
-import Security from "@/components/settings/Security";
-import Vault from "@/components/settings/Vault";
+
+import Export from "@/components/settings/export";
+import Import from "@/components/settings/import";
+import Profile from "@/components/settings/profile";
+import Security from "@/components/settings/security";
+import Vault from "@/components/settings/vault";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";

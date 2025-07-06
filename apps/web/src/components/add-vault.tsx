@@ -1,12 +1,15 @@
 import type { SubmitHandler } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addVaultBodySchema } from "@passman/schema/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
+
 import { useToast } from "@/hooks/use-toast";
 import { useAddVault } from "@/services/mutations/vault";
 import { useStore } from "@/stores";
+
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -18,7 +21,7 @@ import {
 } from "./ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
-import LoadingSpinner from "./ui/loadingSpinner";
+import LoadingSpinner from "./ui/loading-spinner";
 
 export default function AddVault() {
   const queryClient = useQueryClient();

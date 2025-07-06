@@ -12,8 +12,9 @@ import {
   verifyUserEmailBodySchema,
 } from "@passman/schema/api";
 import { Hono } from "hono";
+
 import { bearerAuth } from "../../middlewares/auth";
-import { zValidatorCustomFunc } from "../../middlewares/zValidatorCustomFunc";
+import { zValidatorCustomFunc } from "../../middlewares/z-validator-custom-func";
 import userService from "./user.service";
 
 export const userRoutes = new Hono()

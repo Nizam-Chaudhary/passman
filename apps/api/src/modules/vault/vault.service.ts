@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "../../db/index";
 import * as schema from "../../db/schema";
-import { BadRequestException, NotFoundException } from "../../lib/responseExceptions";
+import { BadRequestException, NotFoundException } from "../../lib/response-exceptions";
 
 class UserService {
   async getVaults(userId: number) {

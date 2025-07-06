@@ -1,5 +1,7 @@
 import type { JwtUserData } from "@passman/schema/api";
+
 import { jwtDecode } from "jwt-decode";
+
 import { AUTH_TOKEN, REFRESH_TOKEN } from "./constants";
 
 export function getToken(): string | null {

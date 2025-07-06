@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+
 import { authRoutes } from "./modules/auth/auth.route";
 import { fileRoutes } from "./modules/file/file.route";
 import { healthRoute } from "./modules/health/health.route";

@@ -1,10 +1,13 @@
 import type { SubmitHandler } from "react-hook-form";
-import type { CreateMasterPasswordForm } from "@/schema/user";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
-import RecoveryKeyDialog from "@/components/RecoverKeyDialog";
+
+import type { CreateMasterPasswordForm } from "@/schema/user";
+
+import RecoveryKeyDialog from "@/components/recover-key-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LoadingSpinner from "@/components/ui/loadingSpinner";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";
 import { useToast } from "@/hooks/use-toast";
@@ -25,7 +28,7 @@ import {
   generateMasterKey,
   generateRecoveryKey,
   generateSalt,
-} from "@/lib/encryption.helper";
+} from "@/lib/encryption-helper";
 import { createMasterPasswordFormSchema } from "@/schema/user";
 import { useCreateMasterPassword } from "@/services/mutations/user";
 import { useStore } from "@/stores";

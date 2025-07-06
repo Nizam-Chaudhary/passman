@@ -1,8 +1,8 @@
 import type { MasterKey } from "@passman/schema/api";
 
 import { relations } from "drizzle-orm";
-
 import { boolean, int, json, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+
 import { files, passwords, vaults } from "../schema";
 
 export const users = mysqlTable("users", {

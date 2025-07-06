@@ -1,14 +1,18 @@
 import type { SubmitHandler } from "react-hook-form";
-import type { AddPasswordForm } from "@/schema/password";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
+
+import type { AddPasswordForm } from "@/schema/password";
+
 import { useToast } from "@/hooks/use-toast";
-import { encrypt } from "@/lib/encryption.helper";
+import { encrypt } from "@/lib/encryption-helper";
 import { addPasswordFormSchema } from "@/schema/password";
 import { useAddPassword } from "@/services/mutations/password";
 import { useStore } from "@/stores";
+
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -20,7 +24,7 @@ import {
 } from "./ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
-import LoadingSpinner from "./ui/loadingSpinner";
+import LoadingSpinner from "./ui/loading-spinner";
 import { PasswordInput } from "./ui/password-input";
 import { Textarea } from "./ui/textarea";
 

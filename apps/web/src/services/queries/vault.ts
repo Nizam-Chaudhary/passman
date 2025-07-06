@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+
 import { useAuthStore } from "@/stores/auth";
+
 import { api } from "../api";
 
 export function useGetVaults() {

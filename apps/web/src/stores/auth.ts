@@ -1,8 +1,10 @@
 import type { JwtUserData } from "@passman/schema/api";
-import type { Prettify } from "@/vite-env";
+
 import { create } from "zustand";
 import { devtools, persist, subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import type { Prettify } from "@/vite-env";
 
 interface AuthStates {
   isLoggedIn: boolean;

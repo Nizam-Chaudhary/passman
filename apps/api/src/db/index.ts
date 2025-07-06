@@ -1,4 +1,5 @@
 import { drizzle } from "drizzle-orm/mysql2";
+
 import { env } from "../lib/env";
 import * as schema from "./schema";
 

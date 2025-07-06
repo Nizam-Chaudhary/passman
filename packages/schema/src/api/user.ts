@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+
 import { masterKeySchema } from "./common";
 
 export const passwordSchema = z

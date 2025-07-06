@@ -1,5 +1,6 @@
 import { validFileTypesSchema } from "@passman/schema/api";
 import { and, eq } from "drizzle-orm";
+
 import { db } from "../../db/index";
 import { files } from "../../db/schema";
 import { env } from "../../lib/env";
@@ -7,7 +8,7 @@ import {
   BadRequestException,
   NotFoundException,
   ValidationException,
-} from "../../lib/responseExceptions";
+} from "../../lib/response-exceptions";
 import s3 from "../../lib/s3";
 
 class FileService {

@@ -1,8 +1,10 @@
 import type { JwtUserData } from "@passman/schema/api";
+
 import { createMiddleware } from "hono/factory";
+
 import { env } from "../lib/env";
-import { UnauthorizedException } from "../lib/responseExceptions";
-import { verifyToken } from "../utils/tokenHelper";
+import { UnauthorizedException } from "../lib/response-exceptions";
+import { verifyToken } from "../utils/token-helper";
 
 export const bearerAuth = createMiddleware<{
   Variables: { user: JwtUserData };

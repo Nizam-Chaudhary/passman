@@ -1,11 +1,13 @@
 import type { VerifyMasterPasswordBody } from "@passman/schema/api/user";
 import type { SubmitHandler } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { verifyMasterPasswordBodySchema } from "@passman/schema/api/user";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,11 +25,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LoadingSpinner from "@/components/ui/loadingSpinner";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";
 import { useToast } from "@/hooks/use-toast";
-import { decrypt, deriveKey, importKey } from "@/lib/encryption.helper";
+import { decrypt, deriveKey, importKey } from "@/lib/encryption-helper";
 import { useVerifyMasterPassword } from "@/services/mutations/user";
 import { useStore } from "@/stores";
 import { useAuthStore } from "@/stores/auth";

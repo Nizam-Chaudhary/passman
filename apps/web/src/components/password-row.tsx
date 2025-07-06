@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
+
 import { getInitials } from "@/lib/utils";
+
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";

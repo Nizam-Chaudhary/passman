@@ -1,7 +1,10 @@
 import type { GetPasswordsQueryOptions, IdParamsType } from "@passman/schema/api";
+
 import { useQuery } from "@tanstack/react-query";
-import { decrypt } from "@/lib/encryption.helper";
+
+import { decrypt } from "@/lib/encryption-helper";
 import { useAuthStore } from "@/stores/auth";
+
 import { api } from "../api";
 
 export function useGetPasswordListForVault(query: GetPasswordsQueryOptions) {

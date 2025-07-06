@@ -1,9 +1,11 @@
 import { getRouteApi } from "@tanstack/react-router";
 import { useShallow } from "zustand/react/shallow";
+
 // import { useGetApiV1Passwords } from "@/api-client/api";
 import { useGetPasswordListForVault } from "@/services/queries/password";
 import { useStore } from "@/stores";
-import { PasswordRow } from "./PasswordRow";
+
+import { PasswordRow } from "./password-row";
 import { Card, CardContent } from "./ui/card";
 import Loading from "./ui/loading";
 import { ScrollArea } from "./ui/scroll-area";

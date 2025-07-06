@@ -5,14 +5,15 @@ import { KeyRound, LockIcon, Search } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import z from "zod/v4";
 import { useShallow } from "zustand/react/shallow";
-import AddPassword from "@/components/AddPassword";
-import { AppSidebar } from "@/components/AppSidebar";
-import { PasswordList } from "@/components/PasswordList";
-import { PasswordView } from "@/components/PasswordView";
+
+import AddPassword from "@/components/add-password";
+import { AppSidebar } from "@/components/app-sidebar";
+import { PasswordList } from "@/components/password-list";
+import { PasswordView } from "@/components/password-view";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { VaultComboBox } from "@/components/VaultComboBox";
+import { VaultComboBox } from "@/components/vault-combo-box";
 import { useStore } from "@/stores";
 
 const homeSearchSchema = z.object({

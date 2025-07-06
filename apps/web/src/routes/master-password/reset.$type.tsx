@@ -1,10 +1,13 @@
 import type { SubmitHandler } from "react-hook-form";
-import type { UpdateMasterPasswordForm } from "@/schema/user";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
-import RecoveryKeyDialog from "@/components/RecoverKeyDialog";
+
+import type { UpdateMasterPasswordForm } from "@/schema/user";
+
+import RecoveryKeyDialog from "@/components/recover-key-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,13 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LoadingSpinner from "@/components/ui/loadingSpinner";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
-import VerifyRecoveryMasterPassword from "@/components/VerifyRecoveryMasterPassword";
-import VerifyRecoverKey from "@/components/VerifyReocveryKey";
+import VerifyRecoveryMasterPassword from "@/components/verify-recovery-master-password";
+import VerifyRecoverKey from "@/components/verify-reocvery-key";
 import { useRefreshToken } from "@/hooks/refresh-token";
 import { useToast } from "@/hooks/use-toast";
-import { deriveKey, encrypt, generateRecoveryKey, generateSalt } from "@/lib/encryption.helper";
+import { deriveKey, encrypt, generateRecoveryKey, generateSalt } from "@/lib/encryption-helper";
 import { updateMasterPasswordFormSchema } from "@/schema/user";
 import { useUpdateMasterPassword } from "@/services/mutations/user";
 import { useStore } from "@/stores";

@@ -1,4 +1,5 @@
 import type { StateCreator } from "zustand";
+
 import type { Store } from "@/stores";
 
 interface TimerStates {

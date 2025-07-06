@@ -1,4 +1,5 @@
 import type { Context } from "hono";
+
 import { HTTPException } from "hono/http-exception";
 
 export function errorHandler(err: unknown, c: Context) {

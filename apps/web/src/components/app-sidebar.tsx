@@ -1,8 +1,8 @@
 import { GalleryVerticalEnd } from "lucide-react";
 
-import { NavMain } from "./NavMain";
-import { NavUser } from "./NavUser";
-import { TeamSwitcher } from "./TeamSwitcher";
+import { NavMain } from "./nav-main";
+import { NavUser } from "./nav-user";
+import { TeamSwitcher } from "./team-switcher";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "./ui/sidebar";
 
 // This is sample data.

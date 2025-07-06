@@ -1,10 +1,13 @@
 import type { SubmitHandler } from "react-hook-form";
-import type { ResetPasswordForm } from "@/schema/user";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useForm } from "react-hook-form";
 import z from "zod/v4";
+
+import type { ResetPasswordForm } from "@/schema/user";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LoadingSpinner from "@/components/ui/loadingSpinner";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useToast } from "@/hooks/use-toast";
 import { resetPasswordFormSchema } from "@/schema/user";

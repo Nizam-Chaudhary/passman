@@ -1,6 +1,8 @@
 import type { FileUploadResponse } from "@/schema/file";
+
 import { useToast } from "@/hooks/use-toast";
 import { useUploadFile } from "@/services/mutations/file";
+
 import { Input } from "./ui/input";
 
 interface Props {

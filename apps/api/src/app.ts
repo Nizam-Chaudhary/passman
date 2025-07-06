@@ -4,8 +4,9 @@ import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 import { timeout } from "hono/timeout";
 import { trimTrailingSlash } from "hono/trailing-slash";
+
 import { env } from "./lib/env";
-import { errorHandler } from "./middlewares/errorHandler";
+import { errorHandler } from "./middlewares/error-handler";
 import { routes } from "./route";
 
 const app = new Hono();

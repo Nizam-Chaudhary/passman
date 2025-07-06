@@ -1,5 +1,6 @@
 import type { HeadersInit } from "bun";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
+
 import { HTTPException } from "hono/http-exception";
 
 // Standard error response structure
