@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import { debounce } from "lodash";
 import { KeyRound, LockIcon, Search } from "lucide-react";
 import { useEffect, useMemo } from "react";
@@ -17,13 +16,13 @@ import { VaultComboBox } from "@/components/vault-combo-box";
 import { useStore } from "@/stores";
 
 const homeSearchSchema = z.object({
-  q: z.string().default("").optional(),
-  p: z.number().min(1).optional(),
+  q: z.string().optional().catch(undefined),
+  p: z.number().min(1).optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/_auth/")({
   component: Home,
-  validateSearch: zodValidator(homeSearchSchema),
+  validateSearch: homeSearchSchema,
 });
 
 function Home() {

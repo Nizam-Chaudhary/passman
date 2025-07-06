@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-publish-docker-image:
+  build-and-publish-web-docker-image:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
         with:
           registry: https://ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Web Docker image
         uses: docker/build-push-action@v6
@@ -28,12 +28,24 @@ jobs:
           context: .
           file: ./apps/web/Dockerfile
           target: web
-          # cache-from: type=gha
-          # cache-to: type=gha,mode=max
           push: true
           tags: |
             ghcr.io/nizam-chaudhary/passman-fe:latest
             ghcr.io/nizam-chaudhary/passman-fe:${{ github.sha }}
+
+  build-and-publish-api-docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push API Docker image
         uses: docker/build-push-action@v6
@@ -41,8 +53,6 @@ jobs:
           context: .
           file: ./apps/api/Dockerfile
           target: api
-          # cache-from: type=gha
-          # cache-to: type=gha,mode=max
           push: true
           tags: |
             ghcr.io/nizam-chaudhary/passman-be:latest
@@ -51,7 +61,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs:
-      - build-and-publish-docker-image
+      - build-and-publish-web-docker-image
+      - build-and-publish-api-docker-image
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
