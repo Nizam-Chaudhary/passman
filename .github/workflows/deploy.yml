@@ -13,7 +13,7 @@ jobs:
 
       - name: Add environment variables
         run: |
-          echo ${{ secrets.FE_APP_ENV_FILE }} >> .env.production
+          echo ${{ secrets.FE_APP_ENV_FILE }} >> ./apps/web/.env.production
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
