@@ -81,7 +81,7 @@ function Settings() {
                 onClick={() => setSelectedItem(item)}
                 className={cn(
                   "hover:bg-accent hover:text-accent-foreground flex items-center justify-start rounded-lg px-2 py-2 text-sm font-medium",
-                  selectedItem.title === item.title ? "bg-accent" : "transparent"
+                  selectedItem.title === item.title ? "bg-accent" : "transparent",
                 )}
               >
                 <item.icon className="mr-2 h-4 w-4" />

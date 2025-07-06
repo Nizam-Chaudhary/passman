@@ -54,6 +54,6 @@ if (rootElement && !rootElement.innerHTML) {
           <Toaster />
         </QueryClientProvider>
       </ThemeProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 }

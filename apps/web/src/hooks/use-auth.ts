@@ -12,7 +12,7 @@ function useAuth() {
       setUserData: state.setUserData,
       setIsAuthenticated: state.setIsAuthenticated,
       userData: state.userData,
-    }))
+    })),
   );
 
   const refreshTokenMutationRef = useRef(useRefreshToken());

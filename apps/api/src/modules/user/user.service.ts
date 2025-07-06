@@ -181,7 +181,7 @@ class UserService {
 
     const isMasterPasswordValid = await Bun.password.verify(
       input.masterPassword,
-      user.masterPassword
+      user.masterPassword,
     );
 
     if (!isMasterPasswordValid) {
@@ -293,7 +293,7 @@ class UserService {
     const hashedPassword = await Bun.password.hash(body.password);
     const jwtTokenResult = await verifyToken<ResetPasswordJwtTokenPayload>(
       body.token,
-      env.JWT_SECRET
+      env.JWT_SECRET,
     );
 
     if (!jwtTokenResult.success || !jwtTokenResult.payload) {

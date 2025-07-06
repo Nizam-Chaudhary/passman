@@ -33,7 +33,7 @@ function Profile() {
           .string()
           .min(4, "Username must be at least 4 characters")
           .max(50, "Username must be at most 50 characters"),
-      })
+      }),
     ),
     defaultValues: {
       userName: userDetails?.userName ?? "",
@@ -93,7 +93,7 @@ function Profile() {
             className: "bg-red-600 text-white",
           });
         },
-      }
+      },
     );
   };
 

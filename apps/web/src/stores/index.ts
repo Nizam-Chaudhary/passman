@@ -26,7 +26,7 @@ export const useStore = create<Store>()(
         ...createPasswordSlice(...a),
         ...createMasterPasswordSlice(...a),
         ...createTimerSlice(...a),
-      }))
-    )
-  )
+      })),
+    ),
+  ),
 );

@@ -49,13 +49,13 @@ function CreateMasterPassword() {
     useShallow((state) => ({
       setRecoveryKey: state.setRecoveryKey,
       setOpenRecoveryKeyDialog: state.setOpenRecoveryKeyDialog,
-    }))
+    })),
   );
 
   const { authActions } = useAuthStore(
     useShallow((state) => ({
       authActions: state.actions,
-    }))
+    })),
   );
 
   const { toast } = useToast();
@@ -116,7 +116,7 @@ function CreateMasterPassword() {
             className: "bg-red-700",
           });
         },
-      }
+      },
     );
   };
 

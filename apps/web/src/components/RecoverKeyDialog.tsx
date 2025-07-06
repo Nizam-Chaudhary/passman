@@ -21,7 +21,7 @@ function RecoveryKeyDialog() {
       open: state.openRecoveryKeyDialog,
       onOpenChange: state.setOpenRecoveryKeyDialog,
       recoveryKey: state.recoveryKey,
-    }))
+    })),
   );
   const { toast } = useToast();
   const navigate = useNavigate();

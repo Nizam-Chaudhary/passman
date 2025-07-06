@@ -20,7 +20,7 @@ const initialState: VaultStates = {
 export type VaultSlice = VaultStates & VaultActions;
 
 export const createVaultSlice: StateCreator<Store, [["zustand/immer", never]], [], VaultSlice> = (
-  set
+  set,
 ) => ({
   ...initialState,
   setCurrentVault: (vault) =>

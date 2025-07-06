@@ -36,7 +36,7 @@ export function PasswordView() {
     useShallow((state) => ({
       setOpenDeletePasswordDialog: state.setOpenDeletePasswordDialog,
       masterKey: state.masterKey,
-    }))
+    })),
   );
   const passwordId = searchParams.p;
   const {
@@ -145,7 +145,7 @@ export function PasswordView() {
             className: "bg-green-700",
           });
         },
-      }
+      },
     );
   };
 
@@ -170,7 +170,7 @@ export function PasswordView() {
           });
           setOpenDeletePasswordDialog(false);
         },
-      }
+      },
     );
   };
 

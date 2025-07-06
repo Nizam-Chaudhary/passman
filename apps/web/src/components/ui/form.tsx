@@ -61,7 +61,9 @@ function FormItem({
   ref,
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & { ref?: React.RefObject<HTMLDivElement | null> }) {
+}: React.HTMLAttributes<HTMLDivElement> & {
+  ref?: React.RefObject<HTMLDivElement | null>;
+}) {
   const id = React.useId();
 
   return (

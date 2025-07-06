@@ -41,7 +41,7 @@ function SignUp() {
   const { authActions } = useAuthStore(
     useShallow((state) => ({
       authActions: state.actions,
-    }))
+    })),
   );
 
   const signUpForm = useForm<RegisterUserBody>({

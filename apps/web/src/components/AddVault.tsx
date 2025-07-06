@@ -26,7 +26,7 @@ export default function AddVault() {
     useShallow((state) => ({
       open: state.openAddVaultDialog,
       setOpen: state.setOpenAddVaultDialog,
-    }))
+    })),
   );
 
   const { toast } = useToast();

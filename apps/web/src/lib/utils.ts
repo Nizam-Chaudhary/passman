@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function makeQueryString(
-  params: Record<string, string | number | boolean | undefined | null>
+  params: Record<string, string | number | boolean | undefined | null>,
 ) {
   const results = Object.entries(params)
     .filter(([, value]) => value != null)

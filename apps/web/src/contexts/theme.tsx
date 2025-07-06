@@ -27,7 +27,7 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
   );
 
   useEffect(() => {
@@ -36,8 +36,7 @@ export function ThemeProvider({
     root.classList.remove("light", "dark");
 
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefer-color-schema: dark)")
-        .matches
+      const systemTheme = window.matchMedia("(prefer-color-schema: dark)").matches
         ? "dark"
         : "light";
 
@@ -56,7 +55,7 @@ export function ThemeProvider({
         setTheme(theme);
       },
     }),
-    [theme, storageKey]
+    [theme, storageKey],
   );
 
   return (
@@ -70,8 +69,7 @@ export function ThemeProvider({
 export function useTheme() {
   const context = use(ThemeProviderContext);
 
-  if (context === undefined)
-    throw new Error("useTheme must be used within a ThemeProvider");
+  if (context === undefined) throw new Error("useTheme must be used within a ThemeProvider");
 
   return context;
 }

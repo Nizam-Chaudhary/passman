@@ -106,10 +106,12 @@ export const useAuthStore = create<AuthStore>()(
           name: "passman-auth",
           partialize: (state) =>
             Object.fromEntries(
-              Object.entries(state).filter(([key]) => !["isAuthenticated", "actions"].includes(key))
+              Object.entries(state).filter(
+                ([key]) => !["isAuthenticated", "actions"].includes(key),
+              ),
             ),
-        }
-      )
-    )
-  )
+        },
+      ),
+    ),
+  ),
 );

@@ -30,7 +30,7 @@ export function NavMain() {
     useShallow((state) => ({
       currentMainNav: state.currentMainNav,
       setCurrentMainNav: state.setCurrentMainNav,
-    }))
+    })),
   );
   const handleClick = (title: "Passwords" | "Notes") => {
     setCurrentMainNav(title);

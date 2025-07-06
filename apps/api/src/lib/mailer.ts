@@ -45,7 +45,7 @@ export function sendMail(options: { toAddresses: string; subject: string; emailB
           console.error(new Date().toLocaleString(), info.envelope);
           console.error(info.messageId);
         }
-      }
+      },
     );
     resolve(true);
   });

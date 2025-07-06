@@ -16,7 +16,7 @@ export const fileRoutes = new Hono()
       const user = c.get("user");
       const response = await fileService.uploadFile(file, user.id);
       return c.json(response, 201);
-    }
+    },
   )
   .delete(
     "/:id",
@@ -28,5 +28,5 @@ export const fileRoutes = new Hono()
       const user = c.get("user");
       await fileService.removeFile(user.id, id);
       return c.json({ message: "File deleted successfully" }, 200);
-    }
+    },
   );

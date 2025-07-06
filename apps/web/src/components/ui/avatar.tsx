@@ -49,7 +49,7 @@ function AvatarFallback({
       ref={ref}
       className={cn(
         "bg-muted flex h-full w-full items-center justify-center rounded-full",
-        className
+        className,
       )}
       {...props}
     />

@@ -29,7 +29,7 @@ function Home() {
   const { setOpenAddPasswordDialog } = useStore(
     useShallow((state) => ({
       setOpenAddPasswordDialog: state.setOpenAddPasswordDialog,
-    }))
+    })),
   );
 
   const searchParams = Route.useSearch();
@@ -50,7 +50,7 @@ function Home() {
           });
         }
       }, 500),
-    [navigate]
+    [navigate],
   );
 
   // Cleanup the debounced function on unmount

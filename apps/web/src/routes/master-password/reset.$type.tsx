@@ -53,7 +53,7 @@ function ResetMasterPassword() {
         setRecoveryKey: state.setRecoveryKey,
         setOpenRecoveryKeyDialog: state.setOpenRecoveryKeyDialog,
         setMasterKeyForUpdate: state.setMasterKeyForUpdate,
-      }))
+      })),
     );
 
   const form = useForm({
@@ -120,7 +120,7 @@ function ResetMasterPassword() {
             className: "bg-red-700",
           });
         },
-      }
+      },
     );
   };
 

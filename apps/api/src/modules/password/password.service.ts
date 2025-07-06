@@ -36,7 +36,7 @@ class PasswordService {
           like(passwords.name, `%${search}%`),
           like(passwords.url, `%${search}%`),
           like(passwords.username, `%${search}%`),
-          like(passwords.note, `%${search}%`)
+          like(passwords.note, `%${search}%`),
         )
       : undefined;
 

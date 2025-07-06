@@ -17,7 +17,7 @@ const initialState: TimerStates = {
 export type TimerSlice = TimerStates & TimerActions;
 
 export const createTimerSlice: StateCreator<Store, [["zustand/immer", never]], [], TimerSlice> = (
-  set
+  set,
 ) => ({
   ...initialState,
   decreaseOtpTimer: () => {

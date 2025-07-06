@@ -16,7 +16,7 @@ app.use(
   "/api/*",
   cors({
     origin: env.NODE_ENV === "production" ? [env.FE_URL] : "*",
-  })
+  }),
 );
 app.use(secureHeaders());
 app.onError(errorHandler);

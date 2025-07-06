@@ -69,7 +69,7 @@ class AuthService {
   async refreshToken(body: RefreshTokenBody) {
     const tokenData = (await jwt.verify(
       body.refreshToken,
-      env.JWT_SECRET
+      env.JWT_SECRET,
     )) as unknown as JwtUserData;
 
     if (!tokenData) {

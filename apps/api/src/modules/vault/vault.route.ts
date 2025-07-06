@@ -26,7 +26,7 @@ export const vaultRoutes = new Hono()
       const user = c.get("user");
       const response = await vaultService.addVault(body.name, user.id);
       return c.json(response, 201);
-    }
+    },
   )
   .patch(
     "/:id",
@@ -40,7 +40,7 @@ export const vaultRoutes = new Hono()
       const user = c.get("user");
       const response = await vaultService.updateVault(id, body.name, user.id);
       return c.json(response);
-    }
+    },
   )
   .delete(
     "/:id",
@@ -52,5 +52,5 @@ export const vaultRoutes = new Hono()
       const user = c.get("user");
       const response = await vaultService.deleteVault(id, user.id);
       return c.json(response);
-    }
+    },
   );

@@ -15,7 +15,7 @@ export function PasswordList() {
   const { currentVault } = useStore(
     useShallow((state) => ({
       currentVault: state.currentVault,
-    }))
+    })),
   );
   const {
     data: passwords,

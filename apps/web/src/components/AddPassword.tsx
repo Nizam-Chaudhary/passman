@@ -32,7 +32,7 @@ export default function AddPassword() {
       setOpenAddPasswordDialog: state.setOpenAddPasswordDialog,
       masterKey: state.masterKey,
       currentVault: state.currentVault,
-    }))
+    })),
   );
   const { toast } = useToast();
 

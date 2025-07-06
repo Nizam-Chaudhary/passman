@@ -24,7 +24,7 @@ export const userRoutes = new Hono()
       const body = c.req.valid("json");
       const response = await userService.registerUser(body);
       return c.json(response, 201);
-    }
+    },
   )
   .post(
     "/reset-password-email",
@@ -34,7 +34,7 @@ export const userRoutes = new Hono()
       const response = await userService.sendResetPasswordEmail(body);
 
       return c.json(response, 200);
-    }
+    },
   )
   .post(
     "/reset-password",
@@ -44,7 +44,7 @@ export const userRoutes = new Hono()
       const response = await userService.resetPassword(body);
 
       return c.json(response, 200);
-    }
+    },
   )
   .post(
     "/verify-email",
@@ -54,7 +54,7 @@ export const userRoutes = new Hono()
       const response = await userService.verifyUserEmail(body);
 
       return c.json(response, 200);
-    }
+    },
   )
   .post("/send-otp", zValidator("json", resendOtpBodySchema, zValidatorCustomFunc), async (c) => {
     const body = c.req.valid("json");
@@ -79,7 +79,7 @@ export const userRoutes = new Hono()
       const response = await userService.updateUser(id, body);
 
       return c.json(response, 200);
-    }
+    },
   )
   .post(
     "/master-key",
@@ -92,7 +92,7 @@ export const userRoutes = new Hono()
       const response = await userService.createMasterKey(id, body);
 
       return c.json(response, 201);
-    }
+    },
   )
   .post(
     "/verify-master-password",
@@ -105,7 +105,7 @@ export const userRoutes = new Hono()
       const response = await userService.verifyMasterPassword(id, body);
 
       return c.json(response, 200);
-    }
+    },
   )
   .get("/", bearerAuth, zValidator("header", headerSchema, zValidatorCustomFunc), async (c) => {
     const { id } = c.get("user");
@@ -124,5 +124,5 @@ export const userRoutes = new Hono()
       const response = await userService.updateMasterPassword(user.id, body);
 
       return c.json(response, 200);
-    }
+    },
   );

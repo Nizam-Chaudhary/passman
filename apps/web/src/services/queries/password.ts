@@ -1,7 +1,4 @@
-import type {
-  GetPasswordsQueryOptions,
-  IdParamsType,
-} from "@passman/schema/api";
+import type { GetPasswordsQueryOptions, IdParamsType } from "@passman/schema/api";
 import { useQuery } from "@tanstack/react-query";
 import { decrypt } from "@/lib/encryption.helper";
 import { useAuthStore } from "@/stores/auth";
@@ -29,10 +26,7 @@ export function useGetPasswordListForVault(query: GetPasswordsQueryOptions) {
   });
 }
 
-export function useGetPasswordById(options: {
-  param: IdParamsType;
-  masterKey: CryptoKey;
-}) {
+export function useGetPasswordById(options: { param: IdParamsType; masterKey: CryptoKey }) {
   return useQuery({
     queryKey: ["passwords", { options }],
     queryFn: async () => {
@@ -49,10 +43,7 @@ export function useGetPasswordById(options: {
       if (!response.ok) throw await response.json();
       const json = await response.json();
 
-      const decryptedPassword = await decrypt(
-        json.data.password,
-        options.masterKey
-      );
+      const decryptedPassword = await decrypt(json.data.password, options.masterKey);
       return { data: json.data, decryptedPassword };
     },
     enabled: !!options.param.id,

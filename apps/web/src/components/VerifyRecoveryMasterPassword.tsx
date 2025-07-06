@@ -28,7 +28,7 @@ function VerifyRecoveryMasterPassword() {
   const { setMastersetMasterKeyForRecovery } = useStore(
     useShallow((state) => ({
       setMastersetMasterKeyForRecovery: state.setMasterKeyForUpdate,
-    }))
+    })),
   );
 
   const { data: response, isPending, isError } = useGetUserDetails();

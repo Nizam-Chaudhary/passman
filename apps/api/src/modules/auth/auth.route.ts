@@ -17,5 +17,5 @@ export const authRoutes = new Hono()
       const body = c.req.valid("json");
       const response = await authService.refreshToken(body);
       return c.json(response);
-    }
+    },
   );

@@ -64,7 +64,7 @@ function ResetPassword() {
 
           navigate({ to: "/login", replace: true });
         },
-      }
+      },
     );
   };
   return (

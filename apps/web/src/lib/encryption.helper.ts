@@ -9,7 +9,7 @@ export async function deriveKey(password: string, salt: string): Promise<CryptoK
     passwordBuffer,
     { name: "PBKDF2" },
     false,
-    ["deriveKey"]
+    ["deriveKey"],
   );
 
   // Derive the key using PBKDF2
@@ -23,7 +23,7 @@ export async function deriveKey(password: string, salt: string): Promise<CryptoK
     keyMaterial,
     { name: "AES-GCM", length: 256 },
     true, // This means we won't use the derived key for encryption directly here
-    ["encrypt", "decrypt"]
+    ["encrypt", "decrypt"],
   );
 
   return derivedKey; // Return as a Uint8Array for consistency
@@ -34,7 +34,7 @@ export async function importKey(keyString: string): Promise<CryptoKey> {
   // Convert hex string to Uint8Array
   const keyBytes = new Uint8Array(
     // biome-ignore lint/style/noNonNullAssertion: <explanation>
-    keyString.match(/.{1,2}/g)!.map((byte) => Number.parseInt(byte, 16))
+    keyString.match(/.{1,2}/g)!.map((byte) => Number.parseInt(byte, 16)),
   );
 
   // Import as CryptoKey
@@ -45,13 +45,13 @@ export async function importKey(keyString: string): Promise<CryptoKey> {
       name: "AES-GCM",
     },
     true, // extractable
-    ["encrypt", "decrypt"]
+    ["encrypt", "decrypt"],
   );
 }
 
 export async function encrypt(
   data: string,
-  key: CryptoKey // key passed as a raw Uint8Array
+  key: CryptoKey, // key passed as a raw Uint8Array
 ): Promise<{ iv: string; encrypted: string }> {
   // Generate a random initialization vector (IV)
   const iv = crypto.getRandomValues(new Uint8Array(12)); // AES-GCM typically uses a 12-byte IV
@@ -67,7 +67,7 @@ export async function encrypt(
       iv,
     },
     key, // The imported CryptoKey
-    dataBuffer // The data to encrypt
+    dataBuffer, // The data to encrypt
   );
 
   // Return the IV (as hex) and encrypted data (as hex)
@@ -84,18 +84,18 @@ export async function encrypt(
 
 export async function decrypt(
   encryptedData: { iv: string; encrypted: string },
-  key: CryptoKey // key passed as a raw Uint8Array
+  key: CryptoKey, // key passed as a raw Uint8Array
 ): Promise<string> {
   // Convert the IV from hex string to Uint8Array
   const iv = new Uint8Array(
     // biome-ignore lint/style/noNonNullAssertion: <explanation>
-    encryptedData.iv.match(/.{1,2}/g)!.map((byte) => Number.parseInt(byte, 16))
+    encryptedData.iv.match(/.{1,2}/g)!.map((byte) => Number.parseInt(byte, 16)),
   );
 
   // Convert the encrypted data from hex string to Uint8Array
   const encryptedBuffer = new Uint8Array(
     // biome-ignore lint/style/noNonNullAssertion: <explanation>
-    encryptedData.encrypted.match(/.{1,2}/g)!.map((byte) => Number.parseInt(byte, 16))
+    encryptedData.encrypted.match(/.{1,2}/g)!.map((byte) => Number.parseInt(byte, 16)),
   );
 
   // Decrypt the data using AES-GCM
@@ -105,7 +105,7 @@ export async function decrypt(
       iv,
     },
     key, // The imported CryptoKey
-    encryptedBuffer // The encrypted data to decrypt
+    encryptedBuffer, // The encrypted data to decrypt
   );
 
   // Convert the decrypted buffer to a string

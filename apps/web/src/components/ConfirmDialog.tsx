@@ -26,7 +26,7 @@ export default function ConfirmDialog(props: Props) {
     useShallow((state) => ({
       open: state.openDeletePasswordDialog,
       setOpen: state.setOpenDeletePasswordDialog,
-    }))
+    })),
   );
   return (
     <Dialog open={open} onOpenChange={setOpen}>

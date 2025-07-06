@@ -24,7 +24,7 @@ function FileUpload({ onSuccess }: Props): React.ReactElement {
       { file },
       {
         onSuccess,
-      }
+      },
     );
   };
 

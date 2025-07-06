@@ -25,7 +25,7 @@ export const passwordRoutes = new Hono()
       const user = c.get("user");
       const response = await passwordService.addPassword(user.id, body);
       return c.json(response, 201);
-    }
+    },
   )
   .get(
     "/",
@@ -37,7 +37,7 @@ export const passwordRoutes = new Hono()
       const user = c.get("user");
       const response = await passwordService.getPasswords(user.id, vaultId, search);
       return c.json(response);
-    }
+    },
   )
   .get(
     "/:id",
@@ -49,7 +49,7 @@ export const passwordRoutes = new Hono()
       const user = c.get("user");
       const response = await passwordService.getPassword(user.id, id);
       return c.json(response);
-    }
+    },
   )
   .patch(
     "/:id",
@@ -63,7 +63,7 @@ export const passwordRoutes = new Hono()
       const user = c.get("user");
       const response = await passwordService.updatePassword(id, body, user.id);
       return c.json(response);
-    }
+    },
   )
   .delete(
     "/multiple",
@@ -75,7 +75,7 @@ export const passwordRoutes = new Hono()
       const user = c.get("user");
       const response = await passwordService.deleteMultiplePasswords(user.id, ids);
       return c.json(response);
-    }
+    },
   )
   .delete(
     "/:id",
@@ -87,7 +87,7 @@ export const passwordRoutes = new Hono()
       const user = c.get("user");
       const response = await passwordService.deletePassword(id, user.id);
       return c.json(response);
-    }
+    },
   )
   .post(
     "/import",
@@ -99,7 +99,7 @@ export const passwordRoutes = new Hono()
       const user = c.get("user");
       const response = await passwordService.importPasswords(user.id, body);
       return c.json(response, 201);
-    }
+    },
   )
   .post(
     "/move-vaults",
@@ -111,5 +111,5 @@ export const passwordRoutes = new Hono()
       const user = c.get("user");
       const response = await passwordService.movePasswordsToVault(user.id, body);
       return c.json(response);
-    }
+    },
   );

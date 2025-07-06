@@ -31,14 +31,14 @@ export function NavUser() {
   const { authActions } = useAuthStore(
     useShallow((state) => ({
       authActions: state.actions,
-    }))
+    })),
   );
 
   const { setMasterKey, setRecoveryKey } = useStore(
     useShallow((state) => ({
       setMasterKey: state.setMasterKey,
       setRecoveryKey: state.setRecoveryKey,
-    }))
+    })),
   );
 
   const { isMobile } = useSidebar();

@@ -29,7 +29,7 @@ function VerifyRecoverKey() {
   const { setMastersetMasterKeyForRecovery } = useStore(
     useShallow((state) => ({
       setMastersetMasterKeyForRecovery: state.setMasterKeyForUpdate,
-    }))
+    })),
   );
 
   const { data: response, isPending, isError } = useGetUserDetails();
@@ -39,7 +39,7 @@ function VerifyRecoverKey() {
     mutationFn: async (data: { recoveryKey: MasterKey; userRecoveryKey: string }) => {
       const derivedRecoveryDecryptKey = await deriveKey(
         data.userRecoveryKey,
-        data.recoveryKey.salt
+        data.recoveryKey.salt,
       );
 
       return await decrypt(data.recoveryKey, derivedRecoveryDecryptKey);

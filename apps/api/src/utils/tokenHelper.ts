@@ -33,7 +33,7 @@ export async function createToken<T extends Record<string, any>>(options: Create
 
 export async function verifyToken<T = Record<string, any>>(
   token: string,
-  secret: string
+  secret: string,
 ): Promise<VerifyTokenResult<T>> {
   try {
     const payload = await verify(token, secret);

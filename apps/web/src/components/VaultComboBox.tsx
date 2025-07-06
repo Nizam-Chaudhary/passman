@@ -26,7 +26,7 @@ export function VaultComboBox() {
       currentVault: state.currentVault,
       setCurrentVault: state.setCurrentVault,
       setOpenAddVaultDialog: state.setOpenAddVaultDialog,
-    }))
+    })),
   );
   const { data: response } = useGetVaults();
 
@@ -77,7 +77,7 @@ export function VaultComboBox() {
                     <Check
                       className={cn(
                         "ml-auto",
-                        vault.id === currentVault?.id ? "opacity-100" : "opacity-0"
+                        vault.id === currentVault?.id ? "opacity-100" : "opacity-0",
                       )}
                     />
                   </CommandItem>

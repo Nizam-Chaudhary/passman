@@ -11,14 +11,14 @@ export function useRefreshToken() {
     useShallow((state) => ({
       refreshToken: state.refreshToken,
       authActions: state.actions,
-    }))
+    })),
   );
   const { setMasterKey, setRecoveryKey } = useStore(
     useShallow((state) => ({
       setOpenAddPasswordDialog: state.setOpenAddPasswordDialog,
       setMasterKey: state.setMasterKey,
       setRecoveryKey: state.setRecoveryKey,
-    }))
+    })),
   );
 
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ export function useRefreshToken() {
           });
         },
         onError: onRefreshTokenError,
-      }
+      },
     );
   };
 

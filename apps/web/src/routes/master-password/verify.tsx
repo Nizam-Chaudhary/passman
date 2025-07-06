@@ -57,12 +57,12 @@ function VerifyMasterPassword() {
   const { setMasterkey } = useStore(
     useShallow((state) => ({
       setMasterkey: state.setMasterKey,
-    }))
+    })),
   );
   const { authActions } = useAuthStore(
     useShallow((state) => ({
       authActions: state.actions,
-    }))
+    })),
   );
 
   const navigate = useNavigate();

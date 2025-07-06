@@ -14,5 +14,5 @@ export default antfu(
       },
     ],
   },
-  ...pluginQuery.configs["flat/recommended"]
+  ...pluginQuery.configs["flat/recommended"],
 );
