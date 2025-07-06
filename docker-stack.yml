@@ -51,7 +51,7 @@ services:
       - traefik.http.routers.passman-be.entrypoints=websecure
       - traefik.http.routers.passman-be.tls.certresolver=myresolver
     env_file:
-      - ./apps/api/.env.docker
+      - ./apps/api/.env.production
     deploy:
       update_config:
         order: start-first

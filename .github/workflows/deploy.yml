@@ -81,7 +81,7 @@ jobs:
           ssh-keyscan -H passman.live >> ~/.ssh/known_hosts
           docker context create passman --docker "host=ssh://ubuntu@passman.live"
           docker context use passman
-          echo ${{ secrets.BE_APP_ENV_FILE }} >> ./apps/api/.env.docker
+          echo ${{ secrets.BE_APP_ENV_FILE }} >> ./apps/api/.env.production
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
