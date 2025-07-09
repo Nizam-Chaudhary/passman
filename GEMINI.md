@@ -39,7 +39,7 @@ Refer to the `Dockerfile`, `docker-compose.yaml`, `docker-stack.yml`, and GitHub
 To start the development servers for all workspaces, run:
 
 ```bash
-pnpm dev
+pnpm turbo dev
 ```
 
 ### Linting
@@ -49,7 +49,7 @@ Before committing any changes, please run the following commands to ensure code 
 To check for linting errors, run:
 
 ```bash
-pnpm lint
+pnpm turbo lint
 ```
 
 ### Type Checking
@@ -57,7 +57,7 @@ pnpm lint
 To check for TypeScript errors, run:
 
 ```bash
-pnpm typecheck
+pnpm turbo typecheck
 ```
 
 This will ensure that your contributions are consistent with the project's standards.
