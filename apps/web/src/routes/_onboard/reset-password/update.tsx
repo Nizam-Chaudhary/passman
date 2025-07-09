@@ -2,7 +2,6 @@ import type { SubmitHandler } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod/v4";
@@ -30,7 +29,7 @@ const resetPasswordSearchSchema = z.object({
 
 export const Route = createFileRoute("/_onboard/reset-password/update")({
   component: ResetPassword,
-  validateSearch: zodValidator(resetPasswordSearchSchema),
+  validateSearch: resetPasswordSearchSchema,
 });
 
 function ResetPassword() {
