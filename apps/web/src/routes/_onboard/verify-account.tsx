@@ -33,6 +33,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 import { verifyUserEmailFormSchema } from "@/schema/user";
 import { useSendVerificationOtp, useVerifyUserEmail } from "@/services/mutations/user";
 import { useStore } from "@/stores";
@@ -77,9 +78,10 @@ function VerifyAccount() {
   useEffect(() => {
     if (email && timer <= 0) {
       resendOTPMutation.mutate({ email });
+      setTimer(120); // Reset timer immediately after resending OTP
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email]);
+  }, [email, timer]);
 
   useEffect(() => {
     setTimer(120);
@@ -93,32 +95,43 @@ function VerifyAccount() {
       email: email!,
       otp: data.otp,
     };
-    verifyUserEmailMutation.mutate(payload, {
-      onError: (error) => {
-        toast.error(error.message);
+    toast.promise(
+      new Promise((resolve, reject) => {
+        verifyUserEmailMutation.mutate(payload, {
+          onError: (error) => {
+            reject(error);
+          },
+          onSuccess: () => {
+            navigate({ to: "/login", replace: true });
+            resolve("Email verified successfully");
+          },
+        });
+      }),
+      {
+        loading: "Verifying account...",
+        success: "Account verified successfully!",
+        error: (error) => error.message || "Account verification failed.",
       },
-      onSuccess: () => {
-        toast.success("Email verified successfully");
-        navigate({ to: "/login", replace: true });
-      },
-    });
+    );
   };
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Verify Account</CardTitle>
-          <CardDescription>Please enter the one-time password sent to your Email.</CardDescription>
+      <Card className="w-full max-w-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-center text-2xl">Verify your account</CardTitle>
+          <CardDescription className="text-center">
+            Please enter the one-time password sent to your email.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto max-w-xs space-y-6">
               <FormField
                 control={form.control}
                 name="otp"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col items-center">
                     <FormLabel>One-Time Password</FormLabel>
                     <FormControl>
                       <InputOTP maxLength={6} {...field}>
@@ -139,28 +152,50 @@ function VerifyAccount() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" className="w-full" disabled={verifyUserEmailMutation.isPending}>
+                <LoadingSwap isLoading={verifyUserEmailMutation.isPending}>Submit</LoadingSwap>
+              </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col items-center gap-4">
           {timer > 0 ? (
             <Timer text="Resend OTP again in " time={timer} />
           ) : (
-            <button
+            <Button
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                if (email) {
-                  resendOTPMutation.mutate({
-                    email,
-                  });
-                }
-                setTimer(120);
+                toast.promise(
+                  new Promise((resolve, reject) => {
+                    if (email) {
+                      resendOTPMutation.mutate(
+                        { email },
+                        {
+                          onSuccess: () => {
+                            setTimer(120);
+                            resolve("OTP sent successfully!");
+                          },
+                          onError: (error) => {
+                            reject(error);
+                          },
+                        },
+                      );
+                    } else {
+                      reject(new Error("Email not found."));
+                    }
+                  }),
+                  {
+                    loading: "Sending OTP...",
+                    success: "OTP sent successfully!",
+                    error: (error) => error.message || "Failed to send OTP.",
+                  },
+                );
               }}
+              disabled={resendOTPMutation.isPending}
             >
-              Resend OTP
-            </button>
+              <LoadingSwap isLoading={resendOTPMutation.isPending}>Resend OTP</LoadingSwap>
+            </Button>
           )}
         </CardFooter>
       </Card>
