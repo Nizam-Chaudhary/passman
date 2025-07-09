@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LoadingSpinner from "@/components/ui/loading-spinner";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 import { useLoginUser } from "@/services/mutations/auth";
 import { useAuthStore } from "@/stores/auth";
 
@@ -55,37 +55,47 @@ function Login() {
   });
 
   function onSubmit(data: LoginUserBody) {
-    mutateLoginUser.mutate(data, {
-      onError: (error) => {
-        if (error.message === "Email not verified. Please verify first!") {
-          authActions.setIsEmailVerified(false);
-          authActions.setUserEmail(data.email);
-          navigate({ to: "/verify-account" });
-        } else {
-          toast.error(error?.message);
-        }
-      },
-      onSuccess: async (response, variables) => {
-        authActions.setIsEmailVerified(true);
-        const token = response.data.token;
-        const userData = jwtDecode<JwtUserData>(token);
-        authActions.login({
-          accessToken: token,
-          refreshToken: response.data.refreshToken,
-          isEmailVerified: true,
-          user: userData,
+    toast.promise(
+      new Promise((resolve, reject) => {
+        mutateLoginUser.mutate(data, {
+          onError: (error) => {
+            if (error.message === "Email not verified. Please verify first!") {
+              authActions.setIsEmailVerified(false);
+              authActions.setUserEmail(data.email);
+              navigate({ to: "/verify-account" });
+              reject(error);
+            } else {
+              reject(error);
+            }
+          },
+          onSuccess: async (response, variables) => {
+            authActions.setIsEmailVerified(true);
+            const token = response.data.token;
+            const userData = jwtDecode<JwtUserData>(token);
+            authActions.login({
+              accessToken: token,
+              refreshToken: response.data.refreshToken,
+              isEmailVerified: true,
+              user: userData,
+            });
+            if (response.data.masterKey == null) {
+              navigate({ to: "/master-password/create" });
+            } else if (response.data.isVerified) {
+              navigate({ to: "/master-password/verify" });
+            } else {
+              authActions.setUserEmail(variables.email);
+              navigate({ to: "/verify-account" });
+            }
+            resolve("Logged in successfully");
+          },
         });
-        toast.success("Logged in successfully");
-        if (response.data.masterKey == null) {
-          navigate({ to: "/master-password/create" });
-        } else if (response.data.isVerified) {
-          navigate({ to: "/master-password/verify" });
-        } else {
-          authActions.setUserEmail(variables.email);
-          navigate({ to: "/verify-account" });
-        }
+      }),
+      {
+        loading: "Logging in...",
+        success: "Logged in successfully!",
+        error: (error) => error.message || "Login failed.",
       },
-    });
+    );
   }
 
   return (
@@ -125,7 +135,7 @@ function Login() {
                 )}
               />
               <Button type="submit" className="w-full" disabled={mutateLoginUser.isPending}>
-                {mutateLoginUser.isPending ? <LoadingSpinner /> : "Login"}
+                <LoadingSwap isLoading={mutateLoginUser.isPending}>Login</LoadingSwap>
               </Button>
             </form>
           </Form>
