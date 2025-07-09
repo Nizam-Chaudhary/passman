@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod/v4";
 
 import type { ResetPasswordForm } from "@/schema/user";
@@ -20,7 +21,6 @@ import {
 } from "@/components/ui/form";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useToast } from "@/hooks/use-toast";
 import { resetPasswordFormSchema } from "@/schema/user";
 import { useResetPassword } from "@/services/mutations/user";
 
@@ -41,7 +41,6 @@ function ResetPassword() {
       confirmPassword: "",
     },
   });
-  const { toast } = useToast();
   const navigate = useNavigate();
   const { token } = Route.useSearch();
 
@@ -60,10 +59,7 @@ function ResetPassword() {
       },
       {
         onSuccess: () => {
-          toast({
-            title: "User login password updated successfully.",
-            className: "bg-green-700",
-          });
+          toast.success("User login password updated successfully.");
 
           navigate({ to: "/login", replace: true });
         },

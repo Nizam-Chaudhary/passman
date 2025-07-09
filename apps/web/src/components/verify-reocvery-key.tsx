@@ -5,11 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import type { VerifyRecoveryKeyForm } from "@/schema/user";
 
-import { useToast } from "@/hooks/use-toast";
 import { decrypt, deriveKey } from "@/lib/encryption-helper";
 import { verifyRecoveryKeyFormSchema } from "@/schema/user";
 import { useGetUserDetails } from "@/services/queries/user";
@@ -21,7 +21,6 @@ import LoadingSpinner from "./ui/loading-spinner";
 import { PasswordInput } from "./ui/password-input";
 
 function VerifyRecoverKey() {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(verifyRecoveryKeyFormSchema),
@@ -49,19 +48,13 @@ function VerifyRecoverKey() {
       return await decrypt(data.recoveryKey, derivedRecoveryDecryptKey);
     },
     onSuccess: (masterKey) => {
-      toast({
-        className: "bg-green-700 text-white",
-        title: "Recover key verified successfully",
-      });
+      toast.success("Recover key verified successfully");
 
       setMastersetMasterKeyForRecovery(masterKey);
     },
     onError: () => {
       setMastersetMasterKeyForRecovery(null);
-      toast({
-        className: "bg-red-700 text-white",
-        title: "Invalid recovery key",
-      });
+      toast.error("Invalid recovery key");
     },
   });
 

@@ -4,9 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { addVaultBodySchema } from "@passman/schema/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
-import { useToast } from "@/hooks/use-toast";
 import { useAddVault } from "@/services/mutations/vault";
 import { useStore } from "@/stores";
 
@@ -32,8 +32,6 @@ export default function AddVault() {
     })),
   );
 
-  const { toast } = useToast();
-
   const form = useForm<{ name: string }>({
     resolver: zodResolver(addVaultBodySchema),
     defaultValues: {
@@ -46,19 +44,13 @@ export default function AddVault() {
   const onSubmit: SubmitHandler<{ name: string }> = (data) => {
     addVaultMutation.mutate(data, {
       onError: (error) => {
-        toast({
-          title: error.message,
-          className: "bg-red-700",
-        });
+        toast.error(error.message);
       },
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["vaults"],
         });
-        toast({
-          title: "Vault added successfully.",
-          className: "bg-green-700",
-        });
+        toast.success("Vault added successfully.");
         setOpen(false);
         form.reset();
       },

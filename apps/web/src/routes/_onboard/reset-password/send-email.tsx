@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { sendResetPasswordEmailBodySchema } from "@passman/schema/api";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/loading-spinner";
-import { useToast } from "@/hooks/use-toast";
 import { useSendResetPasswordMail } from "@/services/mutations/user";
 
 export const Route = createFileRoute("/_onboard/reset-password/send-email")({
@@ -31,7 +31,6 @@ function ResetPasswordSendMail() {
       email: "",
     },
   });
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   const sendResetPasswordEmailMutation = useSendResetPasswordMail();
@@ -39,18 +38,12 @@ function ResetPasswordSendMail() {
   const onSubmit: SubmitHandler<{ email: string }> = async (data) => {
     sendResetPasswordEmailMutation.mutate(data, {
       onSuccess: () => {
-        toast({
-          title: "Reset link sent to registered email.",
-          className: "bg-green-700",
-        });
+        toast.success("Reset link sent to registered email.");
 
         navigate({ to: "/login", replace: true });
       },
       onError: (error) => {
-        toast({
-          title: error.message,
-          className: "bg-red-700",
-        });
+        toast.error(error.message);
       },
     });
   };

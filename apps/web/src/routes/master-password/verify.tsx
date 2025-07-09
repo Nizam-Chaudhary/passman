@@ -6,6 +6,7 @@ import { verifyMasterPasswordBodySchema } from "@passman/schema/api/user";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,6 @@ import {
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";
-import { useToast } from "@/hooks/use-toast";
 import { decrypt, deriveKey, importKey } from "@/lib/encryption-helper";
 import { useVerifyMasterPassword } from "@/services/mutations/user";
 import { useStore } from "@/stores";
@@ -68,7 +68,6 @@ function VerifyMasterPassword() {
   );
 
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const form = useForm({
     resolver: zodResolver(verifyMasterPasswordBodySchema),
@@ -100,10 +99,7 @@ function VerifyMasterPassword() {
       },
       onError: (error) => {
         setIsSubmitting(false);
-        toast({
-          title: error.message,
-          className: "bg-red-700",
-        });
+        toast.error(error.message);
         if (error.message === "Access token expired") {
           refreshTokenMutation.mutate();
         }

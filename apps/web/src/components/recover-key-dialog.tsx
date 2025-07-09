@@ -1,8 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
-import { useToast } from "@/hooks/use-toast";
 import { useStore } from "@/stores";
 
 import { Button } from "./ui/button";
@@ -25,7 +25,6 @@ function RecoveryKeyDialog() {
       recoveryKey: state.recoveryKey,
     })),
   );
-  const { toast } = useToast();
   const navigate = useNavigate();
   return (
     <Dialog open={open}>
@@ -43,11 +42,7 @@ function RecoveryKeyDialog() {
               onClick={() => {
                 navigator.clipboard.writeText(recoveryKey ?? "");
                 setButtonType("okay");
-                toast({
-                  title: "Copied to clipboard",
-                  description: "Recovery key copied to clipboard",
-                  className: "bg-green-700",
-                });
+                toast.success("Copied to clipboard");
               }}
             >
               Copy
