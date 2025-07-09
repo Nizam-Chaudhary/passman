@@ -6,13 +6,14 @@ import { getRouteApi } from "@tanstack/react-router";
 import { ClipboardCopyIcon, TrashIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import type { UpdatePasswordForm } from "@/schema/password";
 
 import { encrypt } from "@/lib/encryption-helper";
 import { getInitials } from "@/lib/utils";
-import { upddatePasswordForm } from "@/schema/password";
+import { updatePasswordFormSchema } from "@/schema/password";
 import { useDeletePassword, useUpdatePassword } from "@/services/mutations/password";
 import { useGetPasswordById } from "@/services/queries/password";
 import { useStore } from "@/stores";
@@ -24,6 +25,7 @@ import { Card, CardContent, CardHeader } from "./ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import LoadingSpinner from "./ui/loading-spinner";
+import { LoadingSwap } from "./ui/loading-swap";
 import { PasswordInput } from "./ui/password-input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
@@ -54,7 +56,7 @@ export function PasswordView() {
   const deletePasswordMutation = useDeletePassword();
 
   const editPasswordForm = useForm<UpdatePasswordForm>({
-    resolver: zodResolver(upddatePasswordForm),
+    resolver: zodResolver(updatePasswordFormSchema),
     defaultValues: {
       url: "",
       username: "",
@@ -114,11 +116,7 @@ export function PasswordView() {
 
   const onEditSubmit: SubmitHandler<UpdatePasswordForm> = async (data) => {
     if (!masterKey) {
-      toast({
-        title: "Error encrypting password!",
-        description: "User key not found",
-        className: "bg-red-700",
-      });
+      toast.error("User key not found");
       return;
     }
     const encryptedPassword = await encrypt(data.password, masterKey);
@@ -127,69 +125,68 @@ export function PasswordView() {
       password: encryptedPassword,
     };
 
-    editPasswordMutation.mutate(
-      { body: updatedPassword, param: { id: Number(passwordId) } },
+    toast.promise(
+      new Promise((resolve, reject) => {
+        editPasswordMutation.mutate(
+          { body: updatedPassword, param: { id: Number(passwordId) } },
+          {
+            onError: (error) => {
+              reject(error);
+            },
+            onSuccess: () => {
+              queryClient.invalidateQueries({
+                queryKey: ["passwords"],
+              });
+              queryClient.invalidateQueries({
+                queryKey: ["decryptPassword"],
+              });
+              resolve("Password updated successfully.");
+            },
+          },
+        );
+      }),
       {
-        onError: (error) => {
-          toast({
-            className: "bg-red-700",
-            description: error.message,
-          });
-        },
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: ["passwords"],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["decryptPassword"],
-          });
-          toast({
-            title: "Password updated successfully.",
-            className: "bg-green-700",
-          });
-        },
+        loading: "Updating password...",
+        success: "Password updated successfully!",
+        error: (error) => error.message || "Failed to update password.",
       },
     );
   };
 
   const onDeletePassword = () => {
-    deletePasswordMutation.mutate(
-      { id: Number(passwordId) },
+    toast.promise(
+      new Promise((resolve, reject) => {
+        deletePasswordMutation.mutate(
+          { id: Number(passwordId) },
+          {
+            onError: (error) => {
+              reject(error);
+            },
+            onSuccess: () => {
+              navigate({ search: (prev) => ({ ...prev, p: undefined }) });
+              queryClient.invalidateQueries({
+                queryKey: ["passwords"],
+              });
+              resolve("Password deleted successfully.");
+              setOpenDeletePasswordDialog(false);
+            },
+          },
+        );
+      }),
       {
-        onError: (error) => {
-          toast({
-            className: "bg-red-700",
-            description: error.message,
-          });
-        },
-        onSuccess: () => {
-          navigate({ search: (prev) => ({ ...prev, p: undefined }) });
-          queryClient.invalidateQueries({
-            queryKey: ["passwords"],
-          });
-          toast({
-            title: "Password deleted successfully.",
-            className: "bg-green-700",
-          });
-          setOpenDeletePasswordDialog(false);
-        },
+        loading: "Deleting password...",
+        success: "Password deleted successfully!",
+        error: (error) => error.message || "Failed to delete password.",
       },
     );
   };
 
   const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast({
-        className: "bg-green-700",
-        description: "Copied to clipboard",
-      });
-    } catch {
-      toast({
-        className: "bg-red-700",
-        description: "Failed to copy to clipboard",
-      });
-    }
+    toast.promise(navigator.clipboard.writeText(text), {
+      loading: "Copying to clipboard...",
+      success: "Copied to clipboard!",
+      error: "Failed to copy to clipboard.",
+    });
   };
 
   return (
@@ -268,10 +265,7 @@ export function PasswordView() {
                             onClick={(e) => {
                               e.preventDefault();
                               copyToClipboard(field.value ?? "");
-                              toast({
-                                className: "bg-green-700",
-                                description: "Username copied to clipboard",
-                              });
+                              toast.success("Username copied to clipboard");
                             }}
                           >
                             <ClipboardCopyIcon />
@@ -309,10 +303,7 @@ export function PasswordView() {
                             onClick={(e) => {
                               e.preventDefault();
                               copyToClipboard(field.value ?? "");
-                              toast({
-                                className: "bg-green-700",
-                                description: "Password copied to clipboard",
-                              });
+                              toast.success("Password copied to clipboard");
                             }}
                           >
                             <ClipboardCopyIcon />
@@ -346,8 +337,9 @@ export function PasswordView() {
                 <Button
                   className="w-full bg-blue-700 text-center text-white hover:bg-blue-600"
                   type="submit"
+                  disabled={editPasswordMutation.isPending}
                 >
-                  Save
+                  <LoadingSwap isLoading={editPasswordMutation.isPending}>Save</LoadingSwap>
                 </Button>
               </form>
             </Form>

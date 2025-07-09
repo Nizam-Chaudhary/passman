@@ -7,7 +7,7 @@ import { useStore } from "@/stores";
 
 import { PasswordRow } from "./password-row";
 import { Card, CardContent } from "./ui/card";
-import Loading from "./ui/loading";
+import LoadingSpinner from "./ui/loading-spinner";
 import { ScrollArea } from "./ui/scroll-area";
 
 const routeApi = getRouteApi("/_auth/");
@@ -33,7 +33,7 @@ export function PasswordList() {
       <Card className="h-[calc(100vh-5.5rem)]">
         <CardContent>
           <div className="flex h-[calc(100vh-10rem)] items-center justify-center">
-            <Loading />
+            <LoadingSpinner />
           </div>
         </CardContent>
       </Card>

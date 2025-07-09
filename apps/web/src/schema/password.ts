@@ -13,6 +13,6 @@ export const addPasswordFormSchema = z.object({
 
 export type AddPasswordForm = z.infer<typeof addPasswordFormSchema>;
 
-export const upddatePasswordForm = addPasswordFormSchema;
+export const updatePasswordFormSchema = addPasswordFormSchema;
 
-export type UpdatePasswordForm = z.infer<typeof upddatePasswordForm>;
+export type UpdatePasswordForm = z.infer<typeof updatePasswordFormSchema>;

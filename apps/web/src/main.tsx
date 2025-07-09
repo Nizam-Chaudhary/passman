@@ -8,6 +8,8 @@ import { ThemeProvider, useTheme } from "@/contexts/theme";
 import "@/index.css";
 import { routeTree } from "@/routeTree.gen.ts";
 
+import LoadingSpinner from "./components/ui/loading-spinner";
+
 const queryClient = new QueryClient();
 const router = createRouter({
   routeTree,
@@ -15,7 +17,7 @@ const router = createRouter({
     queryClient,
     theme: undefined!,
   },
-  defaultPendingComponent: () => <div>Loading...</div>,
+  defaultPendingComponent: () => LoadingSpinner,
   defaultPreload: "intent",
   scrollRestoration: true,
   defaultStructuralSharing: true,
