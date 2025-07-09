@@ -1,7 +1,7 @@
 import type { SubmitHandler } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod/v4";
@@ -9,7 +9,14 @@ import z from "zod/v4";
 import type { ResetPasswordForm } from "@/schema/user";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -18,7 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LoadingSpinner from "@/components/ui/loading-spinner";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { resetPasswordFormSchema } from "@/schema/user";
 import { useResetPassword } from "@/services/mutations/user";
@@ -51,25 +58,37 @@ function ResetPassword() {
       return;
     }
 
-    resetPasswordMutation.mutate(
+    toast.promise(
+      new Promise((resolve, reject) => {
+        resetPasswordMutation.mutate(
+          {
+            token,
+            password: data.password,
+          },
+          {
+            onSuccess: () => {
+              navigate({ to: "/login", replace: true });
+              resolve("User login password updated successfully.");
+            },
+            onError: (error) => {
+              reject(error);
+            },
+          },
+        );
+      }),
       {
-        token,
-        password: data.password,
-      },
-      {
-        onSuccess: () => {
-          toast.success("User login password updated successfully.");
-
-          navigate({ to: "/login", replace: true });
-        },
+        loading: "Resetting password...",
+        success: "Password reset successfully!",
+        error: (error) => error.message || "Password reset failed.",
       },
     );
   };
   return (
     <div className="flex h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Reset account password</CardTitle>
+      <Card className="w-full max-w-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-center text-2xl">Reset your password</CardTitle>
+          <CardDescription className="text-center">Enter your new password below.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -100,12 +119,17 @@ function ResetPassword() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-20" disabled={resetPasswordMutation.isPending}>
-                {resetPasswordMutation.isPending ? <LoadingSpinner /> : "Submit"}
+              <Button type="submit" className="w-full" disabled={resetPasswordMutation.isPending}>
+                <LoadingSwap isLoading={resetPasswordMutation.isPending}>Submit</LoadingSwap>
               </Button>
             </form>
           </Form>
         </CardContent>
+        <CardFooter className="flex flex-col items-center gap-4">
+          <Link to="/login" className="text-sm text-white">
+            Back to login
+          </Link>
+        </CardFooter>
       </Card>
     </div>
   );
