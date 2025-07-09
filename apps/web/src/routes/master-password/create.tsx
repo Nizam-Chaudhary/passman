@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LoadingSpinner from "@/components/ui/loading-spinner";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";
 import {
@@ -73,57 +73,69 @@ function CreateMasterPassword() {
   const refreshTokenMutation = useRefreshToken();
 
   const onSubmit: SubmitHandler<CreateMasterPasswordForm> = async (data) => {
-    const masterKey = generateMasterKey();
-    const recoveryKey = generateRecoveryKey();
-    setRecoveryKey(recoveryKey);
+    toast.promise(
+      new Promise((resolve, reject) => {
+        const masterKey = generateMasterKey();
+        const recoveryKey = generateRecoveryKey();
+        setRecoveryKey(recoveryKey);
 
-    /* derive user key from master password and recover key using generated recovery key */
-    const userKeySalt = generateSalt();
-    const recoveryKeySalt = generateSalt();
-    const derivedUserKeyPromise = deriveKey(data.masterPassword, userKeySalt);
-    const derivedRecoveryKeyPromise = deriveKey(recoveryKey, recoveryKeySalt);
-    const [derivedUserKey, derivedRecoveryKey] = await Promise.all([
-      derivedUserKeyPromise,
-      derivedRecoveryKeyPromise,
-    ]);
+        /* derive user key from master password and recover key using generated recovery key */
+        const userKeySalt = generateSalt();
+        const recoveryKeySalt = generateSalt();
+        const derivedUserKeyPromise = deriveKey(data.masterPassword, userKeySalt);
+        const derivedRecoveryKeyPromise = deriveKey(recoveryKey, recoveryKeySalt);
+        const [derivedUserKey, derivedRecoveryKey] = await Promise.all([
+          derivedUserKeyPromise,
+          derivedRecoveryKeyPromise,
+        ]);
 
-    /* encrypt the master key with both user key and recovery key */
-    const encryptedMasterKeyPromise = encrypt(masterKey, derivedUserKey);
-    const encryptedRecoveryKeyPromise = encrypt(masterKey, derivedRecoveryKey);
+        /* encrypt the master key with both user key and recovery key */
+        const encryptedMasterKeyPromise = encrypt(masterKey, derivedUserKey);
+        const encryptedRecoveryKeyPromise = encrypt(masterKey, derivedRecoveryKey);
 
-    const [encryptedMasterKey, encryptedRecoveryKey] = await Promise.all([
-      encryptedMasterKeyPromise,
-      encryptedRecoveryKeyPromise,
-    ]);
+        const [encryptedMasterKey, encryptedRecoveryKey] = await Promise.all([
+          encryptedMasterKeyPromise,
+          encryptedRecoveryKeyPromise,
+        ]);
 
-    await createMasterPasswordMutation.mutateAsync(
+        createMasterPasswordMutation.mutate(
+          {
+            masterPassword: data.masterPassword,
+            masterKey: { ...encryptedMasterKey, salt: userKeySalt },
+            recoveryKey: {
+              ...encryptedRecoveryKey,
+              salt: recoveryKeySalt,
+            },
+          },
+          {
+            onSuccess: async () => {
+              await refreshTokenMutation.mutate();
+              authActions.setMasterPasswordCreated(true);
+              setOpenRecoveryKeyDialog(true);
+              resolve("Master password created successfully!");
+            },
+            onError: (error) => {
+              reject(error);
+            },
+          },
+        );
+      }),
       {
-        masterPassword: data.masterPassword,
-        masterKey: { ...encryptedMasterKey, salt: userKeySalt },
-        recoveryKey: {
-          ...encryptedRecoveryKey,
-          salt: recoveryKeySalt,
-        },
-      },
-      {
-        onSuccess: async () => {
-          await refreshTokenMutation.mutate();
-          authActions.setMasterPasswordCreated(true);
-          setOpenRecoveryKeyDialog(true);
-        },
-        onError: (error) => {
-          toast.error(error.message);
-        },
+        loading: "Creating master password...",
+        success: "Master password created successfully!",
+        error: (error) => error.message || "Master password creation failed.",
       },
     );
   };
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Master Password</CardTitle>
-          <CardDescription>Create a master password</CardDescription>
+      <Card className="w-full max-w-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-center text-2xl">Create Master Password</CardTitle>
+          <CardDescription className="text-center">
+            Create a strong master password to secure your Passman account.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -156,10 +168,10 @@ function CreateMasterPassword() {
               />
               <Button
                 type="submit"
-                className="w-20"
+                className="w-full"
                 disabled={createMasterPasswordMutation.isPending}
               >
-                {createMasterPasswordMutation.isPending ? <LoadingSpinner /> : "Submit"}
+                <LoadingSwap isLoading={createMasterPasswordMutation.isPending}>Submit</LoadingSwap>
               </Button>
             </form>
           </Form>

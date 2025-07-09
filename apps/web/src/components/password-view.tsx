@@ -10,7 +10,6 @@ import { useShallow } from "zustand/react/shallow";
 
 import type { UpdatePasswordForm } from "@/schema/password";
 
-import { toast } from "@/hooks/use-toast";
 import { encrypt } from "@/lib/encryption-helper";
 import { getInitials } from "@/lib/utils";
 import { upddatePasswordForm } from "@/schema/password";
@@ -24,7 +23,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
-import Loading from "./ui/loading";
+import LoadingSpinner from "./ui/loading-spinner";
 import { PasswordInput } from "./ui/password-input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
@@ -91,7 +90,7 @@ export function PasswordView() {
       <Card className="h-[calc(100vh-5.5rem)]">
         <CardContent>
           <div className="flex h-[calc(100vh-10rem)] items-center justify-center">
-            <Loading />
+            <LoadingSpinner />
           </div>
         </CardContent>
       </Card>

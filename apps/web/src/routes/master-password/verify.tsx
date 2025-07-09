@@ -4,7 +4,6 @@ import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { verifyMasterPasswordBodySchema } from "@passman/schema/api/user";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
@@ -26,7 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LoadingSpinner from "@/components/ui/loading-spinner";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";
 import { decrypt, deriveKey, importKey } from "@/lib/encryption-helper";
@@ -55,7 +54,6 @@ export const Route = createFileRoute("/master-password/verify")({
 });
 
 function VerifyMasterPassword() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { setMasterkey } = useStore(
     useShallow((state) => ({
       setMasterkey: state.setMasterKey,
@@ -81,37 +79,46 @@ function VerifyMasterPassword() {
 
   const onSubmit: SubmitHandler<VerifyMasterPasswordBody> = async (data, event) => {
     event?.preventDefault();
-    setIsSubmitting(true);
-    await verifyMasterPasswordMutation.mutateAsync(data, {
-      onSuccess: async (response) => {
-        if (!response.data.masterKey) {
-          navigate({ to: "/master-password/create", replace: true });
-          return;
-        }
-        const userKey = await deriveKey(data.masterPassword, response.data.masterKey.salt);
-
-        setIsSubmitting(false);
-        const decryptedMasterKey = await decrypt(response.data.masterKey, userKey);
-        const masterKey = await importKey(decryptedMasterKey);
-        setMasterkey(masterKey);
-        authActions.authenticate();
-        navigate({ to: "/", replace: true });
+    toast.promise(
+      new Promise((resolve, reject) => {
+        verifyMasterPasswordMutation.mutate(data, {
+          onSuccess: async (response) => {
+            if (!response.data.masterKey) {
+              navigate({ to: "/master-password/create", replace: true });
+              resolve("Master password not found. Please create one.");
+              return;
+            }
+            const userKey = await deriveKey(data.masterPassword, response.data.masterKey.salt);
+            const decryptedMasterKey = await decrypt(response.data.masterKey, userKey);
+            const masterKey = await importKey(decryptedMasterKey);
+            setMasterkey(masterKey);
+            authActions.authenticate();
+            navigate({ to: "/", replace: true });
+            resolve("Master password verified successfully!");
+          },
+          onError: (error) => {
+            if (error.message === "Access token expired") {
+              refreshTokenMutation.mutate();
+            }
+            reject(error);
+          },
+        });
+      }),
+      {
+        loading: "Verifying master password...",
+        success: "Master password verified successfully!",
+        error: (error) => error.message || "Master password verification failed.",
       },
-      onError: (error) => {
-        setIsSubmitting(false);
-        toast.error(error.message);
-        if (error.message === "Access token expired") {
-          refreshTokenMutation.mutate();
-        }
-      },
-    });
+    );
   };
   return (
     <div className="flex h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Master Password</CardTitle>
-          <CardDescription>Enter existing Master password</CardDescription>
+      <Card className="w-full max-w-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-center text-2xl">Verify Master Password</CardTitle>
+          <CardDescription className="text-center">
+            Enter your master password to unlock Passman.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -129,15 +136,19 @@ function VerifyMasterPassword() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-20" disabled={isSubmitting}>
-                {isSubmitting ? <LoadingSpinner /> : "Submit"}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={verifyMasterPasswordMutation.isPending}
+              >
+                <LoadingSwap isLoading={verifyMasterPasswordMutation.isPending}>Submit</LoadingSwap>
               </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col items-center gap-4">
           <Link
-            className="text-blue-600"
+            className="text-sm text-white"
             to="/master-password/reset/$type"
             params={{
               type: "recover",
@@ -145,6 +156,24 @@ function VerifyMasterPassword() {
           >
             Forgot master password
           </Link>
+          <div className="relative w-full">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-gray-400">Or</span>
+            </div>
+          </div>
+          <Button
+            variant="link"
+            className="text-sm text-white"
+            onClick={() => {
+              authActions.logout();
+              navigate({ to: "/login", replace: true });
+            }}
+          >
+            Back to login
+          </Button>
         </CardFooter>
       </Card>
     </div>
