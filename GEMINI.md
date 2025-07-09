@@ -46,16 +46,10 @@ pnpm turbo dev
 
 Before committing any changes, please run the following commands to ensure code quality and prevent errors.
 
-To check for linting errors, run:
+To check for linting errors and auto fix, run:
 
 ```bash
-pnpm turbo lint
-```
-
-To automatically fix linting errors, run:
-
-```bash
-pnpm turbo lint -- --fix
+pnpm turbo lint:fix
 ```
 
 ### Type Checking

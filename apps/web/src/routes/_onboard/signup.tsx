@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LoadingSpinner from "@/components/ui/loading-spinner";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRegisterUser } from "@/services/mutations/user";
 import { useAuthStore } from "@/stores/auth";
@@ -55,25 +55,36 @@ function SignUp() {
   });
 
   const onSubmit: SubmitHandler<RegisterUserBody> = async (data) => {
-    registerUserMutation.mutate(data, {
-      onError: (error) => {
-        toast.error(error.message);
+    toast.promise(
+      new Promise((resolve, reject) => {
+        registerUserMutation.mutate(data, {
+          onError: (error) => {
+            reject(error);
+          },
+          onSuccess: async (_response, variables) => {
+            authActions.setUserEmail(variables.email);
+            authActions.setIsEmailVerified(false);
+            await navigate({ to: "/verify-account" });
+            resolve("Signed up successfully!");
+          },
+        });
+      }),
+      {
+        loading: "Signing up...",
+        success: "Signed up successfully!",
+        error: (error) => error.message || "Sign up failed.",
       },
-      onSuccess: async (_response, variables) => {
-        toast.success("Signed up successfully!");
-        authActions.setUserEmail(variables.email);
-        authActions.setIsEmailVerified(false);
-        await navigate({ to: "/verify-account" });
-      },
-    });
+    );
   };
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+      <Card className="w-full max-w-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-center text-2xl">Sign Up for Passman</CardTitle>
+          <CardDescription className="text-center">
+            Create your secure Passman account
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...signUpForm}>
@@ -117,14 +128,22 @@ function SignUp() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-20" disabled={registerUserMutation.isPending}>
-                {registerUserMutation.isPending ? <LoadingSpinner /> : "Sign Up"}
+              <Button type="submit" className="w-full" disabled={registerUserMutation.isPending}>
+                <LoadingSwap isLoading={registerUserMutation.isPending}>Sign Up</LoadingSwap>
               </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
-          <Link to="/login" className="text-blue-600" replace={true}>
+        <CardFooter className="flex flex-col items-center gap-4">
+          <div className="relative w-full">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-gray-400">Or</span>
+            </div>
+          </div>
+          <Link to="/login" className="text-sm text-white">
             Already have an account? Login
           </Link>
         </CardFooter>
