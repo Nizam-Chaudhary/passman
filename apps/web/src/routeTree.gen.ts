@@ -13,7 +13,6 @@ import { Route as OnboardRouteImport } from './routes/_onboard'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 import { Route as MasterPasswordVerifyRouteImport } from './routes/master-password/verify'
-import { Route as MasterPasswordCreateRouteImport } from './routes/master-password/create'
 import { Route as OnboardVerifyAccountRouteImport } from './routes/_onboard/verify-account'
 import { Route as OnboardSignupRouteImport } from './routes/_onboard/signup'
 import { Route as OnboardLoginRouteImport } from './routes/_onboard/login'
@@ -38,11 +37,6 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
 const MasterPasswordVerifyRoute = MasterPasswordVerifyRouteImport.update({
   id: '/master-password/verify',
   path: '/master-password/verify',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MasterPasswordCreateRoute = MasterPasswordCreateRouteImport.update({
-  id: '/master-password/create',
-  path: '/master-password/create',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardVerifyAccountRoute = OnboardVerifyAccountRouteImport.update({
@@ -88,7 +82,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof OnboardLoginRoute
   '/signup': typeof OnboardSignupRoute
   '/verify-account': typeof OnboardVerifyAccountRoute
-  '/master-password/create': typeof MasterPasswordCreateRoute
   '/master-password/verify': typeof MasterPasswordVerifyRoute
   '/': typeof AuthIndexRoute
   '/reset-password/send-email': typeof OnboardResetPasswordSendEmailRoute
@@ -100,7 +93,6 @@ export interface FileRoutesByTo {
   '/login': typeof OnboardLoginRoute
   '/signup': typeof OnboardSignupRoute
   '/verify-account': typeof OnboardVerifyAccountRoute
-  '/master-password/create': typeof MasterPasswordCreateRoute
   '/master-password/verify': typeof MasterPasswordVerifyRoute
   '/': typeof AuthIndexRoute
   '/reset-password/send-email': typeof OnboardResetPasswordSendEmailRoute
@@ -115,7 +107,6 @@ export interface FileRoutesById {
   '/_onboard/login': typeof OnboardLoginRoute
   '/_onboard/signup': typeof OnboardSignupRoute
   '/_onboard/verify-account': typeof OnboardVerifyAccountRoute
-  '/master-password/create': typeof MasterPasswordCreateRoute
   '/master-password/verify': typeof MasterPasswordVerifyRoute
   '/_auth/': typeof AuthIndexRoute
   '/_onboard/reset-password/send-email': typeof OnboardResetPasswordSendEmailRoute
@@ -129,7 +120,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/verify-account'
-    | '/master-password/create'
     | '/master-password/verify'
     | '/'
     | '/reset-password/send-email'
@@ -141,7 +131,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/verify-account'
-    | '/master-password/create'
     | '/master-password/verify'
     | '/'
     | '/reset-password/send-email'
@@ -155,7 +144,6 @@ export interface FileRouteTypes {
     | '/_onboard/login'
     | '/_onboard/signup'
     | '/_onboard/verify-account'
-    | '/master-password/create'
     | '/master-password/verify'
     | '/_auth/'
     | '/_onboard/reset-password/send-email'
@@ -166,7 +154,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   OnboardRoute: typeof OnboardRouteWithChildren
-  MasterPasswordCreateRoute: typeof MasterPasswordCreateRoute
   MasterPasswordVerifyRoute: typeof MasterPasswordVerifyRoute
   MasterPasswordResetTypeRoute: typeof MasterPasswordResetTypeRoute
 }
@@ -199,13 +186,6 @@ declare module '@tanstack/react-router' {
       path: '/master-password/verify'
       fullPath: '/master-password/verify'
       preLoaderRoute: typeof MasterPasswordVerifyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/master-password/create': {
-      id: '/master-password/create'
-      path: '/master-password/create'
-      fullPath: '/master-password/create'
-      preLoaderRoute: typeof MasterPasswordCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_onboard/verify-account': {
@@ -294,7 +274,6 @@ const OnboardRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   OnboardRoute: OnboardRouteWithChildren,
-  MasterPasswordCreateRoute: MasterPasswordCreateRoute,
   MasterPasswordVerifyRoute: MasterPasswordVerifyRoute,
   MasterPasswordResetTypeRoute: MasterPasswordResetTypeRoute,
 }

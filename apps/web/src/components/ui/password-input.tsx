@@ -27,6 +27,8 @@ const PasswordInput = ({
         variant="ghost"
         size="sm"
         type="button"
+        tabIndex={-1}
+        aria-hidden="false"
         onClick={(e) => {
           e.preventDefault();
           setShowPassword((prev) => !prev);
@@ -44,13 +46,13 @@ const PasswordInput = ({
       {/* hides browsers password toggles */}
       <style>
         {`
-					.hide-password-toggle::-ms-reveal,
-					.hide-password-toggle::-ms-clear {
-						visibility: hidden;
-						pointer-events: none;
-						display: none;
-					}
-				`}
+            .hide-password-toggle::-ms-reveal,
+            .hide-password-toggle::-ms-clear {
+              visibility: hidden;
+              pointer-events: none;
+              display: none;
+            }
+          `}
       </style>
     </div>
   );
