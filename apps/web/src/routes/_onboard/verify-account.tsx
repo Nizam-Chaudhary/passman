@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import type { VerifyUserEmailForm } from "@/schema/user";
@@ -32,7 +33,6 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useToast } from "@/hooks/use-toast";
 import { verifyUserEmailFormSchema } from "@/schema/user";
 import { useSendVerificationOtp, useVerifyUserEmail } from "@/services/mutations/user";
 import { useStore } from "@/stores";
@@ -59,7 +59,6 @@ function VerifyAccount() {
     return () => clearInterval(interval);
   }, [decreaseTimer]);
 
-  const { toast } = useToast();
   const form = useForm<VerifyUserEmailForm>({
     resolver: zodResolver(verifyUserEmailFormSchema),
     defaultValues: {
@@ -96,16 +95,10 @@ function VerifyAccount() {
     };
     verifyUserEmailMutation.mutate(payload, {
       onError: (error) => {
-        toast({
-          className: "bg-red-700 text-white",
-          title: error.message,
-        });
+        toast.error(error.message);
       },
       onSuccess: () => {
-        toast({
-          className: "bg-green-700 text-white",
-          title: "Email verified successfully",
-        });
+        toast.success("Email verified successfully");
         navigate({ to: "/login", replace: true });
       },
     });

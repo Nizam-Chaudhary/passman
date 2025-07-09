@@ -3,11 +3,11 @@ import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import type { AddPasswordForm } from "@/schema/password";
 
-import { useToast } from "@/hooks/use-toast";
 import { encrypt } from "@/lib/encryption-helper";
 import { addPasswordFormSchema } from "@/schema/password";
 import { useAddPassword } from "@/services/mutations/password";
@@ -38,7 +38,6 @@ export default function AddPassword() {
       currentVault: state.currentVault,
     })),
   );
-  const { toast } = useToast();
 
   const addPasswordMutation = useAddPassword();
   const form = useForm<AddPasswordForm>({
@@ -53,19 +52,11 @@ export default function AddPassword() {
 
   const onSubmit: SubmitHandler<AddPasswordForm> = async (data) => {
     if (!masterKey) {
-      toast({
-        className: "bg-red-700",
-        title: "Error encrypting password!",
-        description: "User key not found",
-      });
+      toast.error("Error encrypting password!", { description: "User key not found" });
       return;
     }
     if (!currentVault) {
-      toast({
-        className: "bg-red-700",
-        title: "Error adding password!",
-        description: "Please select any vault",
-      });
+      toast.error("Error adding password!", { description: "Please select any vault" });
       return;
     }
     const encryptedPassword = await encrypt(data.password, masterKey);
@@ -77,19 +68,13 @@ export default function AddPassword() {
 
     addPasswordMutation.mutate(payload, {
       onError: (error) => {
-        toast({
-          className: "bg-red-500",
-          description: error.message,
-        });
+        toast.error(error.message);
       },
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["passwords"],
         });
-        toast({
-          title: "Password added successfully.",
-          className: "bg-green-700",
-        });
+        toast.success("Password added successfully.");
         setOpenAddPasswordDialog(false);
         form.reset();
       },

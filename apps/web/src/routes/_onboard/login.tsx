@@ -5,6 +5,7 @@ import { loginUserBodySchema } from "@passman/schema/api/auth";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { jwtDecode } from "jwt-decode";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/loading-spinner";
-import { useToast } from "@/hooks/use-toast";
 import { useLoginUser } from "@/services/mutations/auth";
 import { useAuthStore } from "@/stores/auth";
 
@@ -38,7 +38,6 @@ export const Route = createFileRoute("/_onboard/login")({
 
 function Login() {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const mutateLoginUser = useLoginUser();
 
   const { authActions } = useAuthStore(
@@ -63,10 +62,7 @@ function Login() {
           authActions.setUserEmail(data.email);
           navigate({ to: "/verify-account" });
         } else {
-          toast({
-            className: "bg-red-700",
-            title: error?.message,
-          });
+          toast.error(error?.message);
         }
       },
       onSuccess: async (response, variables) => {
@@ -79,10 +75,7 @@ function Login() {
           isEmailVerified: true,
           user: userData,
         });
-        toast({
-          className: "bg-green-700",
-          title: "Logged in successfully",
-        });
+        toast.success("Logged in successfully");
         if (response.data.masterKey == null) {
           navigate({ to: "/master-password/create" });
         } else if (response.data.isVerified) {

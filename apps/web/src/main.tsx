@@ -2,11 +2,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import { Toaster } from "sonner";
 
-import { Toaster } from "@/components/ui/toaster.tsx";
 import { ThemeProvider, useTheme } from "@/contexts/theme";
-import { routeTree } from "@/routeTree.gen.ts";
 import "@/index.css";
+import { routeTree } from "@/routeTree.gen.ts";
 
 const queryClient = new QueryClient();
 const router = createRouter({

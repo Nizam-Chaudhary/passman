@@ -3,6 +3,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import type { UpdateMasterPasswordForm } from "@/schema/user";
@@ -23,7 +24,6 @@ import { PasswordInput } from "@/components/ui/password-input";
 import VerifyRecoveryMasterPassword from "@/components/verify-recovery-master-password";
 import VerifyRecoverKey from "@/components/verify-reocvery-key";
 import { useRefreshToken } from "@/hooks/refresh-token";
-import { useToast } from "@/hooks/use-toast";
 import { deriveKey, encrypt, generateRecoveryKey, generateSalt } from "@/lib/encryption-helper";
 import { updateMasterPasswordFormSchema } from "@/schema/user";
 import { useUpdateMasterPassword } from "@/services/mutations/user";
@@ -48,7 +48,6 @@ export const Route = createFileRoute("/master-password/reset/$type")({
 
 function ResetMasterPassword() {
   const { type } = Route.useParams();
-  const { toast } = useToast();
   const { masterKeyForUpdate, setMasterKeyForUpdate, setRecoveryKey, setOpenRecoveryKeyDialog } =
     useStore(
       useShallow((state) => ({
@@ -72,10 +71,7 @@ function ResetMasterPassword() {
 
   const updateMasterPassword: SubmitHandler<UpdateMasterPasswordForm> = async (data) => {
     if (!masterKeyForUpdate) {
-      toast({
-        title: "Please verify first",
-        className: "bg-red-600 text-white",
-      });
+      toast.error("Please verify first");
 
       return;
     }
@@ -118,10 +114,7 @@ function ResetMasterPassword() {
           setOpenRecoveryKeyDialog(true);
         },
         onError: (error) => {
-          toast({
-            title: error.message,
-            className: "bg-red-700",
-          });
+          toast.error(error.message);
         },
       },
     );

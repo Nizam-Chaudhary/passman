@@ -70,18 +70,16 @@ const MasterPasswordResetTypeRoute = MasterPasswordResetTypeRouteImport.update({
   path: "/master-password/reset/$type",
   getParentRoute: () => rootRouteImport,
 } as any);
-const OnboardResetPasswordUpdateRoute =
-  OnboardResetPasswordUpdateRouteImport.update({
-    id: "/reset-password/update",
-    path: "/reset-password/update",
-    getParentRoute: () => OnboardRoute,
-  } as any);
-const OnboardResetPasswordSendEmailRoute =
-  OnboardResetPasswordSendEmailRouteImport.update({
-    id: "/reset-password/send-email",
-    path: "/reset-password/send-email",
-    getParentRoute: () => OnboardRoute,
-  } as any);
+const OnboardResetPasswordUpdateRoute = OnboardResetPasswordUpdateRouteImport.update({
+  id: "/reset-password/update",
+  path: "/reset-password/update",
+  getParentRoute: () => OnboardRoute,
+} as any);
+const OnboardResetPasswordSendEmailRoute = OnboardResetPasswordSendEmailRouteImport.update({
+  id: "/reset-password/send-email",
+  path: "/reset-password/send-email",
+  getParentRoute: () => OnboardRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
   "/settings": typeof AuthSettingsRoute;
@@ -288,8 +286,7 @@ const OnboardRouteChildren: OnboardRouteChildren = {
   OnboardResetPasswordUpdateRoute: OnboardResetPasswordUpdateRoute,
 };
 
-const OnboardRouteWithChildren =
-  OnboardRoute._addFileChildren(OnboardRouteChildren);
+const OnboardRouteWithChildren = OnboardRoute._addFileChildren(OnboardRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,

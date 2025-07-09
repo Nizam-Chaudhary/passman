@@ -3,6 +3,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import type { CreateMasterPasswordForm } from "@/schema/user";
@@ -21,7 +22,6 @@ import {
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRefreshToken } from "@/hooks/refresh-token";
-import { useToast } from "@/hooks/use-toast";
 import {
   deriveKey,
   encrypt,
@@ -60,8 +60,6 @@ function CreateMasterPassword() {
       authActions: state.actions,
     })),
   );
-
-  const { toast } = useToast();
 
   const form = useForm({
     resolver: zodResolver(createMasterPasswordFormSchema),
@@ -114,10 +112,7 @@ function CreateMasterPassword() {
           setOpenRecoveryKeyDialog(true);
         },
         onError: (error) => {
-          toast({
-            title: error.message,
-            className: "bg-red-700",
-          });
+          toast.error(error.message);
         },
       },
     );

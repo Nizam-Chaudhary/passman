@@ -6,9 +6,9 @@ import { verifyMasterPasswordBodySchema } from "@passman/schema/api";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
-import { useToast } from "@/hooks/use-toast";
 import { decrypt, deriveKey } from "@/lib/encryption-helper";
 import { useGetUserDetails } from "@/services/queries/user";
 import { useStore } from "@/stores";
@@ -19,7 +19,6 @@ import LoadingSpinner from "./ui/loading-spinner";
 import { PasswordInput } from "./ui/password-input";
 
 function VerifyRecoveryMasterPassword() {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(verifyMasterPasswordBodySchema),
@@ -44,19 +43,13 @@ function VerifyRecoveryMasterPassword() {
       return await decrypt(data.masterKey, derivedUsedKey);
     },
     onSuccess: (masterKey) => {
-      toast({
-        className: "bg-green-700 text-white",
-        title: "Master password verified successfully",
-      });
+      toast.success("Master password verified successfully");
 
       setMastersetMasterKeyForRecovery(masterKey);
     },
     onError: () => {
       setMastersetMasterKeyForRecovery(null);
-      toast({
-        className: "bg-red-700 text-white",
-        title: "Invalid master password",
-      });
+      toast.error("Invalid master password");
     },
   });
 

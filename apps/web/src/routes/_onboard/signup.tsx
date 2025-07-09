@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUserBodySchema } from "@passman/schema/api/user";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,6 @@ import {
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useToast } from "@/hooks/use-toast";
 import { useRegisterUser } from "@/services/mutations/user";
 import { useAuthStore } from "@/stores/auth";
 
@@ -36,7 +36,6 @@ export const Route = createFileRoute("/_onboard/signup")({
 });
 
 function SignUp() {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const registerUserMutation = useRegisterUser();
 
@@ -58,16 +57,10 @@ function SignUp() {
   const onSubmit: SubmitHandler<RegisterUserBody> = async (data) => {
     registerUserMutation.mutate(data, {
       onError: (error) => {
-        toast({
-          className: "bg-red-700",
-          title: error.message,
-        });
+        toast.error(error.message);
       },
       onSuccess: async (_response, variables) => {
-        toast({
-          className: "bg-green-700",
-          title: "Signed up successfully!",
-        });
+        toast.success("Signed up successfully!");
         authActions.setUserEmail(variables.email);
         authActions.setIsEmailVerified(false);
         await navigate({ to: "/verify-account" });

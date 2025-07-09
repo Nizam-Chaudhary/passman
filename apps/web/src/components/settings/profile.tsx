@@ -3,6 +3,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod/v4";
 
 import type { FileUploadResponse } from "@/schema/file";
@@ -12,7 +13,6 @@ import type { FileUploadResponse } from "@/schema/file";
 //     useGetApiV1Users,
 //     usePatchApiV1Users,
 // } from "@/api-client/api";
-import { useToast } from "@/hooks/use-toast";
 import { getInitials } from "@/lib/utils";
 import { useUpdateUser } from "@/services/mutations/user";
 import { useGetUserDetails } from "@/services/queries/user";
@@ -43,7 +43,6 @@ function Profile() {
       userName: userDetails?.userName ?? "",
     },
   });
-  const { toast } = useToast();
 
   const updateUserMutation = useUpdateUser();
 
@@ -70,10 +69,7 @@ function Profile() {
         queryClient.invalidateQueries({
           queryKey: ["users"],
         });
-        toast({
-          title: "Username updated successfully.",
-          className: "bg-green-700 text-white",
-        });
+        toast.success("Username updated successfully.");
       },
     });
   };
@@ -86,16 +82,10 @@ function Profile() {
           queryClient.invalidateQueries({
             queryKey: ["users"],
           });
-          toast({
-            title: "Profile picture updated successfully.",
-            className: "bg-green-700 text-white",
-          });
+          toast.success("Profile picture updated successfully.");
         },
         onError: () => {
-          toast({
-            title: "Unable to update profile picture.",
-            className: "bg-red-600 text-white",
-          });
+          toast.error("Unable to update profile picture.");
         },
       },
     );

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronsUpDown, LogOut, Settings2Icon } from "lucide-react";
+import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,7 +19,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useToast } from "@/hooks/use-toast";
 import { getInitials } from "@/lib/utils";
 import { useGetUserDetails } from "@/services/queries/user";
 import { useStore } from "@/stores";
@@ -44,7 +44,6 @@ export function NavUser() {
   );
 
   const { isMobile } = useSidebar();
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   if (isPending) {
@@ -60,10 +59,7 @@ export function NavUser() {
     setMasterKey(null);
     setRecoveryKey("");
     navigate({ to: "/login" });
-    toast({
-      description: "Logged out successfully",
-      className: "bg-green-700 text-bold",
-    });
+    toast.success("Logged out successfully");
   };
 
   return (
