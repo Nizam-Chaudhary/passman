@@ -1,20 +1,18 @@
 import type { ComponentProps } from "react";
 
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
 import { Button } from "./button";
 import { Input } from "./input";
 
-function PasswordInput({
+const PasswordInput = ({
   ref,
   className,
   ...props
-}: ComponentProps<"input"> & {
-  ref?: React.RefObject<HTMLInputElement | null>;
-}) {
+}: ComponentProps<"input"> & { ref?: React.RefObject<HTMLInputElement | null> }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -56,7 +54,7 @@ function PasswordInput({
       </style>
     </div>
   );
-}
+};
 
 PasswordInput.displayName = "PasswordInput";
 

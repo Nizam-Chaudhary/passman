@@ -90,10 +90,10 @@ function Login() {
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Login to your Passman account</CardDescription>
+      <Card className="w-full max-w-lg">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-center text-2xl">Login to Passman</CardTitle>
+          <CardDescription className="text-center">Your secure password manager</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...loginForm}>
@@ -124,19 +124,25 @@ function Login() {
                   </FormItem>
                 )}
               />
-              <div className="flex items-center justify-between">
-                <Button type="submit" className="w-18" disabled={mutateLoginUser.isPending}>
-                  {mutateLoginUser.isPending ? <LoadingSpinner /> : "Login"}
-                </Button>
-                <Link to="/reset-password/send-email" className="text-blue-600">
-                  Forgot password
-                </Link>
-              </div>
+              <Button type="submit" className="w-full" disabled={mutateLoginUser.isPending}>
+                {mutateLoginUser.isPending ? <LoadingSpinner /> : "Login"}
+              </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
-          <Link to="/signup" className="text-blue-600">
+        <CardFooter className="flex flex-col items-center gap-4">
+          <Link to="/reset-password/send-email" className="text-sm text-white">
+            Forgot password?
+          </Link>
+          <div className="relative w-full">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-gray-400">Or</span>
+            </div>
+          </div>
+          <Link to="/signup" className="text-sm text-white">
             Create a new account
           </Link>
         </CardFooter>

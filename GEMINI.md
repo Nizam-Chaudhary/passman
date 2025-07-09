@@ -4,7 +4,7 @@ This is a monorepo for Passman, a password manager application.
 
 ## Workspaces
 
-The monorepo is managed using pnpm and Turborepo and contains the following workspaces:
+The monorerepo is managed using pnpm and Turborepo and contains the following workspaces:
 
 - `apps/api`: The backend server built with Hono.
 - `apps/web`: The frontend application built with Vite and React.
@@ -50,6 +50,12 @@ To check for linting errors, run:
 
 ```bash
 pnpm turbo lint
+```
+
+To automatically fix linting errors, run:
+
+```bash
+pnpm turbo lint -- --fix
 ```
 
 ### Type Checking
