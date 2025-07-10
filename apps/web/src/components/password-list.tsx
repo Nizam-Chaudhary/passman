@@ -1,11 +1,10 @@
 import { getRouteApi } from "@tanstack/react-router";
 import { useShallow } from "zustand/react/shallow";
 
-// import { useGetApiV1Passwords } from "@/api-client/api";
 import { useGetPasswordListForVault } from "@/services/queries/password";
 import { useStore } from "@/stores";
 
-import { PasswordRow } from "./password-row";
+import { PasswordCard } from "./password-card";
 import { Card, CardContent } from "./ui/card";
 import LoadingSpinner from "./ui/loading-spinner";
 import { ScrollArea } from "./ui/scroll-area";
@@ -59,14 +58,11 @@ export function PasswordList() {
         <CardContent className="p-0">
           <ScrollArea className="h-[calc(100vh-5.5rem)]">
             {passwords?.data?.length > 0 ? (
-              passwords.data.map((password) => (
-                <PasswordRow
-                  key={password.id}
-                  id={password.id.toString()}
-                  url={password.url}
-                  username={password.username}
-                />
-              ))
+              <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
+                {passwords.data.map((password) => (
+                  <PasswordCard key={password.id} password={password} />
+                ))}
+              </div>
             ) : (
               <div className="flex h-[calc(100vh-10rem)] flex-col items-center justify-center gap-8">
                 <img className="w-[40vh]" src="/assets/no_data.svg" />

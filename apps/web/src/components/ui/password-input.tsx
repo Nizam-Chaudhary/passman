@@ -1,18 +1,17 @@
-import type { ComponentProps } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
-import { Button } from "./button";
-import { Input } from "./input";
 
 const PasswordInput = ({
   ref,
   className,
   ...props
-}: ComponentProps<"input"> & { ref?: React.RefObject<HTMLInputElement | null> }) => {
+}: ComponentPropsWithoutRef<"input"> & { ref?: React.RefObject<HTMLInputElement | null> }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -27,8 +26,6 @@ const PasswordInput = ({
         variant="ghost"
         size="sm"
         type="button"
-        tabIndex={-1}
-        aria-hidden="false"
         onClick={(e) => {
           e.preventDefault();
           setShowPassword((prev) => !prev);

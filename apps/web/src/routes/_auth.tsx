@@ -1,5 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores/auth";
 
 export const Route = createFileRoute("/_auth")({
@@ -24,5 +26,14 @@ export const Route = createFileRoute("/_auth")({
 });
 
 function RouteComponent() {
-  return <Outlet />;
+  return (
+    <div>
+      <SidebarProvider>
+        <AppSidebar />
+        <div className="w-[100%]">
+          <Outlet />
+        </div>
+      </SidebarProvider>
+    </div>
+  );
 }

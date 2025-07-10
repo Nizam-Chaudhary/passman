@@ -80,29 +80,28 @@ function VerifyMasterPassword() {
   const onSubmit: SubmitHandler<VerifyMasterPasswordBody> = async (data, event) => {
     event?.preventDefault();
     toast.promise(
-      new Promise((resolve, reject) => {
-        verifyMasterPasswordMutation.mutate(data, {
-          onSuccess: async (response) => {
-            if (!response.data.masterKey) {
-              navigate({ to: "/master-password/create", replace: true });
-              resolve("Master password not found. Please create one.");
-              return;
-            }
-            const userKey = await deriveKey(data.masterPassword, response.data.masterKey.salt);
-            const decryptedMasterKey = await decrypt(response.data.masterKey, userKey);
-            const masterKey = await importKey(decryptedMasterKey);
-            setMasterkey(masterKey);
-            authActions.authenticate();
-            navigate({ to: "/", replace: true });
-            resolve("Master password verified successfully!");
-          },
-          onError: (error) => {
-            if (error.message === "Access token expired") {
-              refreshTokenMutation.mutate();
-            }
-            reject(error);
-          },
-        });
+      verifyMasterPasswordMutation.mutateAsync(data, {
+        onSuccess: async (response) => {
+          if (!response.data.masterKey) {
+            navigate({ to: "/master-password/create", replace: true });
+            throw new Error("Master password not found. Please create one.");
+          }
+          await refreshTokenMutation.mutate();
+
+          console.log("Nizam@6353");
+          const userKey = await deriveKey(data.masterPassword, response.data.masterKey.salt);
+          const decryptedMasterKey = await decrypt(response.data.masterKey, userKey);
+          const masterKey = await importKey(decryptedMasterKey);
+          setMasterkey(masterKey);
+          authActions.authenticate();
+          navigate({ to: "/", replace: true });
+        },
+        onError: async (error) => {
+          if (error.message === "Access token expired") {
+            await refreshTokenMutation.mutate();
+          }
+          throw error;
+        },
       }),
       {
         loading: "Verifying master password...",

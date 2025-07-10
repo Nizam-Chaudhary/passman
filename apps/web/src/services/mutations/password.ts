@@ -61,3 +61,20 @@ export function useDeletePassword() {
     },
   });
 }
+
+export function useDeleteMultiplePasswords() {
+  return useMutation({
+    mutationFn: async (ids: number[]) => {
+      const token = useAuthStore.getState().accessToken;
+      const response = await api.passwords.bulk.$delete({
+        header: {
+          Authorization: `Bearer ${token}`,
+        },
+        json: { ids },
+      });
+
+      if (!response.ok) throw await response.json();
+      return await response.json();
+    },
+  });
+}
