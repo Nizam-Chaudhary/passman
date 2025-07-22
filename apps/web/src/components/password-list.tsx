@@ -7,7 +7,7 @@ import { useStore } from "@/stores";
 
 import { PasswordRow } from "./password-row";
 import { Card, CardContent } from "./ui/card";
-import Loading from "./ui/loading";
+import Loading from "./ui/loading-spinner";
 import { ScrollArea } from "./ui/scroll-area";
 
 const routeApi = getRouteApi("/_auth/");

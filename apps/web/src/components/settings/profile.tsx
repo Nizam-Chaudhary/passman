@@ -22,7 +22,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import Loading from "../ui/loading";
 import LoadingSpinner from "../ui/loading-spinner";
 
 function Profile() {
@@ -49,7 +48,7 @@ function Profile() {
   if (isPending) {
     return (
       <div className="flex h-[300px] items-center justify-center">
-        <Loading />
+        <LoadingSpinner />
       </div>
     );
   }
